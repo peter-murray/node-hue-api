@@ -1,0 +1,7 @@
+# NPM generated files
+*.tgz
+node_modules
+
+# IntelliJ IDEA Files
+.idea
+*.iml

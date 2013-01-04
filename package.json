@@ -1,0 +1,40 @@
+{
+	"name"        : "node-hue-api",
+	"version"     : "0.1.0",
+	"author"      : "Peter Murray <peter.murray@osirisoft.com>",
+	"contributors": [
+		{
+			"name" : "Peter Murray",
+			"email": "peter.murray@osirisoft.com"
+		}
+	],
+
+	"scripts"     : {
+		"test" : "make test"
+	},
+
+	"dependencies": {
+		"xml2js"  : "0.2.2",
+		"q"       : "0.8.12",
+		"q-io"    : "1.5.1",
+		"parseUri": "1.2.3-2",
+		"MD5"     : "1.0.3"
+	},
+
+	"devDependencies": {
+		"mocha": "*",
+		"chai" : "1.4.2"
+	},
+
+	"engines": {
+		"nodejs": ">= 0.8.0"
+	},
+
+	"keywords": [
+		"philips",
+		"hue",
+		"api",
+		"living",
+		"color"
+	]
+}
