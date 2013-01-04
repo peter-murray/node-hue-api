@@ -5,11 +5,11 @@
 
 ## Installation
 
-	NPM server client:
+NPM server client:
 
-	```
-	$ npm install node-hue-api
-	```
+```
+$ npm install node-hue-api
+```
 
 ## Examples
 
