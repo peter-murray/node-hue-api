@@ -14,6 +14,7 @@ $ npm install node-hue-api
 ## Examples
 
 ### Locating a Philips Hue Bridge
+To locate all the Philips Hue Bridges on your network (if you do not know the IP Address already);
 
 ```js
 var hue = require("node-hue-api").hue;
@@ -23,6 +24,34 @@ var displayBridges = function(bridge) {
 };
 
 hue.locateBridges().then(displayBridges).done();
+```
+
+### Connecting to a Philips Hue Bridge
+To connect to a Philips Hue Bridge and obtain some basic details about it you can use the connect() function'
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var hostname = "192.168.2.129";
+var username = "083b2f780c78555d532b78544f135798";
+
+var api = new hue.HueApi(hostname, username);
+api.connect().then(displayResult).done();
+```
+
+Running the above code should give you a result similar to;
+```
+{
+  "name": "Philips hue",
+  "version": "01003542",
+  "linkButton": false,
+  "macAddress": "00:xx:xx:xx:xx:xx",
+  "host": "192.168.2.129"
+}
 ```
 
 ## License
