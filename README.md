@@ -160,6 +160,212 @@ This will produce a JSON response that has a root key of "devices" that has an a
 }
 ````
 
+## Finding the Lights Attached to the Bridge
+To find all the lights that are registered with the Hue Bridge, so that you might be able to interact with them, you can use the lights() function.
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "033a6feb77750dc770ec4a4487a9e8db",
+    api;
+
+api = new hue.HueApi(host, username);
+api.lights()
+    .then(displayResult)
+    .done();
+```
+
+This will output a JSON object that will provide details of the lights that the Hue Bridge knows about;
+```
+{
+  "lights": [
+    {
+      "id": "1",
+      "name": "Lounge Living Color"
+    },
+    {
+      "id": "2",
+      "name": "Right Bedside"
+    },
+    {
+      "id": "3",
+      "name": "Left Bedside"
+    },
+    {
+      "id": "4",
+      "name": "Lounge Standing Lamp"
+    }
+  ]
+}
+```
+The "id" values are what you will need to use to interact with the light directly and set the states on it (like on/off, color, etc...).
+
+## Interacting with a Hue Light or Living Color Lamp
+The library provides a function, __setLightState()__, that allows you to set the various states on a light connected to the Hue Bridge.
+You can either provide a JSON object that contains the values to set the various state values, or you can use the provided __lightState__ object in the library to build the state object ot pass to the function. See below for examples.
+
+## Using LightState to Build States
+The __lightState__ object provides a fluent way to build up a simple or complex light states that you can pass to a light.
+
+The majority of the various states that you can set on a Hue Light or Living Color lamp are available from this object.
+
+### Creating Complex States
+The LightState object provides a simple way to build up JSON object to set multiple values on a Hue Light.
+
+To turn on a light and set it to a warm white color;
+```js
+var hue = require("node-hue-api").hue,
+    lightState = require("node-hue-api").lightState;
+
+var host = "192.168.2.129",
+    username = "033a6feb77750dc770ec4a4487a9e8db",
+    api = new hue.HueApi(host, username),
+    state;
+
+// Set light state to 'on' with warm white value of 500 and brightness set to 100%
+state = lightState.create().on().white(500, 100);
+
+// Set the lamp with id '2' to on
+api.setLightState(2, state)
+    .done();
+```
+
+The __lightState__ object will ensure that the values passed into the various state functions are correctly bounded to avoid
+errors when setting them. For example the color temperature value (which determines the white value) must be between 154 and 500. If you pass in a value outside of this range then the lightState function call will set it to the closest valid value.
+
+Currently the __lightState__ object will combine together all the various state values that get set by the various function calls. This means that if you do create a combination of conflicting values, like __on__ and __off__ the last one set will be the actual value provided in the corresponding JSON object;
+
+```js
+// This will result in a JSON object for the state that sets the brightness to 100% but turn the light "off"
+state = lightState.create().on().brightness(100).off();
+```
+
+When using __lightState__ it is currently recommended to create a new state object each time you want to build a new state, otherwise you will get a combination of all the previous settings as well as the new values.
+
+## Turning a Light On/Off using LightState
+
+```js
+var hue = require("node-hue-api").hue,
+    lightState = require("node-hue-api").lightState;
+
+var displayResult = function(result) {
+    console.log(result);
+};
+
+var displayError = function(err) {
+    console.error(err);
+};
+
+var host = "192.168.2.129",
+    username = "033a6feb77750dc770ec4a4487a9e8db",
+    api = new hue.HueApi(host, username),
+    state = lightState.create();
+
+// Set the lamp with id '2' to on
+api.setLightState(2, state.on())
+    .then(displayResult)
+    .fail(displayError)
+    .done();
+
+// Now turn off the lamp
+api.setLightState(2, state.off())
+	.then(displayResult)
+    .fail(displayError)
+    .done();
+```
+
+If the function call is successful, then you should get a response of true. If the call fails then an APIError will be generated with the failure details.
+
+
+## Setting Light States using custom JSON Object
+You can pass in your own JSON object that contain the setting(s) that you wish to pass to the light via the bridge.
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function(result) {
+    console.log(result);
+};
+
+var displayError = function(err) {
+    console.error(err);
+};
+
+var host = "192.168.2.129",
+    username = "033a6feb77750dc770ec4a4487a9e8db",
+    api;
+
+api = new hue.HueApi(host, username);
+api.setLightState(2, {"on": true}) // provide a value of false to turn off
+    .then(displayResult)
+    .fail(displayError)
+    .done();
+```
+
+If the function call is successful, then you should get a response of true. If the call fails then an APIError will be generated with the failure details.
+
+
+## Getting the Current Status/State for a Light
+To obtain the current state of a light from the Hue Bridge you can use the __lightStatus()__ function;
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayStatus = function(status) {
+    console.log(JSON.stringify(status, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "033a6feb77750dc770ec4a4487a9e8db",
+    api = new hue.HueApi(host, username);
+
+// Obtain the Status of Light '2'
+api.lightStatus(2)
+    .then(displayStatus)
+    .done();
+```
+
+This will produce a JSON object detailing the status of the lamp;
+```
+{
+  "state": {
+    "on": true,
+    "bri": 254,
+    "hue": 34515,
+    "sat": 236,
+    "xy": [
+      0.3138,
+      0.3239
+    ],
+    "ct": 153,
+    "alert": "none",
+    "effect": "none",
+    "colormode": "ct",
+    "reachable": true
+  },
+  "type": "Extended color light",
+  "name": "Left Bedside",
+  "modelid": "LCT001",
+  "swversion": "65003148",
+  "pointsymbol": {
+    "1": "none",
+    "2": "none",
+    "3": "none",
+    "4": "none",
+    "5": "none",
+    "6": "none",
+    "7": "none",
+    "8": "none"
+  }
+}
+```
+
+
 ## License
 Copyright 2013. All Rights Reserved.
 
