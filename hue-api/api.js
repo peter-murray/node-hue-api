@@ -37,6 +37,28 @@ exports.locateBridges = function (timeout) {
 };
 
 /**
+ * Allows a new user/device to be registered with the Philips Hue Bridge.
+ * @param host The hostname or IP Address of the Hue Bridge.
+ * @param username The username to register.
+ * @param description The description for the user/device that is being registered. This is a human readable
+ * description of the user/device. If one is not provided then a default will be set.
+ * @return {*}
+ */
+exports.registerUser = function (host, username, description) {
+    var user = {
+        "username": md5(username),
+        "devicetype": description || "Node API"
+    };
+
+    function extractUsername(user) {
+        return user[0].success.username;
+    }
+
+    return httpPromise.httpPost(host, apiPaths.api(), user)
+        .then(extractUsername);
+};
+
+/**
  * Attempts to connect with a Philips Hue Bridge.
  * @return Will return an Object with details of the Hue Bridge if successful.
  */
