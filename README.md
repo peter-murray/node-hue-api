@@ -1,14 +1,22 @@
 # Node Hue API
 
-An API for NodeJS that interacts with the Philips Hue Bridge to control Philips Hue Light Bulbs and
+An API library for Node.js that interacts with the Philips Hue Bridge to control Philips Hue Light Bulbs and
 Philips Living Color Lamps.
 
-This API abstracts away the actual Philips Hue Bridge REST API, that is as yet, not finalized.
+This library abstracts away the actual Philips Hue Bridge REST API, that is as yet, not finalized.
+
+The library uses __promises__ instead of Node's normal callback system that is in common use. The reason for this was to make the writing of the library cleaner and error handling simpler. In some use cases the amount of nesting of async callbacks was excessive, and the promise system alleviates this, as well as providing simpler chaining.
+It is simple enough to wrap this library with callback functions if necessary.
+
+Due to this library using promises, it is necessary to call __done()__ on any promises that are returned, otherwise errors can be swallowed silently.
+
+## Philips Hue Resources
 
 There are a number of resources where users have detailed documentation on the Philips Hue Bridge;
  - Unofficial Hue Documentation: <http://burgestrand.github.com/hue-api/>
  - Hack the Hue: <http://rsmck.co.uk/hue>
  - Hue Hackers Mailing List: <https://groups.google.com/forum/#!forum/hue-hackers>
+
 
 ## Installation
 
