@@ -32,6 +32,18 @@ function getApiWhitelistPath(username) {
     return getApiPath(username) + "/config/whitelist/" + username;
 }
 
+function getApiSchedulesPath(username, id) {
+    var url = getApiPath(username) + "/schedules";
+    if (id) {
+        url += "/" + id;
+    }
+    return url;
+}
+
+function getApiConfigPath(username) {
+    return getApiPath(username) + "/config";
+}
+
 // Export the methods for the module
 module.exports = {
     api: getApiPath,
@@ -39,5 +51,7 @@ module.exports = {
     lights: getApiLightsPath,
     lightState: getApiLightStatePath,
     groups: getApiGroupsPath,
-    deregister: getApiWhitelistPath
+    deregister: getApiWhitelistPath,
+    schedules: getApiSchedulesPath,
+    config: getApiConfigPath
 };
