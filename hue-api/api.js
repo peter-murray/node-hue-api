@@ -209,6 +209,96 @@ HueApi.prototype.setLightState = function (id, stateValues) {
         .then(parseResults);
 };
 
+/**
+ * Gets the schedules
+ * @return A promise that will return the schedules as an object
+ */
+HueApi.prototype.schedules = function () {
+    var parseResults = function (result) {
+        if (!_wasSuccessful(result)) {
+            throw new Error(_parseErrors(results).join(", "));
+        }
+        return JSON.parse(result);
+    };
+    return httpPromise.httpGet(this.host, apiPaths.schedules(this.username))
+        .then(parseResults);
+};
+
+HueApi.prototype.getSchedule = function (id) {
+    var parseResults = function (result) {
+        if (!_wasSuccessful(result)) {
+            throw new Error(_parseErrors(results).join(", "));
+        }
+        return JSON.parse(result);
+    };
+    
+    return httpPromise.httpGet(this.host, apiPaths.schedules(this.username, id))
+        .then(parseResults);
+};
+
+/**
+ * Sets a schedule for given light
+ * @param id The id of the light which is an integer or a value that can be parsed into an integer value.
+ * @param name A name for the schedule
+ * @param when {Date} when the scheduled event should trigger
+ * @param stateValues {Object} containing the properties and values to set on the light
+ */
+HueApi.prototype.setSchedule = function(id, name, when, stateValues) {
+    var parseResults = function (result) {
+        if (!_wasSuccessful(result)) {
+            throw new Error(_parseErrors(results).join(", "));
+        }
+        return true;
+    };
+    
+    var values = {
+        "name": name,
+        "time": when.toJSON().substring(0, 19),
+        "description": " ",
+        "command": {
+            "method": "PUT",
+            "address": apiPaths.lightState(this.username, id),
+            "body": stateValues
+        }
+    };
+    console.log(values);
+    return httpPromise.httpPost(this.host,
+                                apiPaths.schedules(this.username),
+                                values)
+        .then(parseResults);
+};
+
+/**
+ * Deletes a schedule by id
+ * @param id of the schedule
+ */
+HueApi.prototype.deleteSchedule = function(id) {
+    var parseResults = function (result) {
+        if (! _wasSuccessful(result)) {
+            throw new Error(_parseErrors(result).join(", "));
+        }
+        return true;
+    };
+    
+    return httpPromise.httpDelete(this.host,
+                                  apiPaths.schedules(this.username, id))
+        .then(parseResults);
+};
+
+/**
+ * Reads the bridge configuration
+ * @return bridge configuration as json
+ */
+HueApi.prototype.config = function() {
+    var parseResults = function (result) {
+        if (!_wasSuccessful(result)) {
+            throw new Error(_parseErrors(result).join(", "));
+        }
+        return JSON.parse(result);
+    };
+    return httpPromise.httpGet(this.host, apiPaths.config(this.username))
+        .then(parseResults);
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
