@@ -1,11 +1,15 @@
 {
 	"name"        : "node-hue-api",
-	"version"     : "0.1.1",
+	"version"     : "0.1.2",
 	"author"      : "Peter Murray <peter.murray@osirisoft.com>",
 	"contributors": [
 		{
 			"name" : "Peter Murray",
 			"email": "peter.murray@osirisoft.com"
+		},
+		{
+			"name": "Ilari Mäkimattila",
+			"email": "ilari.makimattila@gmail.com"
 		}
 	],
 
