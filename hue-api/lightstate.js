@@ -105,6 +105,16 @@ State.prototype.rgb = function (r, g, b) {
     return this;
 };
 
+/**
+ * Adds the effect to the state
+ * @param value The effect value (either 'colorloop' or 'none'
+ * @return {State}
+ */
+State.prototype.effect = function (value) {
+    _combine(this, _getEffectState(value));
+    return this;
+};
+
 function _getXYState(x, y) {
     return {
         "xy": _getXYValue(x, y)
@@ -147,6 +157,12 @@ function _getOnState() {
 function _getOffState() {
     return {
         "on": false
+    };
+}
+
+function _getEffectState(value) {
+    return {
+        "effect": value
     };
 }
 

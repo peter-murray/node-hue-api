@@ -235,6 +235,7 @@ The __lightState__ object provides the following methods that can be used to bui
 - __xy(x, y)__ where x and y is from 0 to 1 in the Philips Color co-ordinate system
 - __rgb(red, green, blue)__ where red, green and blue are values from 0 to 255 - Not all colors can be created by the lights
 - __transition(seconds)__ this can be used with another setting to create a transition effect (like change brightness over 10 seconds)
+- __effect(value)__ this can be set to 'colorloop' or 'none'. The 'colorloop' rotates through all available hues at the current saturation level
 
 ### Creating Complex States
 The LightState object provides a simple way to build up JSON object to set multiple values on a Hue Light.
