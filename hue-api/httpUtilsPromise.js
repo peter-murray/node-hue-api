@@ -114,8 +114,12 @@ function _checkResponse(response) {
     if (response.status === 200) {
         result = response.body.read().then(extractResponse);
     } else {
-        //TODO errors...
-        result = new Error("Invalid response");
+        throw new errors.ApiError(
+            {
+                type: "Response Error",
+                description: "Unexpected response status; " + response.status
+            }
+        );
     }
     return result;
 }

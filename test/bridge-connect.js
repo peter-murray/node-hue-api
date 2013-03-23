@@ -26,7 +26,7 @@ describe("Hue API", function () {
                 failureCheck;
 
             failureCheck = function (err) {
-                expect(err.errno).equals("ECONNREFUSED");
+                expect(err.message).to.contain("Unexpected response status");
                 done();
             };
 
