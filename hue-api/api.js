@@ -190,9 +190,18 @@ HueApi.prototype.lightStatus = function (id) {
  * @param stateValues {Object} containing the properties and values to set on the light
  * @return A promise that will set the specified state on the light.
  */
-HueApi.prototype.setLightState = function (id, stateValues) {
-    if (! _isLightIdValid(id)) {
+HueApi.prototype.setLightState = function (id, stateValues, group) {
+    //check if group parameter is set, if not override with false.
+    if (!group) group = false;
+
+    //helper function to validate light id
+    if (!group && ! _isLightIdValid(id)) {
         throw new Error("The light id '" + id + "' is not valid for this Hue Bridge.");
+    }
+
+    //helper function to validate group id - if group
+    if (group && _isGroupIdValid(id)) {
+        throw new Error("The group id '" + id + "' is not valid for this Hue Bridge.");
     }
 
     var parseResults = function (result) {
@@ -203,10 +212,19 @@ HueApi.prototype.setLightState = function (id, stateValues) {
         return true;
     };
 
-    return httpPromise.httpPut(this.host,
-                               apiPaths.lightState(this.username, id),
-                               stateValues)
-        .then(parseResults);
+    //send to group action path
+    if (group) {
+        return httpPromise.httpPut(this.host,
+                apiPaths.groupsAction(this.username, id),
+                stateValues)
+            .then(parseResults);
+        //send single state path, no group
+    } else {
+        return httpPromise.httpPut(this.host,
+                apiPaths.lightState(this.username, id),
+                stateValues)
+            .then(parseResults);
+    }
 };
 
 /**
@@ -231,7 +249,7 @@ HueApi.prototype.getSchedule = function (id) {
         }
         return JSON.parse(result);
     };
-    
+
     return httpPromise.httpGet(this.host, apiPaths.schedules(this.username, id))
         .then(parseResults);
 };
@@ -250,7 +268,7 @@ HueApi.prototype.setSchedule = function(id, name, when, stateValues) {
         }
         return true;
     };
-    
+
     var values = {
         "name": name,
         "time": when.toJSON().substring(0, 19),
@@ -263,8 +281,8 @@ HueApi.prototype.setSchedule = function(id, name, when, stateValues) {
     };
     console.log(values);
     return httpPromise.httpPost(this.host,
-                                apiPaths.schedules(this.username),
-                                values)
+            apiPaths.schedules(this.username),
+            values)
         .then(parseResults);
 };
 
@@ -279,9 +297,9 @@ HueApi.prototype.deleteSchedule = function(id) {
         }
         return true;
     };
-    
+
     return httpPromise.httpDelete(this.host,
-                                  apiPaths.schedules(this.username, id))
+            apiPaths.schedules(this.username, id))
         .then(parseResults);
 };
 
@@ -451,6 +469,16 @@ function _isLightIdValid(id) {
         return true;
     } else {
 //        throw new TypeError("The id for the light was not valid, '" + id + "'");
+        return false;
+    }
+}
+
+function _isGroupIdValid(id) {
+    if (parseInt(id, 10) > 0) {
+        //TODO: check group is valid
+        //Keep in mind, group 0 is always valid, stands for ALL lights known by hue bridge
+        return true;
+    } else {
         return false;
     }
 }

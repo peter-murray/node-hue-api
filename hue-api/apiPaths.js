@@ -24,8 +24,18 @@ function getApiLightStatePath(username, lightId) {
     return getApiLightsPath(username, lightId) + "/state";
 }
 
-function getApiGroupsPath(username) {
-    return getApiPath(username) + "/groups";
+function getApiGroupsPath(username, groupId) {
+    var url = getApiPath(username) + "/groups";
+
+    //!== null check required, because if !groupid would be false if groupid is 0.
+    if (groupId !== null) {
+        url += "/" + groupId;
+    }
+    return url;
+}
+
+function getApiGroupsActionPath(username, groupId) {
+    return getApiGroupsPath(username, groupId)  + "/action"
 }
 
 function getApiWhitelistPath(username) {
@@ -51,6 +61,7 @@ module.exports = {
     lights: getApiLightsPath,
     lightState: getApiLightStatePath,
     groups: getApiGroupsPath,
+    groupsAction: getApiGroupsActionPath,
     deregister: getApiWhitelistPath,
     schedules: getApiSchedulesPath,
     config: getApiConfigPath
