@@ -231,7 +231,7 @@ The __lightState__ object provides the following methods that can be used to bui
 - __alert(isLong)__ if isLong is true then the alert will flash 10 times
 - __white(colorTemp, brightPercent)__ where colorTemp is a value between 154 (cool) and 500 (warm) and brightPercent is 0 to 100
 - __brightness(percent)__ where percent is the brightness from 0 to 100
-- __hsl(hue, saturation, brightPercent)__ where hue is a value from 0 to 65535, saturation is a value from 0 to 254, and brightPercent is from 0 to 100
+- __hsl(hue, saturation, brightPercent)__ where hue is a value from 0 to 359, saturation is a percent value from 0 to 100, and brightPercent is from 0 to 100
 - __xy(x, y)__ where x and y is from 0 to 1 in the Philips Color co-ordinate system
 - __rgb(red, green, blue)__ where red, green and blue are values from 0 to 255 - Not all colors can be created by the lights
 - __transition(seconds)__ this can be used with another setting to create a transition effect (like change brightness over 10 seconds)
