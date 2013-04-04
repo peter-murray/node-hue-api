@@ -1,7 +1,8 @@
 "use strict";
 
-var State = function () {
-};
+var utils = require("./utils"),
+    State = function () {
+    };
 
 /**
  * Creates a new state object to pass to a Philips Hue Light
@@ -18,7 +19,7 @@ module.exports.create = function () {
  * @return {State}
  */
 State.prototype.white = function (colorTemp, brightPercentage) {
-    _combine(this, _getWhiteState(colorTemp, brightPercentage));
+    utils.combine(this, _getWhiteState(colorTemp, brightPercentage));
     return this;
 };
 
@@ -28,7 +29,7 @@ State.prototype.white = function (colorTemp, brightPercentage) {
  * @return {State}
  */
 State.prototype.alert = function (isLong) {
-    _combine(this, _getAlertState(isLong));
+    utils.combine(this, _getAlertState(isLong));
     return this;
 };
 
@@ -37,7 +38,7 @@ State.prototype.alert = function (isLong) {
  * @return {State}
  */
 State.prototype.on = function () {
-    _combine(this, _getOnState());
+    utils.combine(this, _getOnState());
     return this;
 };
 
@@ -46,7 +47,7 @@ State.prototype.on = function () {
  * @return {State}
  */
 State.prototype.off = function () {
-    _combine(this, _getOffState());
+    utils.combine(this, _getOffState());
     return this;
 };
 
@@ -56,7 +57,7 @@ State.prototype.off = function () {
  * @return {State}
  */
 State.prototype.brightness = function (value) {
-    _combine(this, _getBrightState(value));
+    utils.combine(this, _getBrightState(value));
     return this;
 };
 
@@ -68,7 +69,7 @@ State.prototype.brightness = function (value) {
  * @return {State}
  */
 State.prototype.hsl = function (hue, saturation, luminosity) {
-    _combine(this, _getHSLState(hue, saturation, luminosity));
+    utils.combine(this, _getHSLState(hue, saturation, luminosity));
     return this;
 };
 
@@ -79,7 +80,7 @@ State.prototype.hsl = function (hue, saturation, luminosity) {
  * @return {State}
  */
 State.prototype.xy = function (x, y) {
-    _combine(this, _getXYState(x, y));
+    utils.combine(this, _getXYState(x, y));
     return this;
 };
 
@@ -89,7 +90,7 @@ State.prototype.xy = function (x, y) {
  * @return {State}
  */
 State.prototype.transition = function (seconds) {
-    _combine(this, _getTransitionState(seconds));
+    utils.combine(this, _getTransitionState(seconds));
     return this;
 };
 
@@ -101,7 +102,7 @@ State.prototype.transition = function (seconds) {
  * @return {State}
  */
 State.prototype.rgb = function (r, g, b) {
-    _combine(this, _getHSLStateFromRGB(r, g, b));
+    utils.combine(this, _getHSLStateFromRGB(r, g, b));
     return this;
 };
 
@@ -111,7 +112,7 @@ State.prototype.rgb = function (r, g, b) {
  * @return {State}
  */
 State.prototype.effect = function (value) {
-    _combine(this, _getEffectState(value));
+    utils.combine(this, _getEffectState(value));
     return this;
 };
 
@@ -122,7 +123,7 @@ function _getXYState(x, y) {
 }
 
 function _getWhiteState(colorTemp, brightness) {
-    return _combine(
+    return utils.combine(
         {"ct": _getColorTemperature(colorTemp)},
         _getBrightState(brightness)
     );
@@ -135,7 +136,7 @@ function _getAlertState(isLong) {
 }
 
 function _getTransitionState(seconds) {
-    var value = (seconds ? seconds : 0) * 10;
+    var value = (seconds || 0) * 10;
     return {
         "transitiontime": value
     };
@@ -199,7 +200,7 @@ function _getHSLStateFromRGB(red, green, blue) {
         h = (60 * (r - g) / delta) + 240;
     }
 
-    var l = 0.5 * add;
+    l = 0.5 * add;
     if (l === 0) {
         s = 0;
     }
@@ -231,34 +232,13 @@ function _getHSLState(hue, saturation, luminosity) {
     saturation = Math.floor(_getBoundedValue(saturation, 0, 100) * (255 / 100)); // percentage converted to 0-255 range
     luminosity = _convertBrightPercentToHueValue(luminosity);
 
-    return _combine(
+    return utils.combine(
         {
             "hue": _getHueValue(hue),
             "sat": _getSaturationValue(saturation)
         },
         _getBrightState(luminosity)
     );
-}
-
-/**
- * Combines the specified object with the properties defined in the values object, overwriting any existing values.
- * @param obj The object to combine the values with
- * @param values The objects to get the properties and values from
- */
-function _combine(obj, values) {
-    var argIdx = 1,
-        state,
-        property;
-
-    while (argIdx < arguments.length) {
-        state = arguments[argIdx];
-        for (property in state) {
-            obj[property] = state[property];
-        }
-        argIdx++;
-    }
-
-    return obj;
 }
 
 /**
