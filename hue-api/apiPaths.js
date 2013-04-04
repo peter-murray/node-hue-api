@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 function getDescriptionXml() {
     return "/description.xml";
@@ -35,7 +35,7 @@ function getApiGroupsPath(username, groupId) {
 }
 
 function getApiGroupsActionPath(username, groupId) {
-    return getApiGroupsPath(username, groupId)  + "/action"
+    return getApiGroupsPath(username, groupId)  + "/action";
 }
 
 function getApiWhitelistPath(username) {
