@@ -23,9 +23,20 @@ AbstractError.prototype.name = "Abstract Error";
  * @param error The error object returned from the request.
  * @constructor
  */
-var ApiError = function(error) {
-    ApiError.super_.call(this, error.description, this.constructor);
-    this.type = error.type;
+var ApiError = function (error) {
+    var errorMessage,
+        type;
+
+    if (typeof(error) === 'string') {
+        errorMessage = error;
+        type = 0;
+    } else {
+        errorMessage = error.message || error.description;
+        type = error.type;
+    }
+
+    ApiError.super_.call(this, errorMessage, this.constructor);
+    this.type = type;
 
     if (error.address) {
         this.address = error.address;
