@@ -6,7 +6,8 @@
 
 var expect = require("chai").expect,
     schedule = require("../index").scheduledEvent,
-    ApiError = require("../index").ApiError;
+    ApiError = require("../index").ApiError,
+    testValues = require("./support/testValues");
 
 describe("ScheduleEvent", function () {
     var scheduledEvent;
@@ -77,16 +78,18 @@ describe("ScheduleEvent", function () {
 
     describe("withName()", function () {
 
+        var maxNameLength = testValues.maxScheduleNameLength;
+
         it("should accept a name", function () {
             scheduledEvent.withName("Simple Event");
             expect(scheduledEvent).to.have.property("name").to.equal("Simple Event");
         });
 
         it("should shorten really long names and shorten it", function () {
-            var name = "A really long name that is longer than the allowed 32 characters for a name";
+            var name = "A really long name that is longer than the allowed " + maxNameLength + " characters for a name";
             scheduledEvent.withName(name);
-            expect(scheduledEvent).to.have.property("name").with.length(32);
-            expect(scheduledEvent.name).to.equal(name.substr(0, 32));
+            expect(scheduledEvent).to.have.property("name").with.length(maxNameLength);
+            expect(scheduledEvent.name).to.equal(name.substr(0, maxNameLength));
         });
     });
 

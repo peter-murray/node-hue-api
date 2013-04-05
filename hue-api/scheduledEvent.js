@@ -57,7 +57,9 @@ Schedule.prototype.when = function (time) {
 
 Schedule.prototype.withName = function(name) {
     // The 1.0 API only accepts up to 32 characters for the name
-    utils.combine(this, {"name": _getStringValue(name, 32)});
+    var nameCharMax = 32;
+
+    utils.combine(this, {"name": _getStringValue(name, nameCharMax)});
     return this;
 };
 

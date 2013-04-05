@@ -388,6 +388,473 @@ This will produce a JSON object detailing the status of the lamp;
 }
 ```
 
+## Working with Groups
+
+### Obtaining all Groups from the Bridge
+To obtain all the groups defined in the bridge use the __groups()__ function;
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayGroups = function(groups) {
+    console.log(JSON.stringify(groups, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "033a6feb77750dc770ec4a4487a9e8db",
+    api = new hue.HueApi(host, username);
+
+// Obtain all the defined groups in the Bridge
+api.groups()
+    .then(displayGroups)
+    .done();
+```
+
+This will produce an array of values detailing the id and names of the groups;
+```
+[
+  {
+    "id": "0",
+    "name": "All Lights"
+  },
+  {
+    "id": "1",
+    "name": "VRC 1"
+  }
+]
+```
+The "All Lights" Group is a special instance and will always exist and have the id of "0" as specified in the Hue Api
+documentation.
+
+
+### Obtaining the Details of a Group Definition
+To obtain the details of the lights that make up a group (and some extra information like the last action that was performed)
+use the __getGroup(id)__ function.
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayGroup = function(group) {
+    console.log(JSON.stringify(group, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username);
+
+api.getGroup(0)
+    .then(displayGroup)
+    .done();
+```
+
+Which will return produce a result like;
+```
+{
+  "id": "0",
+  "name": "All Lights",
+  "lights": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5"
+  ],
+  "lastAction": {
+    "on": true,
+    "bri": 128,
+    "hue": 6144,
+    "sat": 254,
+    "xy": [
+      0.6376,
+      0.3563
+    ],
+    "ct": 500,
+    "effect": "none",
+    "colormode": "ct"
+  }
+}
+```
+
+
+### Updating a Group
+It is possible to update the associated lights and the name of a group after it has been created on the bridge. The function
+__updateGroup(groupId, name, lightIds)__ allows you to do this.
+
+You can set the name, the lightIds or both with this function, just omit what you do not want to set, it will work out which
+parameter was passed based on type, a String for the name and an array for the light ids.
+
+If the update is successful __true__ will be returned in the promise chain, otherwise an error will be thrown.
+
+Changing the name of an existing group;
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function(result) {
+    console.log("Updated Successfully? " + result);
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username);
+
+// Update the name of the group
+api.updateGroup(5, "new group name")
+    .then(displayResult)
+    .done();
+```
+
+Changing the lights associated with an existing group;
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function(result) {
+    console.log("Updated Successfully? " + result);
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username);
+
+// Update the lights in the group to ids 1, 2, and 3.
+api.updateGroup(5, [1, 2, 3])
+    .then(displayResult)
+    .done();
+```
+
+Changing both the name and the lights for an existing group;
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function(result) {
+    console.log("Updated Successfully? " + result);
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username);
+
+// Update the name of the group and the light ids to 4 and 5.
+api.updateGroup(5, "new group name", [4, 5])
+    .then(displayResult)
+    .done();
+```
+
+
+### Create a New Group
+The creation of groups is not officially supported in the released Hue API from Phillips (version 1.0). This has been
+tested on a Hue Bridge, but use at your own risk *(you may have to reset the bridge to factory defaults if something goes wrong)*.
+
+To create a new group use the __createGroup(name, lightIds)__ function;
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username);
+
+api.createGroup("A Group Name", [1, 2, 3])
+    .then(displayResult)
+    .done();
+```
+
+The function will return a promise with a result that contains the id of the newly created group;
+```
+{
+  "id": "2"
+}
+```
+
+
+### Deleting a Group
+The deletion of groups is not officially supported in the released Hue API from Phillips (version 1.0), but it is still
+possible to delete groups, but use at your own risk *(you may have to reset the bridge to factory defaults if something
+goes wrong)*.
+
+To delete a group use the __deleteGroup(id)__ function;
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function(result) {
+    console.log("Deleted Group? " + result);
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username);
+
+api.deleteGroup(10)
+    .then(displayResult)
+    .done();
+```
+
+This function call will return a __true__ result in the promise chain if successful, otherwise an error will be thrown.
+
+
+## Working with Schedules
+
+### Obtaining all the Defined Schedules
+To obtain all the defined schedules on the Hue Bridge use the __schedules()__ function.
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function (result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username);
+
+api.schedules()
+    .then(displayResult)
+    .done();
+```
+
+The function will return a promise that will provide an array of objects of __id__ and __name__ for each schedule;
+```
+[
+  {
+    "id": "1",
+    "name": "Sample Schedule"
+  },
+  {
+    "id": "2",
+    "name": "Wake Up"
+  }
+]
+```
+
+### Obtaining the details of a Schedule
+To obtain the details of a schedule use the __getSchedule(id)__ function;
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function (result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username),
+    scheduleId = 1;
+
+api.getSchedule(scheduleId)
+    .then(displayResult)
+    .done();
+```
+
+The promise returned by the function will return the details of the schedule in the following format;
+```
+{
+  "name": "Sample Schedule",
+  "description": "An example of a schedule",
+  "command": {
+    "address": "/api/08a902b95915cdd9b75547cb50892dc4/lights/5/state",
+    "body": {
+      "on": true
+    },
+    "method": "PUT"
+  },
+  "time": "2014-08-01T00:00:00",
+  "id": 1
+}
+```
+
+### Creating a Schedule
+Creating a schedule requires just two elements, a time at which to trigger the schedule and the command that will be
+triggered when the schedule is run.
+There are other optional values of a name and a description that can be provided to make the schedule easier to identify.
+
+There are two functions that can be invoked to create a new schedule;
+- __scheduleEvent(event)__
+- __createSchedule(event)__
+
+These functions both take an object the wraps up the scheduled event to be created. There are only two required properties
+of the object, __time__ and __command__, with option properties __name__ and __description__.
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function (result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username),
+    scheduledEvent;
+
+scheduledEvent = {
+    "name": "Sample Schedule",
+    "description": "A sample scheduled event to switch on a light",
+    "time": "2013-12-24T00:00:00",
+    "command": {
+        "address": "/api/08a902b95915cdd9b75547cb50892dc4/lights/5/state",
+        "method" : "PUT",
+        "body"   : {
+            "on": true
+        }
+    }
+};
+
+api.createSchedule(scheduledEvent)
+    .then(displayResult)
+    .done();
+```
+
+The result returned by the promise when creating a new schedule will be that of the __id__ for the newly created schedule;
+```
+{
+  "id": "1"
+}
+```
+
+The __command__ value must be a Hue Bridge API endpoint for it to correctly function, which means it must start with
+__/api/<valid username>/__. For now if using this function, you will have to use the exact API end point as specified in
+the Phillips Hue REST Api.
+
+To help with building a schedule and to perform some basic checking to ensure that values are correct/valid there is a
+helper module __scheduleEvent__ which can be used the build a valid schedule object.
+
+### Using ScheduleEvent to build a Schedule
+The __scheduleEvent__ module/function is used to build up a schedule that the Hue Bridge can understand. It is not a
+requirement when creating schedules, but can eliminate some of the basic errors that can result when creating a schedule.
+
+To obtain a scheduleEvent instance;
+```js
+var scheduleEvent = require("node-hue-api").scheduledEvent;
+
+var mySchedule = scheduleEvent.create();
+```
+
+This will give you a schedule object that has the following functions available to build a schedule;
+- __withName(String)__ which will set a name for the schedule (optional)
+- __withDescription(String)__ which will set a description for the schedule (optional)
+- __withCommand(command)__ which will set the command object that the schedule will run
+- __on()__, __at()__, __when()__ which all take a string or Date value to specify the time the schedule will run, if
+passing a string it must be valid when parsed by __Date.parse()__
+
+The __command__ object currently has to be specified as the Hue Bridge API documentation states which is of the form;
+```
+{
+	"address": "/api/08a902b95915cdd9b75547cb50892dc4/lights/5/state",
+    "method" : "PUT",
+    "body"   : {
+    	"on": true
+    }
+}
+```
+The above example command will switch on the light with id __5__ for the username __08a902b95915cdd9b75547cb50892dc4__.
+
+If you use the __withCommand()__ function then the __address__ will be undergo basic validation to ensure it is an
+endpoint for the Hue Bridge which is a common mistake to make when crafting your own values.
+
+Once a scheduleEvent has been built it can be passed directly to the __createSchedule()__, __scheduleEvent()__ or
+__updateSchedule()__ function calls in the Hue API.
+
+For example to create a new schedule that will turn on the light with id 5 at 07:00 on the 25th December 2013;
+```js
+var hue = require("node-hue-api").hue;
+var scheduleEvent = require("node-hue-api").scheduledEvent;
+
+var displayResult = function (result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username),
+    mySchedule;
+
+mySchedule = scheduleEvent.create()
+    .withName("Xmas Day Wake Up")
+    .withDescription("Like anyone really needs a wake up on Xmas day...")
+    .withCommand(
+        {
+            "address": "/api/08a902b95915cdd9b75547cb50892dc4/lights/5/state",
+            "method" : "PUT",
+            "body"   : {
+                "on": true
+            }
+        }
+    )
+    .on("2013-12-25T07:00:00");
+
+api.createSchedule(mySchedule)
+    .then(displayResult)
+    .done();
+```
+
+
+### Updating a Schedule
+You can update an existing schedule using the __updateSchedule(id, schedule)__ function;
+
+```js
+var hue = require("node-hue-api").hue;
+var scheduleEvent = require("node-hue-api").scheduledEvent;
+
+var displayResult = function (result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username),
+    scheduleId = 1,
+    updatedValues;
+
+updatedValues = {
+    "name": "Updated Name",
+    "time": "January 1, 2014 07:00:30"
+};
+
+api.updateSchedule(scheduleId, updatedValues)
+    .then(displayResult)
+    .done();
+```
+
+The result from the promise will be an object with the properties of the schedule that were updated and __true__ as the
+value of each one that was successful.
+```
+{
+  "name": true,
+  "time": true
+}
+```
+
+
+### Deleting a Schedule
+All schedules in the Hue Bridge are removed once they are triggered. To remove an impending schedule use the __deleteSchedule(id)__
+function;
+
+```js
+var hue = require("node-hue-api").hue;
+
+var displayResult = function (result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new hue.HueApi(host, username),
+    scheduleId = 1;
+
+api.deleteSchedule(scheduleId)
+    .then(displayResult)
+    .done();
+```
+
+If the deletion was successful, then __true__ will be returned from the promise, otherwise an __ApiError__ will be thrown,
+as in the case if the schedule does not exist.
+
 
 ## License
 Copyright 2013. All Rights Reserved.

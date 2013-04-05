@@ -1,6 +1,6 @@
 {
 	"name"        : "node-hue-api",
-	"version"     : "0.1.2",
+	"version"     : "0.1.3",
 	"author"      : "Peter Murray <peter.murray@osirisoft.com>",
 	"contributors": [
 		{
@@ -13,7 +13,10 @@
 		},
 		{
 			"name": "Bryan Schlief"
-		}
+		},
+        {
+            "name": "Sebastian B (SBejga)"
+        }
 	],
 
 	"scripts"     : {
@@ -42,6 +45,7 @@
 		"hue",
 		"api",
 		"living",
-		"color"
+		"color",
+        "colour"
 	]
 }

@@ -426,26 +426,77 @@ HueApi.prototype.getSchedule = function (id) {
 
 /**
  * Creates a one time scheduled event.
- * @param event {ScheduledEvent}
+ * @param schedule {ScheduledEvent}
+ * @return A promise that will return the id value of the schedule that was created
  */
-HueApi.prototype.scheduleEvent = function (event) {
+HueApi.prototype.scheduleEvent = function (schedule) {
+    return _createSchedule(this, schedule);
+};
+
+/**
+ * Creates a one time scheduled event.
+ * @param schedule {ScheduledEvent}
+ * @return A promise that will return the id value of the schedule that was created
+ */
+HueApi.prototype.createSchedule = function(schedule) {
+    return _createSchedule(this, schedule);
+};
+
+/**
+ * Updates an existing schedule event with the provided details.
+ * @param schedule The object containing the details to update for the existing schedule event.
+ */
+HueApi.prototype.updateSchedule = function(id, schedule) {
     var values,
-        parseResult = function (result) {
+        deferred,
+        promise,
+        parseResults = function(result) {
+            var returnValue = {};
+
             if (!_wasSuccessful(result)) {
                 throw new errors.ApiError(_parseErrors(result).join(", "));
             }
-            return {"id": result[0].success.id};
+
+            result.forEach(function(value) {
+                Object.keys(value.success).forEach(function(keyValue) {
+                    // The time values being returned do not appear to be correct from the Bridge, it is almost like
+                    // they are in a transition state when the function returns the value, as such time values are not
+                    // going to be returned from this function for now.
+                    //
+                    // Name and description values appear to be correctly represented in the results, but commands are
+                    // typically cut short to just "Updated" so to cater for this variability I am just going to return
+                    // true for each value that was modified, and leave it up to the user to request the value it was
+                    // set to by re-querying the schedule.
+                    //
+                    // I have to trust that the Hue Bridge API will have set the values correctly when it reports
+                    // success otherwise they have some serious issues...
+                    var data = keyValue.substr(keyValue.lastIndexOf("/") + 1, keyValue.length);
+                    returnValue[data] = true;
+                });
+            });
+            return returnValue;
         };
 
-    if (event.time && event.command) {
-        // time and the command a required parameters for this API call
-        values = scheduledEvent.create(event);
-    } else {
-        throw new errors.ApiError("The event object must have command and time values");
+    if (!id) {
+        throw new errors.ApiError("A schedule id must be specified");
     }
 
-    return httpPromise.httpPost(this.host, apiPaths.schedules(this.username), values)
-        .then(parseResult);
+    if (!schedule) {
+        throw new errors.ApiError("An object containing the values for the update to the schedule must be provided");
+    }
+
+    values = scheduledEvent.create(schedule);
+    // Check that there is something we are updating
+    if (!values.name && !values.description && !values.command && !values.time) {
+        deferred = Q.defer();
+        deferred.reject(new errors.ApiError("A valid property of 'name', 'description', 'time' or 'command' was not found for update."));
+        promise = deferred.promise;
+    } else {
+        promise = httpPromise.httpPut(this.host, apiPaths.schedules(this.username, id), values)
+            .then(parseResults);
+    }
+
+    return promise;
 };
 
 /**
@@ -460,7 +511,7 @@ HueApi.prototype.scheduleEvent = function (event) {
  * @param stateValues {Object} containing the properties and values to set on the light
  */
 HueApi.prototype.setSchedule = function (id, name, when, stateValues) {
-    console.log("This function 'setSchedule(id, name, when. stateValues)' is deprecated and will be removed in a future release. Use 'scheduleEvent()' instead.");
+    console.log("This function 'setSchedule(id, name, when. stateValues)' is deprecated and will be removed in a future release. Use 'scheduleEvent()' or 'createSchedule()' instead.");
 
     var parseResults = function (result) {
             if (!_wasSuccessful(result)) {
@@ -526,6 +577,26 @@ HueApi.prototype.config = function () {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+function _createSchedule(api, schedule) {
+    var values,
+        parseResult = function (result) {
+            if (!_wasSuccessful(result)) {
+                throw new errors.ApiError(_parseErrors(result).join(", "));
+            }
+            return {"id": result[0].success.id};
+        };
+
+    if (schedule.time && schedule.command) {
+        // time and the command a required parameters for this API call
+        values = scheduledEvent.create(schedule);
+    } else {
+        throw new errors.ApiError("The event object must have command and time values");
+    }
+
+    return httpPromise.httpPost(api.host, apiPaths.schedules(api.username), values)
+        .then(parseResult);
+}
 
 /**
  * Obtains an object representation of the Description XML.
