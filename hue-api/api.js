@@ -352,7 +352,7 @@ HueApi.prototype.setLightState = function (id, stateValues, group) {
     }
 
     //helper function to validate group id - if group
-    if (group && _isGroupIdValid(id)) {
+    if (group && !_isGroupIdValid(id)) {
         throw new errors.ApiError("The group id '" + id + "' is not valid for this Hue Bridge.");
     }
 
