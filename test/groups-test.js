@@ -1,9 +1,14 @@
 var api = require("../index.js").hue,
     testValues = require("./support/testValues.js"),
-    expect = require("chai").expect;
+    expect = require("chai").expect,
+    Q = require("q");
 
 
 describe("Hue API", function () {
+
+    // Set a maximum timeout for all the tests
+    this.timeout(5000);
+
     var hue = new api.HueApi(testValues.host, testValues.username);
 
     describe("#groups", function () {
@@ -54,6 +59,7 @@ describe("Hue API", function () {
                 };
 
             hue.getGroup(999)
+                .then(_waitForBridge)
                 .then(failTest)
                 .fail(checkError)
                 .done();
@@ -89,6 +95,7 @@ describe("Hue API", function () {
                 };
 
             hue.createGroup(groupName, [1, "2", "3"])
+                .then(_waitForBridge)
                 .then(checkResults)
                 .then(loadGroupDetails)
                 .then(validateCreatedGroup)
@@ -112,6 +119,7 @@ describe("Hue API", function () {
                 };
 
             hue.createGroup("to_delete", 1)
+                .then(_waitForBridge)
                 .then(deleteGroup)
                 .done();
         });
@@ -145,6 +153,7 @@ describe("Hue API", function () {
                 };
 
             hue.createGroup("test-Rename", 1)
+                .then(_waitForBridge)
                 .then(validateName)
                 .then(changeName)
                 .then(validateRename)
@@ -179,6 +188,7 @@ describe("Hue API", function () {
                 };
 
             hue.createGroup("test-LightIds", [1, 2, 3])
+                .then(_waitForBridge)
                 .then(validateLights)
                 .then(changeLights)
                 .then(validateChangedLights)
@@ -215,19 +225,21 @@ describe("Hue API", function () {
                 };
 
             hue.createGroup("test-all", [1])
+                .then(_waitForBridge)
                 .then(validateGroup)
                 .then(changeGroup)
+                .then(_waitForBridge)
                 .then(validateGroupChange)
                 .done();
         });
 
         it("should fail on invalid group", function (finished) {
-            var failIfCalled = function() {
+            var failIfCalled = function () {
                     expect.fail("The function call should have produced an error for invalid group id");
                     finished();
                 },
 
-                checkError = function(err) {
+                checkError = function (err) {
                     expect(err.type).to.equal(3);
                     expect(err.message).to.contain("resource,");
                     expect(err.message).to.contain("not available");
@@ -235,9 +247,23 @@ describe("Hue API", function () {
                 };
 
             hue.updateGroup(99, "a name")
+                .then(_waitForBridge)
                 .then(failIfCalled)
                 .fail(checkError)
                 .done();
         });
     });
 });
+
+// We have to wait for the Bridge to actually process the changes, so this function helps slow the tests.
+function _waitForBridge(id) {
+    "use strict";
+    var deferred = Q.defer();
+
+    setTimeout(function () {
+                   deferred.resolve(id);
+               },
+               1000);
+
+    return deferred.promise;
+}
