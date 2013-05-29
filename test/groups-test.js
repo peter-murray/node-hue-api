@@ -1,5 +1,9 @@
-var api = require("../index.js").hue,
+"use strict";
+
+var HueApi = require("../hue-api"),
+    ApiError = require("../hue-api/errors").ApiError,
     testValues = require("./support/testValues.js"),
+    lightState = require("../").lightState,
     expect = require("chai").expect,
     Q = require("q");
 
@@ -9,261 +13,335 @@ describe("Hue API", function () {
     // Set a maximum timeout for all the tests
     this.timeout(5000);
 
-    var hue = new api.HueApi(testValues.host, testValues.username);
+    var hue = new HueApi(testValues.host, testValues.username);
 
-    describe("#groups", function () {
+    describe("group tests", function() {
 
-        it("should obtain all defined groups", function (finished) {
-            hue.groups().then(function (results) {
+        describe("#groups", function () {
 
+            function validateAllGroups(results) {
                 expect(results).to.be.instanceOf(Array);
                 expect(results).to.have.length.greaterThan(0);
 
                 // The first result should always be that of the all lights group
                 expect(results[0].id).to.equal("0");
                 expect(results[0].name).to.equal("All Lights");
+            }
 
-                //TODO expand tests to cover other groups
-//                console.log(results);
+            it("using #promise should retrieve all groups", function (finished) {
+                function validateResults(results) {
+                    validateAllGroups(results);
+                    finished();
+                }
 
-                finished();
-            }).done();
+                hue.groups().then(validateResults).done();
+            });
+
+            it("using #callback should retrieve all groups", function (finished) {
+                hue.groups(function (err, results) {
+                    expect(err).to.be.null;
+                    validateAllGroups(results);
+                    finished();
+                });
+            });
         });
-    });
 
-    describe("#getGroup", function () {
-        it("should obtain 'All Lights' group details", function (finished) {
-            var checkResults = function (groupDetails) {
+
+        describe("#getGroup", function () {
+
+            function validateAllLightsResult(groupDetails) {
                 expect(groupDetails).to.have.property("id").to.equal("0");
                 expect(groupDetails).to.have.property("name").to.equal("All Lights");
                 expect(groupDetails).to.have.property("lastAction");
 
                 expect(groupDetails).to.have.property("lights").to.be.instanceOf(Array);
-                expect(groupDetails.lights).to.have.length(5);
-                finished();
-            };
+                expect(groupDetails.lights).to.have.length(testValues.lightsCount);
+            }
 
-            hue.getGroup(0).then(checkResults).done();
+            function failTest() {
+                expect.fail("Should not be called");
+            }
+
+            describe("using #promise", function () {
+
+                it("should obtain 'All Lights' group details", function (finished) {
+                    function validate(results) {
+                        validateAllLightsResult(results);
+                        finished();
+                    }
+
+                    hue.getGroup(0).then(validate).done();
+                });
+
+                it("should fail for a group id that does not exist", function (finished) {
+                    function checkError(err) {
+                        expect(err).to.have.property("type").to.equal(3);
+                        expect(err).to.have.property("message").to.contain("resource");
+                        expect(err).to.have.property("message").to.contain("not available");
+                        finished();
+                    }
+
+                    hue.getGroup(16).then(failTest).fail(checkError).done();
+                });
+
+                it("should fail for group Id 999", function (finished) {
+                    function validateError(err) {
+                        expect(err).to.be.instanceOf(ApiError);
+                        expect(err.message).to.contain("group id '999' is not valid");
+
+                        finished();
+                    }
+
+                    hue.getGroup(999).then(failTest).fail(validateError).done();
+                });
+            });
+
+            describe("using #callback", function () {
+
+                it("should obtain 'All Lights' group details", function (finished) {
+                    hue.getGroup(0, function (err, results) {
+                        expect(err).to.be.null;
+                        validateAllLightsResult(results);
+                        finished();
+                    });
+                });
+
+                it("should fail for a group id that does not exist", function (finished) {
+                    hue.getGroup(16, function (err, result) {
+                        expect(result).to.be.null;
+
+                        expect(err).to.have.property("type").to.equal(3);
+                        expect(err).to.have.property("message").to.contain("resource");
+                        expect(err).to.have.property("message").to.contain("not available");
+
+                        finished();
+                    });
+                });
+
+                it("should fail for group Id 999", function (finished) {
+                    hue.getGroup(999, function (err, result) {
+                        expect(result).to.be.null;
+
+                        expect(err).to.be.instanceOf(ApiError);
+                        expect(err.message).to.contain("group id '999' is not valid");
+
+                        finished();
+                    });
+                });
+            });
         });
 
-        it("should fail for a group id that does not exist", function (finished) {
-            var checkError = function (err) {
-                    expect(err).to.have.property("type").to.equal(3);
-                    expect(err).to.have.property("message").to.contain("resource");
-                    expect(err).to.have.property("message").to.contain("not available");
-                    finished();
-                },
-                failTest = function () {
-                    expect.fail("Should have got an error");
-                    finished();
-                };
 
-            hue.getGroup(999)
-                .then(_waitForBridge)
-                .then(failTest)
-                .fail(checkError)
-                .done();
-        });
-    });
+        describe("#createGroup #deleteGroup", function () {
 
+            describe("should create a group and then delete it", function () {
 
-    describe("#createGroup", function () {
-        it("should create a new group", function (finished) {
-            //TODO there appears to be a limit of 16 chars, unless there is a duplicate of the name, in which case a " x" is added where x is a number
-            var groupName = "NodejsApiTest",
-                createdGroupId,
+                var groupName = "NodejsApiTest";
 
-                checkResults = function (result) {
-                    expect(result).to.have.property("id");
-                    createdGroupId = result.id;
-                    return createdGroupId;
-                },
+                it("using #promise", function (finished) {
+                    var createdGroupId;
 
-                loadGroupDetails = function (id) {
-                    return hue.getGroup(id);
-                },
+                    function checkResults(result) {
+                        expect(result).to.have.property("id");
+                        createdGroupId = result.id;
+                        return createdGroupId;
+                    }
 
-                validateCreatedGroup = function (group) {
-                    expect(group).to.have.property("id").to.equal(createdGroupId);
+                    function loadGroupDetails(id) {
+                        return hue.getGroup(id);
+                    }
 
-                    // if a duplicate is found a " x" will be appended hence why this check is not equals
-                    expect(group).to.have.property("name").to.have.string(groupName);
+                    function validateCreatedGroup(group) {
+                        expect(group).to.have.property("id").to.equal(createdGroupId);
 
-                    expect(group).to.have.property("lights").to.be.instanceOf(Array);
-                    expect(group.lights).to.contain("1", "2", "3"); //TODO extract as variable
-                    finished();
-                };
+                        // if a duplicate is found a " x" will be appended hence why this check is not equals
+                        expect(group).to.have.property("name").to.have.string(groupName);
 
-            hue.createGroup(groupName, [1, "2", "3"])
-                .then(_waitForBridge)
-                .then(checkResults)
-                .then(loadGroupDetails)
-                .then(validateCreatedGroup)
-                .done();
-        });
-    });
+                        expect(group).to.have.property("lights").to.be.instanceOf(Array);
+                        expect(group.lights).to.contain("1", "2", "3"); //TODO extract as variable
+                    }
 
+                    function deleteGroup() {
+                        return hue.deleteGroup(createdGroupId);
+                    }
 
-    describe("#deleteGroup", function () {
-        it("should delete a group", function (finished) {
-            var groupId,
-                validateDeletion = function (result) {
-                    expect(result).to.be.true;
-                    //TODO check that the group id no longer exists
-                    finished();
-                },
+                    function validateDeletion() {
+                        return hue.getGroup(createdGroupId)
+                            .then(function () {
+                                      expect.fail("Should not be called");
+                                  })
+                            .fail(function (err) {
+                                      expect(err.message).to.contain("resource, /groups/" + createdGroupId);
+                                      expect(err.message).to.contain("not available");
+                                  });
+                    }
 
-                deleteGroup = function (group) {
-                    groupId = group.id;
-                    return hue.deleteGroup(groupId).then(validateDeletion);
-                };
+                    function complete() {
+                        finished();
+                    }
 
-            hue.createGroup("to_delete", 1)
-                .then(_waitForBridge)
-                .then(deleteGroup)
-                .done();
-        });
-    });
+                    // A Round Robin trip through creating a group, validating it and then deleting it and checking for
+                    // removal. This covers create and delete API functions.
+                    hue.createGroup(groupName, ["1", "2", "3"])
+                        .then(_waitForBridge)
+                        .then(checkResults)
+                        .then(loadGroupDetails)
+                        .then(validateCreatedGroup)
+                        .then(deleteGroup)
+                        .then(_waitForBridge)
+                        .then(validateDeletion)
+                        .then(complete)
+                        .done();
+                });
 
-    describe("#updateGroup", function () {
-
-        it("should update the name of a group", function (finished) {
-            var validateName = function (group) {
-                    return hue.getGroup(group.id)
-                        .then(function (details) {
-                                  expect(details.name).to.have.string("test-Rename");
-                                  return details.id;
-                              });
-                },
-
-                changeName = function (id) {
-                    return hue.updateGroup(id, "test-Renamed")
-                        .then(function (result) {
-                                  expect(result).to.be.true;
-                                  return id;
-                              });
-                },
-
-                validateRename = function (id) {
-                    return hue.getGroup(id)
-                        .then(function (details) {
-                                  expect(details.name).to.have.string("test-Renamed");
-                                  finished();
-                              });
-                };
-
-            hue.createGroup("test-Rename", 1)
-                .then(_waitForBridge)
-                .then(validateName)
-                .then(changeName)
-                .then(validateRename)
-                .done();
+                //TODO test this with a callback
+//            it("using #callback", function (finished) {
+//
+//            });
+            });
         });
 
-        it("should update the lights in a group", function (finished) {
-            var validateLights = function (group) {
-                    return hue.getGroup(group.id)
-                        .then(function (details) {
-                                  expect(details.lights).to.have.length(3);
-                                  expect(details.lights).to.contain("1", "2", "3");
-                                  return group.id;
-                              });
-                },
 
-                changeLights = function (id) {
-                    return hue.updateGroup(id, [3, 4, 5])
-                        .then(function (result) {
-                                  expect(result).to.be.true;
-                                  return id;
-                              });
-                },
+        describe("#updateGroup", function () {
 
-                validateChangedLights = function (id) {
-                    return hue.getGroup(id)
-                        .then(function (details) {
-                                  expect(details.lights).to.have.length(3);
-                                  expect(details.lights).to.contain("3", "4", "5");
-                                  finished();
-                              });
-                };
+            var origName = "UpdateTests",
+                origLights = ["1", "2"],
+                groupId;
 
-            hue.createGroup("test-LightIds", [1, 2, 3])
-                .then(_waitForBridge)
-                .then(validateLights)
-                .then(changeLights)
-                .then(validateChangedLights)
-                .done();
+            // Create a group to test on
+            beforeEach(function (finished) {
+
+                hue.createGroup(origName, origLights)
+                    .then(function (result) {
+                              groupId = result.id;
+                              finished();
+                          })
+                    .done();
+            });
+
+            // Remove the created group after each test
+            afterEach(function (finished) {
+
+                hue.deleteGroup(groupId)
+                    .then(function () {
+                              finished();
+                          })
+                    .done();
+            });
+
+            function getGroup() {
+                return hue.getGroup(groupId);
+            }
+
+
+            describe("using #promise", function () {
+
+                it("should update only the name of a group", function (finished) {
+                    function validateRename(details) {
+                        // Name changed
+                        expect(details.name).to.have.string("promiseRename");
+                        // Lights Unchanged
+                        expect(details.lights).to.have.length(2);
+                        expect(details.lights).to.contain("1", "2");
+                    }
+
+                    hue.updateGroup(groupId, "promiseRename")
+                        .then(_waitForBridge)
+                        .then(getGroup)
+                        .then(validateRename)
+                        .then(finished)
+                        .done();
+                });
+
+                it("should update only the lights in a group", function (finished) {
+                    function validateLightsChange(details) {
+                        // Name unchanged
+                        expect(details.name).to.have.string(origName);
+                        // Lights changed
+                        expect(details.lights).to.have.length(2);
+                        expect(details.lights).to.contain("1", "4");
+                    }
+
+                    hue.updateGroup(groupId, ["1", "4"])
+                        .then(_waitForBridge)
+                        .then(getGroup)
+                        .then(validateLightsChange)
+                        .then(finished)
+                        .done();
+                });
+
+                it("should update name and lights in a group", function (finished) {
+                    function validateUpdate(details) {
+                        expect(details.name).to.have.string("pSecondRename");
+
+                        expect(details.lights).to.have.length(2);
+                        expect(details.lights).to.contain("4", "5");
+                    }
+
+                    hue.updateGroup(groupId, "pSecondRename", ["4", "5"])
+                        .then(_waitForBridge)
+                        .then(getGroup)
+                        .then(validateUpdate)
+                        .then(finished)
+                        .done();
+                });
+            });
+
+
+            describe("using #callback", function () {
+                //TODO duplicate above tests
+            });
         });
 
-        it("should update name and light ids", function (finished) {
-            var validateGroup = function (group) {
-                    return hue.getGroup(group.id)
-                        .then(function (details) {
-                                  expect(details.name).to.have.string("test-all");
-                                  expect(details.lights).to.have.length(1);
-                                  expect(details.lights).to.contain("1");
-                                  return group.id;
-                              });
-                },
+        describe("#setGroupLightState", function () {
 
-                changeGroup = function (id) {
-                    return hue.updateGroup(id, "test-yall", [2, 3])
-                        .then(function (result) {
-                                  expect(result).to.be.true;
-                                  return id;
-                              });
-                },
+            describe("using #promise", function (finished) {
+                hue.setGroupLightState(0, lightState.create().off())
+                    .then(function (result) {
+                              expect(result).to.be.true;
+                              finished();
+                          })
+                    .done();
+            });
 
-                validateGroupChange = function (id) {
-                    return hue.getGroup(id)
-                        .then(function (details) {
-                                  expect(details.name).to.have.string("test-yall");
-                                  expect(details.lights).to.have.length(2);
-                                  expect(details.lights).to.contain("2", "3");
-                                  finished();
-                              });
-                };
-
-            hue.createGroup("test-all", [1])
-                .then(_waitForBridge)
-                .then(validateGroup)
-                .then(changeGroup)
-                .then(_waitForBridge)
-                .then(validateGroupChange)
-                .done();
         });
 
-        it("should fail on invalid group", function (finished) {
-            var failIfCalled = function () {
-                    expect.fail("The function call should have produced an error for invalid group id");
-                    finished();
-                },
+// TODO include these tests
+//
+//    describe("#updateGroup", function () {
+//
+//        it("should fail on invalid group", function (finished) {
+//            var failIfCalled = function () {
+//                    expect.fail("The function call should have produced an error for invalid group id");
+//                    finished();
+//                },
+//
+//                checkError = function (err) {
+//                    expect(err.type).to.equal(3);
+//                    expect(err.message).to.contain("resource,");
+//                    expect(err.message).to.contain("not available");
+//                    finished();
+//                };
+//
+//            hue.updateGroup(99, "a name")
+//                .then(_waitForBridge)
+//                .then(failIfCalled)
+//                .fail(checkError)
+//                .done();
+//        });
+//    });
 
-                checkError = function (err) {
-                    expect(err.type).to.equal(3);
-                    expect(err.message).to.contain("resource,");
-                    expect(err.message).to.contain("not available");
-                    finished();
-                };
-
-            hue.updateGroup(99, "a name")
-                .then(_waitForBridge)
-                .then(failIfCalled)
-                .fail(checkError)
-                .done();
-        });
     });
 });
 
 // We have to wait for the Bridge to actually process the changes, so this function helps slow the tests.
 function _waitForBridge(id) {
-    "use strict";
     var deferred = Q.defer();
 
     setTimeout(function () {
                    deferred.resolve(id);
                },
-               1000);
+               1500);
 
     return deferred.promise;
 }

@@ -1,6 +1,6 @@
 {
 	"name"        : "node-hue-api",
-	"version"     : "0.1.4",
+	"version"     : "0.2.0",
 	"author"      : "Peter Murray <peter.murray@osirisoft.com>",
 	"contributors": [
 		{
@@ -32,7 +32,7 @@
 		"q"       : "0.9.3",
 		"q-io"    : "1.6.5",
 		"parseUri": "1.2.3-2",
-		"MD5"     : "1.0.3"
+        "traits"  : "0.4.0"
 	},
 
 	"devDependencies": {
