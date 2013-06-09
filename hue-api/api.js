@@ -246,6 +246,11 @@ HueApi.prototype.updateGroup = function (groupId, name, lightIds) {
         throw new errors.ApiError("Group Id '" + groupId + "' is not valid for the bridge");
     }
 
+    // Protect the default implicit all lights group from being updated
+    if (groupId === 0 || groupId === "0") {
+        throw new errors.ApiError("Cannot update the 'All Lights' default group");
+    }
+
     var parseResults = function (result) {
             if (!_wasSuccessful(result)) {
                 throw new errors.ApiError(_parseErrors(result).join(", "));
@@ -315,7 +320,7 @@ HueApi.prototype.createGroup = function (name, lightIds) {
  */
 HueApi.prototype.deleteGroup = function (id) {
     // Protect the default implicit all lights group from being deleted (not sure if this is even possible, but do not want to risk it)
-    if (id === 0) {
+    if (id === 0 || id === "0") {
         throw new errors.ApiError("Cannot delete the 'All Lights' default group");
     }
 
@@ -750,7 +755,7 @@ function _isLightIdValid(id) {
 }
 
 function _isGroupIdValid(id) {
-    if (parseInt(id, 10) > 0) {
+    if (parseInt(id, 10) >= 0) {
         //TODO: check group is valid
         //Keep in mind, group 0 is always valid, stands for ALL lights known by hue bridge
         return true;
