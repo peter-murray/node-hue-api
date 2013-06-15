@@ -5,11 +5,8 @@
 - Major refactoring to support API methods as Traits (makes maintaining end points easier)
 - Expanded test coverage to cover all the exposed API methods (including promises and callbacks)
 - Change to http promise invocation to support Trait end points
-
 - ``locateBridges()`` replaced with Phillips API backend call for increased speed
 - original 0.1.x version of ``locateBridges()`` changed to ``searchForBridges()``
--
-
 - Removed the groupId from ``setLightState()`` and introduced a ``setGroupLightState()`` function to support groups
 
 
