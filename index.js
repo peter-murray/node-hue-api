@@ -4,7 +4,6 @@
 // This wrapper is to provide some continuity in the modifications of the APIs over time
 //
 
-
 module.exports.HueApi = require("./hue-api/index.js");
 
 module.exports.locateBridges = require("./hue-api/bridge-discovery").locateBridges;

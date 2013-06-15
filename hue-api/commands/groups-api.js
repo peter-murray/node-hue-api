@@ -145,7 +145,7 @@ function _processCreateGroup (result) {
 }
 
 function _ensureSuccessful(result) {
-    console.log(JSON.stringify(result));
+//    console.log(JSON.stringify(result));
     if (!utils.wasSuccessful(result)) {
         throw new ApiError(utils.parseErrors(result).join(", "));
     }

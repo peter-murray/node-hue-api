@@ -51,6 +51,20 @@ HueApi.prototype.config = function (cb) {
 HueApi.prototype.connect = HueApi.prototype.config;
 
 /**
+ * Obtains the complete state for the Bridge. This is considered to be a very expensive operation and should not be invoked
+ * frequently. The results detail all config, users, groups, schedules and lights for the system.
+ *
+ * @param cb An optional callback function if you don't want to be informed via a promise.
+ * @returns {Q.promise} A promise with the result, or {null} if a callback function was provided
+ */
+HueApi.prototype.getFullState = function(cb) {
+    var options = _defaultOptions(this),
+        promise = http.invoke(configurationApi.getFullState, options);
+
+    return utils.promiseOrCallback(promise, cb);
+};
+
+/**
  * Allows a new user/device to be registered with the Philips Hue Bridge. This will return the name of the user that was
  * created by the function call.
  *
@@ -398,8 +412,6 @@ HueApi.prototype.updateGroup = function (id, name, lightIds, cb) {
     if (!promise && !options.values.lights && !options.values.name) {
         promise = _errorPromise("A name or array of lightIds must be provided");
     }
-
-    console.log(JSON.stringify(options));//TODO remove
 
     if (!promise) {
         promise = http.invoke(groupsApi.setGroupAttributes, options);

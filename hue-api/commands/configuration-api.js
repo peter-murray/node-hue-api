@@ -94,6 +94,7 @@ apiTraits.getFullState = Trait.compose(
 module.exports = {
     "createUser"         : Trait.create(Object.prototype, apiTraits.createUser),
     "getConfiguration"   : Trait.create(Object.prototype, apiTraits.getConfiguration),
+    "getFullState"       : Trait.create(Object.prototype, apiTraits.getFullState),
     "modifyConfiguration": Trait.create(Object.prototype, apiTraits.modifyConfiguration),
     "deleteUser"         : Trait.create(Object.prototype, apiTraits.deleteUser)
 };

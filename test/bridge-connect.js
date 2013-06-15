@@ -1,4 +1,4 @@
-var api = require("../index.js").hue,
+var api = require("../index.js"),
     testValues = require("./support/testValues.js"),
     expect = require("chai").expect;
 

@@ -6,17 +6,31 @@ Philips Living Color Lamps.
 This library abstracts away the actual Philips Hue Bridge REST API and provides all of the features of the Phillips API and
 a number of useful functions to control the lights and bridge remotely.
 
-The library has undergone a large update for version `0.2.x`, where it now supports `callbacks` and Q `promises` for the
+The library has undergone a large update for version ``0.2.x``, where it now supports ``callbacks`` and Q ``promises`` for the
 functions of the API.
 So for each function in the API, if a callback is provided, then a callback will be used to return any results
 or notification of success, in a true Node.js fashion. If the callback is omitted then a promise will be returned for
 use in chaining or in most cases simpler handling of the results.
 
-When using Q `promises`, it is necessary to call `done()` on any promises that are returned, otherwise errors can be
+When using Q ``promises``, it is necessary to call ``done()`` on any promises that are returned, otherwise errors can be
 swallowed silently.
 
 ## Change Log
-[Changes](ChangeLog.md)
+For a list of changes, please refer to the change log;
+[Changes](Changelog.md)
+
+Please note that a number of breaking changes have occurred in moving from version 0.1.x to 0.2.x, but these were necessary to
+provide more consistency in the API and to ensure that moving forward the library will be able to better adjust to changes
+in the firmware of the Phillips Hue Bridge.
+
+
+## Work In Progress
+There is still some work to be done around completing the ability to define schedules in a bette way that properly
+validates the command that is to be run as part of the schedule. With the changes introduced in version ``0.2.0`` of this
+library it should be easier to accomplish in an upcoming release.
+
+The public API as of version 0.2.0+ is close to complete (at least for the current version of the Phillips Hue Bridge firmware),
+and as such there will be no breaking changes to the library that has occurred in moving from version ``0.1.x`` to ``0.2.x``.
 
 
 ## Philips Hue Resources
@@ -73,6 +87,7 @@ The results from this call will be of the form;
 Hue Bridges Found: [{"id":"001788fffe096103","ipaddress":"192.168.2.129"}]
 ```
 
+
 #### searchForBridges()
 This API function utilizes a network scan for the SSDP responses of devices on a network. It is the only method that does not
 support callbacks, and is only in the API as a fallback since Phillips provided a quicker discovery method once the API was
@@ -108,73 +123,132 @@ Ths library offer two functions to register new devices/users with the Hue Bridg
 
 
 ### Bridge Configuration
-You can obtain a summary of the configuration of the Bridge using the ``config()`` function;
+You can obtain a summary of the configuration of the Bridge using the ``config()`` or ``connect()`` functions;
 
 ```js
-var HueApi = require("node-hue-api").hue.HueApi;
+var HueApi = require("node-hue-api").HueApi;
 
-var hostname = "192.168.2.129",
-	username = "08a902b95915cdd9b75547cb50892dc4";
-
-var displayBridges = function(config) {
-	console.log("Bridge Configuration: " + JSON.stringify(config));
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
 };
 
-var hue = new HueApi(hostname, username);
+var hostname = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api;
+
+api = new HueApi(hostname, username);
 
 // --------------------------
 // Using a promise
-hue.config().then(displayBridges).done();
+api.connect().then(displayResult).done();
 
 // --------------------------
 // Using a callback
-hue.config(function(err, config) {
-	if (err) throw err;
-	displayBridges(config);
+api.connect(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
 });
 ```
-This will provide results detailing the configuration of the bridge (IP Address, Name, Link Button Status, Defined Users, etc...).
+
+This will provide results detailing the configuration of the bridge (IP Address, Name, Link Button Status, Defined Users, etc...);
+```
+{
+  "name": "Philips hue",
+  "mac": "00:x:xx:xx:xx:xx",
+  "dhcp": true,
+  "ipaddress": "192.168.2.129",
+  "netmask": "255.255.255.0",
+  "gateway": "192.168.2.1",
+  "proxyaddress": "none",
+  "proxyport": 0,
+  "UTC": "2013-06-15T13:20:08",
+  "whitelist": {
+    "51780342fd7746f2fb4e65c30b91d7": {
+      "last use date": "2013-05-29T20:29:51",
+      "create date": "2013-05-29T20:29:51",
+      "name": "Node.js API"
+    },
+    "08a902b95915cdd9b75547cb50892dc4": {
+      "last use date": "1987-01-06T22:53:37",
+      "create date": "2013-04-02T13:39:18",
+      "name": "Node Hue Api Tests User"
+    }
+  },
+  "swversion": "01005825",
+  "swupdate": {
+    "updatestate": 0,
+    "url": "",
+    "text": "",
+    "notify": false
+  },
+  "linkbutton": false,
+  "portalservices": true
+}
+```
+
+If you invoke the ``config()`` or ``connect()`` functions with an invalid user account (i.e. one that is not valid) then
+results of the name and software version will be returned from the bridge with no other information;
+```
+{
+  "name": "Philips hue",
+  "swversion": "01005825"
+}
+```
+For this reason, if you want to validate that the user account used to connect to the bridge is correct, you will have to
+look for a field that is not present in the above result, like the ``mac``, ``ipaddress`` or ``linkbutton`` would be good
+properties to check.
 
 
 ### Registering without an existing Device/User ID
-This method is useful for creating a new user when you have only just discovered your Hue Bridge and do not know the existing device/user IDs.
+A user can be registered on the Bridge using ``registerUser()`` or ``createUser()`` functions. This is useful when you have not got
+an existing user account on the Bridge to use to access its protected functions.
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
 var hostname = "192.168.2.129",
-	newUserName = "a username",
-	userDescription = "device description goes here";
+    newUserName = null // You can provide your own username value, but it is normally easier to leave it to the Bridge to create it
+    userDescription = "device description goes here";
 
+var displayUserResult = function(result) {
+    console.log("Created user: " + JSON.stringify(result));
+};
+
+var displayError = function(err) {
+    console.log(err);
+};
+
+var hue = new HueApi();
+
+// --------------------------
+// Using a promise
 hue.registerUser(hostname, newUserName, userDescription)
-	.then(displayResultFunction)
-	.fail(displayErrorFunction)
-	.done();
+    .then(displayUserResult)
+    .fail(displayError)
+    .done();
+
+// --------------------------
+// Using a callback (with default description and auto generated username)
+hue.createUser(hostname, null, null, function(err, user) {
+	if (err) throw err;
+	displayUserResult(user);
+});
 ```
 
-### Registering a New Device/User ID within the API
-If you want to perform a lookup to ensure that a device/user does not already exist before registering a new device/user, then you can use the registerUser() function when connected to the Hue Bridge as an already approved user.
+If the username value passed in to register a new user is ``null`` or ``undefined`` then the Hue Bridge will create a
+new user with a generated username. It is suggested to allow the bridge to generate this for you automatically.
 
-```js
-var hue = require("node-hue-api").hue;
+The description for the user account is also optional, if you do nto provide one, then the default of "Node.js API" will be set.
 
-var hostname = "192.168.2.129",
-	username = "033a6feb77750dc770ec4a4487a9e8db",
-	newUserName = "a new username",
-	userDescription = "device description goes here",
-	api;
+There is a convenience method, if you have a existing user account when you register a new user, that will programmatically
+press the link button for you. See the details for the function ``pressLinkButton()`` for more details.
 
-api = new hue.HueApi(hostname, username);
-api.registerUser(newUserName, userDescription)
-	.then(displayResultFunction)
-	.fail(displayErrorFunction)
-	.done();
-```
 
-### Registration Output/Error
-When using either of the above registration methods you will get either a hash of the username provided which will be the API username to use, or an error that will likely be due to not pressing the link button on the Bridge.
+#### Registration Output/Error
+When registering a new user you will get the username created, or an error that will likely be due to not pressing the
+link button on the Bridge.
 
-If the link button was NOT pressed on the bridge, then you will get an APIError thrown, which will be captured by the displayError function in the above examples.
+If the link button was NOT pressed on the bridge, then you will get an ``ApiError`` thrown, which will be captured by the displayError function in the above examples.
 ```
 Api Error: link button not pressed
 ```
@@ -183,53 +257,157 @@ If the link button was pressed you should get a response that will provide you w
 ```
 033a6feb77750dc770ec4a4487a9e8db
 ```
-The value returned will be an MD5 hash of the username value passed into the registration function.
 
 
 ### Validating a Connection to a Philips Hue Bridge
-To connect to a Philips Hue Bridge and obtain some basic details about it you can use the connect() function. This function can be used to validate that the host and username is correct before attempting to issue other commands to the Bridge.
+To connect to a Philips Hue Bridge and obtain some basic details about it you can use the ``connect()`` or ``config()``
+functions which were detailed above.
+
+
+### Obtaining the Complete State of the Bridge
+If you have a valid user account in the Bridge, then you can obtain the complete status of the bridge using ``getFullState()``.
+This function is computationally expensive on the bridge and should not be invoked frequently.
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
 var displayResult = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
 var hostname = "192.168.2.129",
-    username = "083b2f780c78555d532b78544f135798",
+    username = "08a902b95915cdd9b75547cb50892dc4",
     api;
 
-api = new hue.HueApi(hostname, username);
-api.connect().then(displayResult).done();
-```
+api = new HueApi(hostname, username);
 
-Running the above code should give you a result similar to;
+// --------------------------
+// Using a promise
+api.getFullState().then(displayResult).done();
+
+// --------------------------
+// Using a callback
+api.getFullState(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+```
+This will produce a JSON response similar to the following (large parts have been removed from the result below);
 ```
 {
-  "name": "Philips hue",
-  "version": "01003542",
-  "linkButton": false,
-  "macAddress": "00:xx:xx:xx:xx:xx",
-  "host": "192.168.2.129"
-}
+  "lights": {
+    "5": {
+      "state": {
+        "on": false,
+        "bri": 0,
+        "hue": 6144,
+        "sat": 254,
+        "xy": [
+          0.6376,
+          0.3563
+        ],
+        "alert": "none",
+        "effect": "none",
+        "colormode": "hs",
+        "reachable": true
+      },
+      "type": "Color light",
+      "name": "Living Color TV",
+      "modelid": "LLC007",
+      "swversion": "4.6.0.8274",
+      "pointsymbol": {
+        "1": "none",
+        "2": "none",
+        "3": "none",
+        "4": "none",
+        "5": "none",
+        "6": "none",
+        "7": "none",
+        "8": "none"
+      }
+    }
+  },
+  "groups": {
+    "1": {
+      "action": {
+        "on": false,
+        "bri": 63,
+        "hue": 65527,
+        "sat": 253,
+        "xy": [
+          0.6736,
+          0.3221
+        ],
+        "ct": 500,
+        "effect": "none",
+        "colormode": "ct"
+      },
+      "lights": [
+        "1",
+        "2",
+        "3"
+      ],
+      "name": "NodejsApiTest"
+    }
+  },
+  "config": {
+  	...
+  	"whitelist": {
+          "51780342fd7746f2fb4e65c30b91d7": {
+            "last use date": "2013-05-29T20:29:51",
+            "create date": "2013-05-29T20:29:51",
+            "name": "Node.js API"
+          },
+          "08a902b95915cdd9b75547cb50892dc4": {
+            "last use date": "1987-01-06T22:53:37",
+            "create date": "2013-04-02T13:39:18",
+            "name": "Node Hue Api Tests User"
+          }
+        },
+	"swversion": "01005825"
+	...
+  },
+  "schedules": {
+    "1": {
+      "name": "Updated Name",
+      "description": "Like anyone really needs a wake up on Xmas day...",
+      "command": {
+        "address": "/api/08a902b95915cdd9b75547cb50892dc4/lights/5/state",
+        "body": {
+          "on": true
+        },
+        "method": "PUT"
+      },
+      "time": "2014-01-01T07:00:30",
+      "created": "1970-01-01T00:00:00"
+    }
+  },
+  "scenes": {}
 ```
 
-
 ### Obtaining Registered Users/Devices
-To obtain the details for all the registered users/devices for a Hue Bridge you can use the registeredUsers() function.
+To obtain the details for all the registered users/devices for a Hue Bridge you can use the ``registeredUsers()`` function.
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
 var displayResult = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
 var hostname = "192.168.2.129";
-var username = "083b2f780c78555d532b78544f135798";
+var username = "08a902b95915cdd9b75547cb50892dc4";
+var api = new HueApi(hostname, username);
 
-var api = new hue.HueApi(hostname, username);
+// --------------------------
+// Using a promise
 api.registeredUsers().then(displayResult).done();
+
+// --------------------------
+// Using a callback
+api.registeredUsers(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
 ```
 This will produce a JSON response that has a root key of "devices" that has an array of registered devices/users for the Bridge. An example of the result is shown below
 ```
@@ -257,24 +435,78 @@ This will produce a JSON response that has a root key of "devices" that has an a
 }
 ````
 
-## Finding the Lights Attached to the Bridge
-To find all the lights that are registered with the Hue Bridge, so that you might be able to interact with them, you can use the lights() function.
+### Deleting a User/Device
+To delete a user or device from the Bridge, you will need an existing user account to authenticate as, and then you can call
+``deleteUser()`` or ``unregisterUser()`` to remove a user from the Bridge Whitelist;
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
+
+var hostname = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4";
+
+var displayUserResult = function(result) {
+    console.log("Deleted user: " + JSON.stringify(result));
+};
+
+var displayError = function(err) {
+    console.log(err);
+};
+
+var hue = new HueApi(hostname, username);
+
+// --------------------------
+// Using a promise
+hue.deleteUser("2b997aae306f15a734d8d1c2315d47cb")
+    .then(displayUserResult)
+    .fail(displayError)
+    .done();
+
+// --------------------------
+// Using a callback
+hue.unregisterUser("1ab7d44219e64c373b4b915e34494443", function(err, user) {
+    if (err) throw err;
+    displayUserResult(user);
+});
+```
+Which will result in a ``true`` result if the user was removed, or an error if any other result occurs (i.e. the user does not exist) as shown below;
+```
+{
+	message: 'resource, /config/whitelist/2b997aae306f15a734d8d1c2315d47cb, not available',
+	type: 3,
+	address: '/config/whitelist/2b997aae306f15a734d8d1c2315d47cb'
+}
+```
+
+
+## Finding the Lights Attached to the Bridge
+To find all the lights that are registered with the Hue Bridge, so that you might be able to interact with them, you can use the ``lights()`` function.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
 
 var displayResult = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
-    username = "033a6feb77750dc770ec4a4487a9e8db",
+    username = "08a902b95915cdd9b75547cb50892dc4",
     api;
 
-api = new hue.HueApi(host, username);
+api = new HueApi(host, username);
+
+// --------------------------
+// Using a promise
 api.lights()
     .then(displayResult)
     .done();
+
+// --------------------------
+// Using a callback
+api.lights(function(err, lights) {
+    if (err) throw err;
+    displayResult(lights);
+});
 ```
 
 This will output a JSON object that will provide details of the lights that the Hue Bridge knows about;
@@ -331,20 +563,34 @@ The LightState object provides a simple way to build up JSON object to set multi
 
 To turn on a light and set it to a warm white color;
 ```js
-var hue = require("node-hue-api").hue,
-    lightState = require("node-hue-api").lightState;
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi,
+    lightState = hue.lightState;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
 
 var host = "192.168.2.129",
-    username = "033a6feb77750dc770ec4a4487a9e8db",
-    api = new hue.HueApi(host, username),
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
     state;
 
 // Set light state to 'on' with warm white value of 500 and brightness set to 100%
 state = lightState.create().on().white(500, 100);
 
-// Set the lamp with id '2' to on
-api.setLightState(2, state)
+// --------------------------
+// Using a promise
+api.setLightState(5, state)
+    .then(displayResult)
     .done();
+
+// --------------------------
+// Using a callback
+api.setLightState(5, state, function(err, lights) {
+    if (err) throw err;
+    displayResult(lights);
+});
 ```
 
 The __lightState__ object will ensure that the values passed into the various state functions are correctly bounded to avoid
@@ -359,11 +605,13 @@ state = lightState.create().on().brightness(100).off();
 
 When using __lightState__ it is currently recommended to create a new state object each time you want to build a new state, otherwise you will get a combination of all the previous settings as well as the new values.
 
+
 ## Turning a Light On/Off using LightState
 
 ```js
-var hue = require("node-hue-api").hue,
-    lightState = require("node-hue-api").lightState;
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi,
+    lightState = hue.lightState;
 
 var displayResult = function(result) {
     console.log(result);
@@ -375,8 +623,11 @@ var displayError = function(err) {
 
 var host = "192.168.2.129",
     username = "033a6feb77750dc770ec4a4487a9e8db",
-    api = new hue.HueApi(host, username),
+    api = new HueApi(host, username),
     state = lightState.create();
+
+// --------------------------
+// Using a promise
 
 // Set the lamp with id '2' to on
 api.setLightState(2, state.on())
@@ -389,16 +640,31 @@ api.setLightState(2, state.off())
 	.then(displayResult)
     .fail(displayError)
     .done();
+
+// --------------------------
+// Using a callback
+// Set the lamp with id '2' to on
+api.setLightState(2, state.on(), function(err, result) {
+	if (err) throw err;
+	displayResult(result);
+});
+
+// Now turn off the lamp
+api.setLightState(2, state.off(), function(err, result) {
+	if (err) throw err;
+	displayResult(result);
+});
 ```
 
-If the function call is successful, then you should get a response of true. If the call fails then an APIError will be generated with the failure details.
+If the function call is successful, then you should get a response of ``true``. If the call fails then an ``ApiError``
+will be generated with the failure details.
 
 
 ## Setting Light States using custom JSON Object
 You can pass in your own JSON object that contain the setting(s) that you wish to pass to the light via the bridge.
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
 var displayResult = function(result) {
     console.log(result);
@@ -409,37 +675,47 @@ var displayError = function(err) {
 };
 
 var host = "192.168.2.129",
-    username = "033a6feb77750dc770ec4a4487a9e8db",
+    username = "08a902b95915cdd9b75547cb50892dc4",
     api;
 
-api = new hue.HueApi(host, username);
+api = new HueApi(host, username);
 api.setLightState(2, {"on": true}) // provide a value of false to turn off
     .then(displayResult)
     .fail(displayError)
     .done();
 ```
 
-If the function call is successful, then you should get a response of true. If the call fails then an APIError will be generated with the failure details.
+If the function call is successful, then you should get a response of true. If the call fails then an ``ApiError`` will be generated with the failure details.
 
 
 ## Getting the Current Status/State for a Light
 To obtain the current state of a light from the Hue Bridge you can use the __lightStatus()__ function;
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
 var displayStatus = function(status) {
     console.log(JSON.stringify(status, null, 2));
 };
 
 var host = "192.168.2.129",
-    username = "033a6feb77750dc770ec4a4487a9e8db",
-    api = new hue.HueApi(host, username);
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username);
 
-// Obtain the Status of Light '2'
-api.lightStatus(2)
+// Obtain the Status of Light '5'
+
+// --------------------------
+// Using a promise
+api.lightStatus(5)
     .then(displayStatus)
     .done();
+
+// --------------------------
+// Using a callback
+api.lightStatus(5, function(err, result) {
+    if (err) throw err;
+    displayStatus(result);
+});
 ```
 
 This will produce a JSON object detailing the status of the lamp;
@@ -477,26 +753,138 @@ This will produce a JSON object detailing the status of the lamp;
 }
 ```
 
+### Searching for New Lights
+When you have added new lights to the system, you need to invoke a search to discover these new lights to allow the Bridge
+to interact with them. The ``searchForNewLights()`` function will invoke a search for any new lights to be added to the
+system.
+
+When you invoke a scan for any new lights in the system, the previous search results are destroyed.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username);
+
+// --------------------------
+// Using a promise
+api.searchForNewLights()
+	.then(displayResults)
+	.done();
+
+// --------------------------
+// Using a callback
+api.searchForNewLights(function(err, result) {
+	if (err) throw err;
+	displayResults(result);
+});
+```
+The result from this call should be ``true`` if a search was successfully triggered. It can take some time for the search
+to complete.
+
+### Obtaining Newly Discovered Lights
+Once a search has been completed, then the newly discovered lights can be obtained using the ``newLights()`` call.
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username);
+
+// --------------------------
+// Using a promise
+api.newLights()
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.newLights(function(err, result) {
+    if (err) throw err;
+    displayResults(result);
+});
+```
+The results from this call should be the new lights that were found during the previous search, and a ``lastscan`` value
+that will be the date that the last scan was performed, which could be ``none`` if a search has never been performed.
+```
+{
+  "lastscan": "2013-06-15T14:45:23"
+}
+```
+
+### Naming Lights
+It is possible to name a light using the ``setLightName()`` function;
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username);
+
+// --------------------------
+// Using a promise
+api.setLightName(5, "A new Name")
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.setLightName(5, "Living Color TV", function(err, result) {
+    if (err) throw err;
+    displayResults(result);
+});
+```
+If the call is successful, then ``true`` will be returned by the function call, otherwise a ``ApiError`` will result.
+
+
 ## Working with Groups
+The Groups API for the Phillips Hue Bridge is not complete at this time, with some of API endpoints not officially
+supported yet. This API does attempt to provide functions to invoke these end points, but in testing, some of them have
+been identified as being problematic, in that they report success, but nothing on the actual Bridge changes. In most of
+these cases, restarting the Bridge (pulling the power cable) resulted in the calls working again for a short period of
+time. Your mileage may vary if you are creating and modifying these newly created groups...
 
 ### Obtaining all Groups from the Bridge
 To obtain all the groups defined in the bridge use the __groups()__ function;
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
-var displayGroups = function(groups) {
-    console.log(JSON.stringify(groups, null, 2));
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
-    username = "033a6feb77750dc770ec4a4487a9e8db",
-    api = new hue.HueApi(host, username);
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username);
 
 // Obtain all the defined groups in the Bridge
+
+// --------------------------
+// Using a promise
 api.groups()
-    .then(displayGroups)
+    .then(displayResults)
     .done();
+
+// --------------------------
+// Using a callback
+api.groups(function(err, result) {
+    if (err) throw err;
+    displayResults(result);
+});
 ```
 
 This will produce an array of values detailing the id and names of the groups;
@@ -521,19 +909,28 @@ To obtain the details of the lights that make up a group (and some extra informa
 use the __getGroup(id)__ function.
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
-var displayGroup = function(group) {
-    console.log(JSON.stringify(group, null, 2));
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username);
+    api = new HueApi(host, username);
 
+// --------------------------
+// Using a promise
 api.getGroup(0)
-    .then(displayGroup)
+    .then(displayResults)
     .done();
+
+// --------------------------
+// Using a callback
+api.getGroup(0, function(err, result) {
+    if (err) throw err;
+    displayResults(result);
+});
 ```
 
 Which will return produce a result like;
@@ -564,68 +961,109 @@ Which will return produce a result like;
 }
 ```
 
+### Setting the Light State for a Group
+A function ``setGroupLightState()`` exists for interacting with a group of lights to be able to set all the lights to a
+particular state. This function is identical to that of the ``setLightState()`` function above, except that it works on
+groups instead of a single light.
+
+In the early versions of this library the group and individual lights were controlled via a single ``setLightState()``
+function, but this has been removed from version _0.2.x_ as it was not clear that a single boolean changed the target for the
+function invocation which felt wrong.
+
 
 ### Updating a Group
 It is possible to update the associated lights and the name of a group after it has been created on the bridge. The function
-__updateGroup(groupId, name, lightIds)__ allows you to do this.
+``updateGroup()`` allows you to do this.
 
 You can set the name, the lightIds or both with this function, just omit what you do not want to set, it will work out which
 parameter was passed based on type, a String for the name and an array for the light ids.
 
-If the update is successful __true__ will be returned in the promise chain, otherwise an error will be thrown.
+When invoking this function ``true`` will be returned if the Bridge accepts the requested change, but under some circumstances
+if the group has just been created, then Bridge reports success, but does not actually change the configuration details. In these
+cases, a restart of the Bridge might resolve the issue.
 
 Changing the name of an existing group;
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
-var displayResult = function(result) {
-    console.log("Updated Successfully? " + result);
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username);
+    api = new HueApi(host, username);
 
 // Update the name of the group
-api.updateGroup(5, "new group name")
-    .then(displayResult)
+
+// --------------------------
+// Using a promise
+api.updateGroup(1, "new group name")
+    .then(displayResults)
     .done();
+
+// --------------------------
+// Using a callback
+api.updateGroup(1, "new group name", function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
 ```
 
 Changing the lights associated with an existing group;
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
-var displayResult = function(result) {
-    console.log("Updated Successfully? " + result);
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username);
+    api = new HueApi(host, username);
 
 // Update the lights in the group to ids 1, 2, and 3.
-api.updateGroup(5, [1, 2, 3])
-    .then(displayResult)
+
+// --------------------------
+// Using a promise
+api.updateGroup(1, [1, 2, 3])
+    .then(displayResults)
     .done();
+
+// --------------------------
+// Using a callback
+api.updateGroup(1, [1, 2, 3], function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
 ```
 
 Changing both the name and the lights for an existing group;
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
-var displayResult = function(result) {
-    console.log("Updated Successfully? " + result);
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username);
+    api = new HueApi(host, username);
 
-// Update the name of the group and the light ids to 4 and 5.
-api.updateGroup(5, "new group name", [4, 5])
-    .then(displayResult)
+// Update both the name and the lights in the group to ids 4, 5.
+
+// --------------------------
+// Using a promise
+api.updateGroup(1, "group name", [4, 5])
+    .then(displayResults)
     .done();
+
+// --------------------------
+// Using a callback
+api.updateGroup(1, "group name", [4, 5], function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
 ```
 
 
@@ -636,19 +1074,30 @@ tested on a Hue Bridge, but use at your own risk *(you may have to reset the bri
 To create a new group use the __createGroup(name, lightIds)__ function;
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
-var displayResult = function(result) {
+var displayResults = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username);
+    api = new HueApi(host, username);
 
-api.createGroup("A Group Name", [1, 2, 3])
-    .then(displayResult)
+// Create a new Group on the bridge
+
+// --------------------------
+// Using a promise
+api.createGroup("a new group", [4, 5])
+    .then(displayResults)
     .done();
+
+// --------------------------
+// Using a callback
+api.createGroup("group name", [1, 4, 5], function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
 ```
 
 The function will return a promise with a result that contains the id of the newly created group;
@@ -664,49 +1113,68 @@ The deletion of groups is not officially supported in the released Hue API from 
 possible to delete groups, but use at your own risk *(you may have to reset the bridge to factory defaults if something
 goes wrong)*.
 
-To delete a group use the __deleteGroup(id)__ function;
+To delete a group use the ``deleteGroup()`` function;
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
-var displayResult = function(result) {
-    console.log("Deleted Group? " + result);
-};
-
-var host = "192.168.2.129",
-    username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username);
-
-api.deleteGroup(10)
-    .then(displayResult)
-    .done();
-```
-
-This function call will return a __true__ result in the promise chain if successful, otherwise an error will be thrown.
-
-
-## Working with Schedules
-
-### Obtaining all the Defined Schedules
-To obtain all the defined schedules on the Hue Bridge use the __schedules()__ function.
-
-```js
-var hue = require("node-hue-api").hue;
-
-var displayResult = function (result) {
+var displayResults = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username);
+    api = new HueApi(host, username);
 
-api.schedules()
-    .then(displayResult)
+// Create a new Group on the bridge
+
+// --------------------------
+// Using a promise
+api.deleteGroup(3)
+    .then(displayResults)
     .done();
+
+// --------------------------
+// Using a callback
+api.deleteGroup(4, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+```
+This function call will return a ``true`` result in the promise chain if successful, otherwise an error will be thrown.
+
+
+## Working with Schedules
+
+### Obtaining all the Defined Schedules
+To obtain all the defined schedules on the Hue Bridge use the ``schedules()`` function.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username);
+
+// --------------------------
+// Using a promise
+api.schedules()
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.schedules(function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
 ```
 
-The function will return a promise that will provide an array of objects of __id__ and __name__ for each schedule;
+The function will return a promise that will provide an array of objects of ``id`` and ``name`` for each schedule;
 ```
 [
   {
@@ -721,23 +1189,32 @@ The function will return a promise that will provide an array of objects of __id
 ```
 
 ### Obtaining the details of a Schedule
-To obtain the details of a schedule use the __getSchedule(id)__ function;
+To obtain the details of a schedule use the ``getSchedule(id)`` function;
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
-var displayResult = function (result) {
+var displayResults = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username),
+    api = new HueApi(host, username),
     scheduleId = 1;
 
+// --------------------------
+// Using a promise
 api.getSchedule(scheduleId)
-    .then(displayResult)
+    .then(displayResults)
     .done();
+
+// --------------------------
+// Using a callback
+api.getSchedule(scheduleId, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
 ```
 
 The promise returned by the function will return the details of the schedule in the following format;
@@ -762,23 +1239,23 @@ Creating a schedule requires just two elements, a time at which to trigger the s
 triggered when the schedule is run.
 There are other optional values of a name and a description that can be provided to make the schedule easier to identify.
 
-There are two functions that can be invoked to create a new schedule;
-- __scheduleEvent(event)__
-- __createSchedule(event)__
+There are two functions that can be invoked to create a new schedule (which are identically implemented);
+- ``scheduleEvent(event, cb)``
+- ``createSchedule(event, cb)``
 
 These functions both take an object the wraps up the scheduled event to be created. There are only two required properties
-of the object, __time__ and __command__, with option properties __name__ and __description__.
+of the object, ``time`` and ``command``, with option properties ``name`` and ``description``.
 
 ```js
-var hue = require("node-hue-api").hue;
+var HueApi = require("node-hue-api").HueApi;
 
-var displayResult = function (result) {
+var displayResults = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username),
+    api = new HueApi(host, username),
     scheduledEvent;
 
 scheduledEvent = {
@@ -794,27 +1271,36 @@ scheduledEvent = {
     }
 };
 
-api.createSchedule(scheduledEvent)
-    .then(displayResult)
+// --------------------------
+// Using a promise
+api.scheduleEvent(scheduledEvent)
+    .then(displayResults)
     .done();
+
+// --------------------------
+// Using a callback
+api.createSchedule(scheduledEvent, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
 ```
 
-The result returned by the promise when creating a new schedule will be that of the __id__ for the newly created schedule;
+The result returned by the promise when creating a new schedule will be that of the ``id`` for the newly created schedule;
 ```
 {
   "id": "1"
 }
 ```
 
-The __command__ value must be a Hue Bridge API endpoint for it to correctly function, which means it must start with
-__/api/<valid username>/__. For now if using this function, you will have to use the exact API end point as specified in
-the Phillips Hue REST Api.
+The ``command`` value must be a Hue Bridge API endpoint for it to correctly function, which means it must start with
+``/api/<valid username>/``. For now if using this function, you will have to use the exact API end point as specified in
+the Phillips Hue REST API.
 
 To help with building a schedule and to perform some basic checking to ensure that values are correct/valid there is a
-helper module __scheduleEvent__ which can be used the build a valid schedule object.
+helper module ``scheduleEvent`` which can be used the build a valid schedule object.
 
 ### Using ScheduleEvent to build a Schedule
-The __scheduleEvent__ module/function is used to build up a schedule that the Hue Bridge can understand. It is not a
+The ``scheduleEvent`` module/function is used to build up a schedule that the Hue Bridge can understand. It is not a
 requirement when creating schedules, but can eliminate some of the basic errors that can result when creating a schedule.
 
 To obtain a scheduleEvent instance;
@@ -825,13 +1311,13 @@ var mySchedule = scheduleEvent.create();
 ```
 
 This will give you a schedule object that has the following functions available to build a schedule;
-- __withName(String)__ which will set a name for the schedule (optional)
-- __withDescription(String)__ which will set a description for the schedule (optional)
-- __withCommand(command)__ which will set the command object that the schedule will run
-- __on()__, __at()__, __when()__ which all take a string or Date value to specify the time the schedule will run, if
-passing a string it must be valid when parsed by __Date.parse()__
+- ``withName(String)`` which will set a name for the schedule (optional)
+- ``withDescription(String)`` which will set a description for the schedule (optional)
+- ``withCommand(command)`` which will set the command object that the schedule will run
+- ``on()``, ``at()``, ``when()`` which all take a string or Date value to specify the time the schedule will run, if
+passing a string it must be valid when parsed by ``Date.parse()``
 
-The __command__ object currently has to be specified as the Hue Bridge API documentation states which is of the form;
+The ``command`` object currently has to be specified as the Hue Bridge API documentation states which is of the form;
 ```
 {
 	"address": "/api/08a902b95915cdd9b75547cb50892dc4/lights/5/state",
@@ -841,18 +1327,19 @@ The __command__ object currently has to be specified as the Hue Bridge API docum
     }
 }
 ```
-The above example command will switch on the light with id __5__ for the username __08a902b95915cdd9b75547cb50892dc4__.
+The above example command will switch on the light with id ``5`` for the username ``08a902b95915cdd9b75547cb50892dc4``.
 
-If you use the __withCommand()__ function then the __address__ will be undergo basic validation to ensure it is an
+If you use the ``withCommand()`` function then the ``address`` will be undergo basic validation to ensure it is an
 endpoint for the Hue Bridge which is a common mistake to make when crafting your own values.
 
-Once a scheduleEvent has been built it can be passed directly to the __createSchedule()__, __scheduleEvent()__ or
-__updateSchedule()__ function calls in the Hue API.
+Once a scheduleEvent has been built it can be passEd directly to the ``createSchedule()``, ``scheduleEvent()`` or
+``updateSchedule()`` function calls in the Hue API.
 
 For example to create a new schedule that will turn on the light with id 5 at 07:00 on the 25th December 2013;
 ```js
-var hue = require("node-hue-api").hue;
-var scheduleEvent = require("node-hue-api").scheduledEvent;
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi,
+    scheduleEvent = hue.scheduledEvent;
 
 var displayResult = function (result) {
     console.log(JSON.stringify(result, null, 2));
@@ -860,35 +1347,44 @@ var displayResult = function (result) {
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username),
+    api = new HueApi(host, username),
     mySchedule;
 
 mySchedule = scheduleEvent.create()
     .withName("Xmas Day Wake Up")
     .withDescription("Like anyone really needs a wake up on Xmas day...")
     .withCommand(
-        {
-            "address": "/api/08a902b95915cdd9b75547cb50892dc4/lights/5/state",
-            "method" : "PUT",
-            "body"   : {
-                "on": true
-            }
+    {
+        "address": "/api/08a902b95915cdd9b75547cb50892dc4/lights/5/state",
+        "method" : "PUT",
+        "body"   : {
+            "on": true
         }
-    )
+    })
     .on("2013-12-25T07:00:00");
 
+// --------------------------
+// Using a promise
 api.createSchedule(mySchedule)
     .then(displayResult)
     .done();
+
+// --------------------------
+// Using a callback
+api.createSchedule(mySchedule, function(err, result) {
+    if (err) throw err;
+    displayResult(result);
+});
 ```
 
 
 ### Updating a Schedule
-You can update an existing schedule using the __updateSchedule(id, schedule)__ function;
+You can update an existing schedule using the ``updateSchedule()`` function;
 
 ```js
-var hue = require("node-hue-api").hue;
-var scheduleEvent = require("node-hue-api").scheduledEvent;
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi,
+    scheduleEvent = hue.scheduledEvent;
 
 var displayResult = function (result) {
     console.log(JSON.stringify(result, null, 2));
@@ -896,7 +1392,7 @@ var displayResult = function (result) {
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username),
+    api = new HueApi(host, username),
     scheduleId = 1,
     updatedValues;
 
@@ -905,12 +1401,21 @@ updatedValues = {
     "time": "January 1, 2014 07:00:30"
 };
 
+// --------------------------
+// Using a promise
 api.updateSchedule(scheduleId, updatedValues)
     .then(displayResult)
     .done();
+
+// --------------------------
+// Using a callback
+api.updateSchedule(scheduleId, updatedValues, function(err, result) {
+    if (err) throw err;
+    displayResult(result);
+});
 ```
 
-The result from the promise will be an object with the properties of the schedule that were updated and __true__ as the
+The result from the promise will be an object with the properties of the schedule that were updated and ``true`` as the
 value of each one that was successful.
 ```
 {
@@ -921,11 +1426,12 @@ value of each one that was successful.
 
 
 ### Deleting a Schedule
-All schedules in the Hue Bridge are removed once they are triggered. To remove an impending schedule use the __deleteSchedule(id)__
+All schedules in the Hue Bridge are removed once they are triggered. To remove an impending schedule use the ``deleteSchedule()``
 function;
 
 ```js
-var hue = require("node-hue-api").hue;
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi;
 
 var displayResult = function (result) {
     console.log(JSON.stringify(result, null, 2));
@@ -933,15 +1439,24 @@ var displayResult = function (result) {
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new hue.HueApi(host, username),
+    api = new HueApi(host, username),
     scheduleId = 1;
 
+// --------------------------
+// Using a promise
 api.deleteSchedule(scheduleId)
     .then(displayResult)
     .done();
+
+// --------------------------
+// Using a callback
+api.deleteSchedule(scheduleId, function(err, result) {
+    if (err) throw err;
+    displayResult(result);
+});
 ```
 
-If the deletion was successful, then __true__ will be returned from the promise, otherwise an __ApiError__ will be thrown,
+If the deletion was successful, then ``true`` will be returned from the promise, otherwise an ``ApiError`` will be thrown,
 as in the case if the schedule does not exist.
 
 
