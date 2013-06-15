@@ -24,7 +24,7 @@ function locateBridges(timeout) {
     setTimeout(function() {
         _close(search);
         deferred.resolve(_filterResults(results));
-    }, timeout ? timeout : 5000);
+    }, timeout || 5000);
 
     return deferred.promise;
 }
@@ -59,8 +59,7 @@ function SSDPSearch(timeout) {
 SSDPSearch.prototype.__proto__ = EventEmitter.prototype;
 
 SSDPSearch.prototype.search = function search() {
-    var self = this,
-        ip = "239.255.255.250",
+    var ip = "239.255.255.250",
         port = 1900;
 
     var pkt = new Buffer(_buildSearchPacket(

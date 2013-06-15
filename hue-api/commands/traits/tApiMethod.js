@@ -3,16 +3,14 @@
 var Trait = require("traits").Trait,
     ApiError = require("../../errors").ApiError;
 
-module.exports = function (path, method, version, permission) {
+module.exports = function (path, method, version, permission, response) {
     return Trait(
         {
             "path" : path,
             "method": method,
             "version": version,
-            "permission": permission,//TODO may not be required as this represents the <username> variable in the path
-
-            //TODO properly cater for this
-            "response": "application/json",
+            "permission": permission, //TODO may not be required as this represents the <username> variable in the path
+            "response": response || "application/json",
 
             "pathParameters": function() {
                 if (! this.path) {

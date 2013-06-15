@@ -8,7 +8,8 @@ var Q = require("q"),
     groupsApi = require("./commands/groups-api"),
     schedulesApi = require("./commands/schedules-api"),
     configurationApi = require("./commands/configuration-api"),
-    scheduledEvent = require("./scheduledEvent");
+    scheduledEvent = require("./scheduledEvent"),
+    bridgeDiscovery = require("./bridge-discovery");
 
 
 function HueApi(host, username) {
@@ -16,6 +17,17 @@ function HueApi(host, username) {
     this.username = username;
 }
 module.exports = HueApi;
+
+/**
+ * Loads the description for the Philips Hue.
+ *
+ * @param cb An optional callback function if you don't want to be informed via a promise.
+ * @return {Q.promise} A promise that will be provided with a description object, or {null} if a callback was provided.
+ */
+HueApi.prototype.description = function (cb) {
+    var promise = bridgeDiscovery.description(this.host);
+    return utils.promiseOrCallback(promise, cb);
+};
 
 /**
  * Reads the bridge configuration and returns it as a JSON object.
@@ -27,7 +39,7 @@ HueApi.prototype.config = function (cb) {
     var options = _defaultOptions(this),
         promise = http.invoke(configurationApi.getConfiguration, options);
 
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 /**
@@ -73,7 +85,7 @@ HueApi.prototype.registerUser = function (host, username, deviceDescription, cb)
     if (!promise) {
         promise = http.invoke(configurationApi.createUser, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -100,7 +112,7 @@ HueApi.prototype.pressLinkButton = function (cb) {
     if (!promise) {
         promise = http.invoke(configurationApi.modifyConfiguration, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -119,7 +131,7 @@ HueApi.prototype.deleteUser = function (username, cb) {
     if (!promise) {
         promise = http.invoke(configurationApi.deleteUser, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -143,7 +155,7 @@ HueApi.prototype.registeredUsers = function (cb) {
             devices = [];
 
         if (list) {
-            Object.keys(list).forEach(function(key) {
+            Object.keys(list).forEach(function (key) {
                 var device;
                 if (list.hasOwnProperty(key)) {
                     device = list[key];
@@ -162,7 +174,7 @@ HueApi.prototype.registeredUsers = function (cb) {
     }
 
     var promise = this.config().then(processUsers);
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -178,7 +190,7 @@ HueApi.prototype.lights = function (cb) {
 
     promise = http.invoke(lightsApi.getAllLights, options);
 
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -199,7 +211,7 @@ HueApi.prototype.lightStatus = function (id, cb) {
     if (!promise) {
         promise = http.invoke(lightsApi.getLightAttributesAndState, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -213,7 +225,7 @@ HueApi.prototype.newLights = function (cb) {
     var options = _defaultOptions(this),
         promise = http.invoke(lightsApi.getNewLights, options);
 
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -227,7 +239,7 @@ HueApi.prototype.searchForNewLights = function (cb) {
     var options = _defaultOptions(this),
         promise = http.invoke(lightsApi.searchForNewLights, options);
 
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -252,7 +264,7 @@ HueApi.prototype.setLightName = function (id, name, cb) {
     if (!promise) {
         promise = http.invoke(lightsApi.renameLight, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -276,7 +288,7 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
     if (!promise) {
         promise = http.invoke(lightsApi.setLightState, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -300,7 +312,7 @@ HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
     if (!promise) {
         promise = http.invoke(groupsApi.setGroupState, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -314,7 +326,7 @@ HueApi.prototype.groups = function (cb) {
     var options = _defaultOptions(this),
         promise = http.invoke(groupsApi.getAllGroups, options);
 
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -349,7 +361,7 @@ HueApi.prototype.getGroup = function (id, cb) {
         promise = http.invoke(groupsApi.getGroupAttributes, options).then(processGroupResult);
     }
 
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -370,8 +382,7 @@ HueApi.prototype.updateGroup = function (id, name, lightIds, cb) {
         promise;
 
     options.values = {};
-
-    promise = _setGroupIdOption(options, id);
+    promise = _setGroupIdOptionForModification(options, id);
 
     // Due to name and lightIds being "optional" we have to re-parse the arguments to get the right ones
     parameters.forEach(function (param) {
@@ -394,7 +405,7 @@ HueApi.prototype.updateGroup = function (id, name, lightIds, cb) {
         promise = http.invoke(groupsApi.setGroupAttributes, options);
     }
 
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -415,12 +426,12 @@ HueApi.prototype.createGroup = function (name, lightIds, cb) {
         promise;
 
     options.values = {
-        "name"  : name,
-        "lights": utils.createStringValueArray(lightIds)
+        name  : name,
+        lights: utils.createStringValueArray(lightIds)
     };
 
     promise = http.invoke(groupsApi.createGroup, options);
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -436,19 +447,12 @@ HueApi.prototype.deleteGroup = function (id, cb) {
     // tinkering with the api end points...
 
     var options = _defaultOptions(this),
-        promise;
-
-    // Protect the default implicit all lights group from being deleted (not sure if this is even possible, but do not want to risk it)
-    if (id === 0) {
-        promise = _errorPromise("Cannot delete the 'All Lights' default group");
-    } else {
-        promise = _setGroupIdOption(options, id);
-    }
+        promise = _setGroupIdOptionForModification(options, id);
 
     if (!promise) {
         promise = http.invoke(groupsApi.deleteGroup, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -465,7 +469,7 @@ HueApi.prototype.schedules = function (cb) {
     var options = _defaultOptions(this),
         promise = http.invoke(schedulesApi.getAllSchedules, options);
 
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 /**
@@ -478,19 +482,17 @@ HueApi.prototype.schedules = function (cb) {
  */
 HueApi.prototype.getSchedule = function (id, cb) {
     var options = _defaultOptions(this),
-        promise;
+        promise = _setScheduleIdOption(options, id);
 
     function parseResults(result) {
         result.id = id;
         return result;
     }
 
-    promise = _setScheduleIdOption(options, id);
-
     if (!promise) {
         promise = http.invoke(schedulesApi.getSchedule, options).then(parseResults);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -533,7 +535,7 @@ HueApi.prototype.deleteSchedule = function (id, cb) {
     if (!promise) {
         promise = http.invoke(schedulesApi.deleteSchedule, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
 
 
@@ -558,10 +560,8 @@ HueApi.prototype.updateSchedule = function (id, schedule, cb) {
         promise = http.invoke(schedulesApi.setScheduleAttributes, options);
     }
 
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 };
-
-//HueApi.prototype.
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -579,14 +579,12 @@ HueApi.prototype.updateSchedule = function (id, schedule, cb) {
  */
 function _createSchedule(api, schedule, cb) {
     var options = _defaultOptions(api),
-        promise;
-
-    promise = _setScheduleOptionsForCreation(options, schedule);
+        promise = _setScheduleOptionsForCreation(options, schedule);
 
     if (!promise) {
         promise = http.invoke(schedulesApi.createSchedule, options);
     }
-    return _promiseOrCallback(promise, cb);
+    return utils.promiseOrCallback(promise, cb);
 }
 
 /**
@@ -722,6 +720,26 @@ function _setGroupIdOption(options, id) {
  * Validates and then injects the 'id' into the options for a group in the bridge.
  *
  * @param options The options to add the 'id' to.
+ * @param id The id of the group
+ * @return {Q.promise} A promise that will throw an error or null if the group id was valid.
+ * @private
+ */
+function _setGroupIdOptionForModification(options, id) {
+    var errorPromise = null;
+
+    if (!_isGroupIdValidForModification(id)) {
+        errorPromise = _errorPromise("The group id '" + id + "' cannot be modified on this Hue Bridge.");
+    } else {
+        options.id = id;
+    }
+
+    return errorPromise;
+}
+
+/**
+ * Validates and then injects the 'id' into the options for a group in the bridge.
+ *
+ * @param options The options to add the 'id' to.
  * @param id The id of the schedule
  * @return {Q.promise} A promise that will throw an error or null if the schedule id was valid.
  * @private
@@ -823,50 +841,6 @@ function _defaultOptions(api) {
 }
 
 /**
- * Checks the callback and if it is valid, will resolve the promise an utilize the callback to inform of results,
- * otherwise the promise is returned to the caller to chain.
- *
- * @param promise The promise being invoked
- * @param cb The callback function, which is optional
- * @returns {*} The promise if there is not a valid callback, or null, if the callback is used to resolve the promise.
- * @private
- */
-function _promiseOrCallback(promise, cb) {
-    var promiseResult = promise;
-
-    if (cb && typeof cb === "function") {
-        _resolvePromise(promise, cb);
-        // Do not return the promise, as the callbacks will have forced it to resolve
-        promiseResult = null;
-    }
-
-    return promiseResult;
-}
-
-/**
- * Terminates a promise chain and invokes a callback with the results.
- *
- * @param promise The promise to terminate
- * @param callback The callback function to invoke
- * @private
- */
-function _resolvePromise(promise, callback) {
-    function resolveValue(value) {
-        if (callback) {
-            callback(null, value);
-        }
-    }
-
-    function resolveError(err) {
-        if (callback) {
-            callback(err, null);
-        }
-    }
-
-    promise.then(resolveValue).fail(resolveError).done();
-}
-
-/**
  * Validates that the light id is valid for this Hue Bridge.
  *
  * @param id The id of the light in the Hue Bridge.
@@ -896,6 +870,20 @@ function _isGroupIdValid(id) {
     } else {
         return false;
     }
+}
+
+/**
+ * Validates that the group id is valid for modification on this Hue Bridge.
+ *
+ * @param id The id of the group in the Hue Bridge.
+ * @returns {boolean} true if the id is valid for this bridge.
+ * @private
+ */
+function _isGroupIdValidForModification(id) {
+    if (_isGroupIdValid(id)) {
+        return parseInt(id, 10) > 0;
+    }
+    return false;
 }
 
 /**

@@ -85,7 +85,7 @@ apiTraits.createGroup = Trait.compose(
         "application/json",
         [
             {"name": "name", "type": "string", maxLength: 32, "optional": true},
-            {"name": "lights", "type": "list int", "optional": true}
+            {"name": "lights", "type": "list int", "optional": false}
         ]
     ),
     tPostProcessing(_processCreateGroup)

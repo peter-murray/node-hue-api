@@ -41,10 +41,8 @@ describe("Hue API", function () {
 });
 
 function _validateLightsResult(results, cb) {
-    console.log(JSON.stringify(results));
-
+//    console.log(JSON.stringify(results));
     expect(results).to.exist;
-
     expect(results).to.have.property("lastscan");
     // none, active, or timestamp
 

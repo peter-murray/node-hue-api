@@ -3,6 +3,48 @@
 var util = require("util");
 
 /**
+ * Checks the callback and if it is valid, will resolve the promise an utilize the callback to inform of results,
+ * otherwise the promise is returned to the caller to chain.
+ *
+ * @param promise The promise being invoked
+ * @param cb The callback function, which is optional
+ * @returns {*} The promise if there is not a valid callback, or null, if the callback is used to resolve the promise.
+ */
+module.exports.promiseOrCallback = function (promise, cb) {
+    var promiseResult = promise;
+
+    if (cb && typeof cb === "function") {
+        module.exports.resolvePromise(promise, cb);
+        // Do not return the promise, as the callbacks will have forced it to resolve
+        promiseResult = null;
+    }
+
+    return promiseResult;
+};
+
+/**
+ * Terminates a promise chain and invokes a callback with the results.
+ *
+ * @param promise The promise to terminate
+ * @param callback The callback function to invoke
+ */
+module.exports.resolvePromise = function(promise, callback) {
+    function resolveValue(value) {
+        if (callback) {
+            callback(null, value);
+        }
+    }
+
+    function resolveError(err) {
+        if (callback) {
+            callback(err, null);
+        }
+    }
+
+    promise.then(resolveValue).fail(resolveError).done();
+};
+
+/**
  * Combines the specified object with the properties defined in the values object, overwriting any existing values.
  * @param obj The object to combine the values with
  * @param values The objects to get the properties and values from, can be many arguments

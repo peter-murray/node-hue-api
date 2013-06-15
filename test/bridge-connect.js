@@ -12,8 +12,7 @@ describe("Hue API", function () {
 
             checkResults = function (results) {
                 expect(results).to.exist;
-
-                expect(results).to.have.property("host").that.equals(testValues.host);
+                expect(results).to.have.property("ipaddress").that.equals(testValues.host);
                 expect(results).to.have.property("name").that.equals("Philips hue");
                 done();
             };

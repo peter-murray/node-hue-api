@@ -11,39 +11,15 @@ module.exports = {
 
 function _invoke(command, parameters) {
     var options = _buildOptions(command, parameters),
-        body,
         promise;
 
-    function processResponse(response) {
-        var result = _parseJsonResult(response);
-        if (result.error) {
-            throw new errors.ApiError(result.error);
-        } else {
-            result = result.result;
-        }
-        return result;
-    }
-
-    // Check if the command has body arguments and process them accordingly
-    if (command.bodyArguments && command.buildRequestBody) {
-//        console.log(JSON.stringify(parameters.values));
-        body = command.buildRequestBody(parameters.values);
-//        console.log(JSON.stringify(body, null, 2));
-
-        //TODO this should probably move into the tBodyArguments Trait
-        if (command.bodyType === "application/json") {
-            options.body = new BufferStream(JSON.stringify(body), "utf-8");
-        } else {
-            throw new errors.ApiError("No support for " + command.bodyType + " in requests.");//TODO
-        }
-    }
-
+//    console.log("HTTP Request Options");
 //    console.log(JSON.stringify(options, null, 2));
+
     promise = http.request(options).then(_checkResponse);
 
-    //TODO need to put this into the request options as a header
     if (command.response === "application/json") {
-        promise = promise.then(processResponse);
+        promise = promise.then(_convertToJson);
     }
 
     if (command.postProcessingFn) {
@@ -53,8 +29,19 @@ function _invoke(command, parameters) {
     return promise;
 }
 
+function _convertToJson(response) {
+    var result = _parseJsonResult(response);
+    if (result.error) {
+        throw new errors.ApiError(result.error);
+    } else {
+        result = result.result;
+    }
+    return result;
+}
+
 function _buildOptions(command, parameters) {
-    var options = {};
+    var options = {},
+        body;
 
     if (parameters.host) {
         options.host = parameters.host;
@@ -71,8 +58,20 @@ function _buildOptions(command, parameters) {
         throw new errors.ApiError("Cannot get the path to invoke from the command");
     }
 
-    if (parameters.values) {
-        options.body = new BufferStream(JSON.stringify(parameters.values), "utf-8");
+    // Check if the command has body arguments and process them accordingly
+    if (command.bodyArguments && command.buildRequestBody) {
+        body = command.buildRequestBody(parameters.values);
+
+        if (command.bodyType === "application/json") {
+            options.body = new BufferStream(JSON.stringify(body), "utf-8");
+        } else {
+            throw new errors.ApiError("No support for " + command.bodyType + " in requests.");
+        }
+    }
+
+    if (command.response) {
+        options.headers = {};
+        options.headers.Accept = command.response;
     }
 
     return options;
@@ -139,22 +138,3 @@ function _parseJsonResult(result) {
         result: jsonError ? null : jsonResult
     };
 }
-//
-///**
-// * Gets a function that will process the HTTP Response object and inform the deferred object of the results.
-// * @param deferred The deferred object to inform of the results
-// * @return {Function} A callback function to use in an HTTP Request.
-// */
-//function _getHttpResponseProcessor(deferred) {
-//    return function (response) {
-//        var str = '';
-//
-//        response.on('data', function (chunk) {
-//            str += chunk;
-//        });
-//
-//        response.on('end', function () {
-//            deferred.resolve(str);
-//        });
-//    };
-//}

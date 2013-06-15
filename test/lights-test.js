@@ -39,8 +39,6 @@ describe("Hue API", function () {
 });
 
 function _validateLightsResult(results, cb) {
-    console.log(JSON.stringify(results));
-
     expect(results).to.exist;
     expect(results).to.have.property("lights");
     expect(results.lights).to.have.length(testValues.lightsCount);

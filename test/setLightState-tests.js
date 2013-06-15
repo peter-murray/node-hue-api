@@ -12,7 +12,7 @@ describe("Hue API", function () {
 
         var hue,
             state,
-            lightId = 5;
+            lightId = testValues.testLightId;
 
         beforeEach(function () {
             hue = new HueApi(testValues.host, testValues.username);
