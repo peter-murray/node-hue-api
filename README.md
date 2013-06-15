@@ -6,149 +6,151 @@ Philips Living Color Lamps.
 This library abstracts away the actual Philips Hue Bridge REST API and provides all of the features of the Phillips API and
 a number of useful functions to control the lights and bridge remotely.
 
-The library has undergone a large update for version `1.0.0`, where it now supports `callbacks` and Q `promises` for the
+The library has undergone a large update for version `0.2.x`, where it now supports `callbacks` and Q `promises` for the
 functions of the API.
 So for each function in the API, if a callback is provided, then a callback will be used to return any results
-or notification of success, in a true Node.js fashion. If the callback is omitted then a promise will be returned for use in chaining or in most cases simpler handling of the
-results.
+or notification of success, in a true Node.js fashion. If the callback is omitted then a promise will be returned for
+use in chaining or in most cases simpler handling of the results.
 
-When using Q `promises`, it is necessary to call `done()` on any promises that are returned, otherwise errors can be swallowed silently.
+When using Q `promises`, it is necessary to call `done()` on any promises that are returned, otherwise errors can be
+swallowed silently.
 
 ## Change Log
-	[Changes](ChangeLog.md)
+[Changes](ChangeLog.md)
 
 
 ## Philips Hue Resources
 
-	There are a number of resources where users have detailed documentation on the Philips Hue Bridge;
-	 - The Official Phillips Hue Documentation <http://developers.meethue.com/index.html>
-	 - Unofficial Hue Documentation: <http://burgestrand.github.com/hue-api/>
-	 - Hack the Hue: <http://rsmck.co.uk/hue>
-	 - Hue Hackers Mailing List: <https://groups.google.com/forum/#!forum/hue-hackers>
+There are a number of resources where users have detailed documentation on the Philips Hue Bridge;
+ - The Official Phillips Hue Documentation <http://developers.meethue.com/index.html>
+ - Unofficial Hue Documentation: <http://burgestrand.github.com/hue-api/>
+ - Hack the Hue: <http://rsmck.co.uk/hue>
+ - Hue Hackers Mailing List: <https://groups.google.com/forum/#!forum/hue-hackers>
 
 
 ## Installation
 
-	NodeJS application using npm:
-	```
-	$ npm install node-hue-api
-	```
+NodeJS application using npm:
+```
+$ npm install node-hue-api
+```
 
 ## Examples
 
 ### Locating a Philips Hue Bridge
-	There are two functions available to find the Phillips Hue Bridges on the network ``locateBridges()`` and ``searchForBridges()``.
-	Both of these methods are useful if you do not know the IP Address of the bridge already.
+There are two functions available to find the Phillips Hue Bridges on the network ``locateBridges()`` and ``searchForBridges()``.
+Both of these methods are useful if you do not know the IP Address of the bridge already.
 
 ### locateBridges()
-	This API function makes use of the official API endpoint that reveals the bridges on a network. It is a call through to
-	``http://meethue.com/api/nupnp`` which may not work in all circumstances, in which case you can fall back to the old function
-	``searchForBridges()``.
+This API function makes use of the official API endpoint that reveals the bridges on a network. It is a call through to
+``http://meethue.com/api/nupnp`` which may not work in all circumstances, in which case you can fall back to the old function
+``searchForBridges()``.
 
-	This function is considerably faster to resolve the bridges < 500ms compared to 5 seconds to perform a full search on my
-	own network.
+This function is considerably faster to resolve the bridges < 500ms compared to 5 seconds to perform a full search on my
+own network.
 
-	```js
-	var hue = require("node-hue-api");
+```js
+var hue = require("node-hue-api");
 
-	var displayBridges = function(bridge) {
-		console.log("Hue Bridges Found: " + JSON.stringify(bridge));
-	};
+var displayBridges = function(bridge) {
+	console.log("Hue Bridges Found: " + JSON.stringify(bridge));
+};
 
-	// --------------------------
-	// Using a promise
-	hue.locateBridges().then(displayBridges).done();
+// --------------------------
+// Using a promise
+hue.locateBridges().then(displayBridges).done();
 
-	// --------------------------
-	// Using a callback
-	hue.locateBridges(function(err, result) {
-		if (err) throw err;
-		displayBridges(result);
-	});
-	```
+// --------------------------
+// Using a callback
+hue.locateBridges(function(err, result) {
+	if (err) throw err;
+	displayBridges(result);
+});
+```
 
-	The results from this call will be of the form;
-	```
-	Hue Bridges Found: [{"id":"001788fffe096103","ipaddress":"192.168.2.129"}]
-	```
+The results from this call will be of the form;
+```
+Hue Bridges Found: [{"id":"001788fffe096103","ipaddress":"192.168.2.129"}]
+```
 
 #### searchForBridges()
-	This API function utilizes a network scan for the SSDP responses of devices on a network. It is the only method that does not
-	support callbacks, and is only in the API as a fallback since Phillips provided a quicker discovery method once the API was
-	officially released.
+This API function utilizes a network scan for the SSDP responses of devices on a network. It is the only method that does not
+support callbacks, and is only in the API as a fallback since Phillips provided a quicker discovery method once the API was
+officially released.
 
-	```js
-	var hue = require("node-hue-api"),
-		timeout = 2000; // 2 seconds
+```js
+var hue = require("node-hue-api"),
+	timeout = 2000; // 2 seconds
 
-	var displayBridges = function(bridge) {
-		console.log("Hue Bridges Found: " + JSON.stringify(bridge));
-	};
+var displayBridges = function(bridge) {
+	console.log("Hue Bridges Found: " + JSON.stringify(bridge));
+};
 
-	hue.searchForBridges(timeout).then(displayBridges).done();
-	```
-	A timeout can be provided to the function to increase/decrease the amount of time that it waits for responses from the
-	search request, by default this is set to 5 seconds (the above example sets this to 2 seconds).
+hue.searchForBridges(timeout).then(displayBridges).done();
+```
+A timeout can be provided to the function to increase/decrease the amount of time that it waits for responses from the
+search request, by default this is set to 5 seconds (the above example sets this to 2 seconds).
 
-	The results from this function call will be of the form;
-	```
-	Hue Bridges Found: [{"id":"001788096103","ipaddress":"192.168.2.129"}]
-	```
+The results from this function call will be of the form;
+```
+Hue Bridges Found: [{"id":"001788096103","ipaddress":"192.168.2.129"}]
+```
 
 
 ### Registering a new Device/User with the Bridge
-	Once you have discovered the IP Address for your bridge (either from the locate/search function, or looking it up on the
-	Philips Hue website), then you will need to register your application with the Hue Bridge.
+Once you have discovered the IP Address for your bridge (either from the locate/search function, or looking it up on the
+Philips Hue website), then you will need to register your application with the Hue Bridge.
 
-	Registration requires you to issue a request to the Bridge after pressing the Link Button on the Bridge (although you can
-	now do this via the API too if you already have an existing user account on the Bridge).
+Registration requires you to issue a request to the Bridge after pressing the Link Button on the Bridge (although you can
+now do this via the API too if you already have an existing user account on the Bridge).
 
-	Ths library offer two functions to register new devices/users with the Hue Bridge. These are detailed below.
+Ths library offer two functions to register new devices/users with the Hue Bridge. These are detailed below.
+
 
 ### Bridge Configuration
-	You can obtain a summary of the configuration of the Bridge using the ``config()`` function;
+You can obtain a summary of the configuration of the Bridge using the ``config()`` function;
 
-	```js
-	var HueApi = require("node-hue-api").hue.HueApi;
+```js
+var HueApi = require("node-hue-api").hue.HueApi;
 
-	var hostname = "192.168.2.129",
-		username = "08a902b95915cdd9b75547cb50892dc4";
+var hostname = "192.168.2.129",
+	username = "08a902b95915cdd9b75547cb50892dc4";
 
-	var displayBridges = function(config) {
-		console.log("Bridge Configuration: " + JSON.stringify(config));
-	};
+var displayBridges = function(config) {
+	console.log("Bridge Configuration: " + JSON.stringify(config));
+};
 
-	var hue = new HueApi(hostname, username);
+var hue = new HueApi(hostname, username);
 
-	// --------------------------
-	// Using a promise
-	hue.config().then(displayBridges).done();
+// --------------------------
+// Using a promise
+hue.config().then(displayBridges).done();
 
-	// --------------------------
-	// Using a callback
-	hue.config(function(err, config) {
-		if (err) throw err;
-		displayBridges(config);
-	});
-	```
-	This will provide results detailing the configuration of the bridge (IP Address, Name, Link Button Status, Defined Users, etc...).
+// --------------------------
+// Using a callback
+hue.config(function(err, config) {
+	if (err) throw err;
+	displayBridges(config);
+});
+```
+This will provide results detailing the configuration of the bridge (IP Address, Name, Link Button Status, Defined Users, etc...).
 
 
 ### Registering without an existing Device/User ID
-	This method is useful for creating a new user when you have only just discovered your Hue Bridge and do not know the existing device/user IDs.
+This method is useful for creating a new user when you have only just discovered your Hue Bridge and do not know the existing device/user IDs.
 
-	```js
-	var hue = require("node-hue-api").hue;
+```js
+var hue = require("node-hue-api").hue;
 
-	var hostname = "192.168.2.129",
-		newUserName = "a username",
-		userDescription = "device description goes here";
+var hostname = "192.168.2.129",
+	newUserName = "a username",
+	userDescription = "device description goes here";
 
-	hue.registerUser(hostname, newUserName, userDescription)
-		.then(displayResultFunction)
-		.fail(displayErrorFunction)
-		.done();
-	```
+hue.registerUser(hostname, newUserName, userDescription)
+	.then(displayResultFunction)
+	.fail(displayErrorFunction)
+	.done();
+```
 
 ### Registering a New Device/User ID within the API
 If you want to perform a lookup to ensure that a device/user does not already exist before registering a new device/user, then you can use the registerUser() function when connected to the Hue Bridge as an already approved user.
