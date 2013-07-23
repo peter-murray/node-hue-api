@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.2.1
+- Corrected typo in the transitionTime for the parameters to pass the light
+
 ## 0.2.0
 - Updated to support promises or callbacks for all API methods
 - Major refactoring to support API methods as Traits (makes maintaining end points easier and provides hooks for validating schedule commands)

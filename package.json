@@ -1,6 +1,6 @@
 {
     "name"   : "node-hue-api",
-    "version": "0.2.0",
+    "version": "0.2.1",
 
     "author": "Peter Murray <peter.murray@osirisoft.com>",
 
@@ -41,16 +41,16 @@
     },
 
     "dependencies": {
-        "xml2js"  : "0.2.2",
-        "q"       : "0.9.3",
-        "q-io"    : "1.6.5",
-        "parseUri": "1.2.3-2",
-        "traits"  : "0.4.0"
+        "xml2js"  : "~0.2.2",
+        "q"       : "~0.9.3",
+        "q-io"    : "~1.6.5",
+        "parseUri": "~1.2.3-2",
+        "traits"  : "~0.4.0"
     },
 
     "devDependencies": {
-        "mocha": "1.9.0",
-        "chai" : "1.6.0"
+        "mocha": "~1.9.0",
+        "chai" : "~1.6.0"
     },
 
     "engines": {
