@@ -230,7 +230,6 @@ function _convertBrightPercentToHueValue(percentage) {
 function _getHSLState(hue, saturation, luminosity) {
     hue = Math.floor(_getBoundedValue(hue, 0, 359) * 182.5487); // degrees upscaled to 0-65535 range
     saturation = Math.floor(_getBoundedValue(saturation, 0, 100) * (255 / 100)); // percentage converted to 0-255 range
-    // luminosity = _convertBrightPercentToHueValue(luminosity);
 
     return utils.combine(
         {
