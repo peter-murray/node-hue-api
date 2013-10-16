@@ -41,17 +41,13 @@ function _convertToJson(response) {
 
 function _buildOptions(command, parameters) {
     var options = {},
-        host_and_port,
+        hostAndPort,
         body;
 
     if (parameters.host) {
-        host_and_port = parameters.host.split(":");
-
-        options.host = host_and_port[0];
-        options.port = host_and_port[1];
-        if (!options.port) {
-            options.port = "80";
-        }
+        hostAndPort = parameters.host.split(":");
+        options.host = hostAndPort[0];
+        options.port = hostAndPort[1] || "80";
     } else {
         throw new Error("A host name must be provided in the parameters");
     }

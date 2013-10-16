@@ -32,10 +32,16 @@ describe("Hue API", function () {
     }
 
     function generateTestScheduleEvent() {
+        var now = Date.now(),
+            time = new Date(now);
+
+        // Take into account local time zones and daylight savings
+        time = now + (-1 * time.getTimezoneOffset() * 60 * 60 * 100) + 10000;
+
         return scheduledEvent.create()
             .withName("createTest")
             .withCommand(validCommand)
-            .at(new Date().getTime() + 10000);
+            .at(time);
     }
 
 
