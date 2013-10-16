@@ -1,79 +1,68 @@
 {
-    "name"   : "node-hue-api",
-    "version": "0.2.1",
-
-    "author": "Peter Murray <peter.murray@osirisoft.com>",
-
-    "contributors": [
-        {
-            "name" : "Peter Murray",
-            "email": "peter.murray@osirisoft.com"
-        },
-        {
-            "name" : "Ilari Mäkimattila",
-            "email": "ilari.makimattila@gmail.com"
-        },
-        {
-            "name": "Bryan Schlief"
-        },
-        {
-            "name": "Sebastian B (SBejga)"
-        },
-        {
-            "name:": "Jon Long",
-            "email": "jon@linesandwaves.com"
-        }
-    ],
-
-    "main": "index.js",
-
-    "scripts": {
-        "test": "make test"
+  "name": "node-hue-api",
+  "version": "0.2.2",
+  "author": "Peter Murray <peter.murray@osirisoft.com>",
+  "contributors": [
+    {
+      "name": "Peter Murray",
+      "email": "peter.murray@osirisoft.com"
     },
-
-    "repository": {
-        "type": "git",
-        "url" : "https://github.com/peter-murray/node-hue-api"
+    {
+      "name": "Ilari Mäkimattila",
+      "email": "ilari.makimattila@gmail.com"
     },
-
-    "bugs": {
-        "url": "https://github.com/peter-murray/node-hue-api/issues"
+    {
+      "name": "Bryan Schlief"
     },
-
-    "dependencies": {
-        "xml2js"  : "~0.2.2",
-        "q"       : "~0.9.3",
-        "q-io"    : "~1.6.5",
-        "parseUri": "~1.2.3-2",
-        "traits"  : "~0.4.0"
+    {
+      "name": "Sebastian B (SBejga)"
     },
-
-    "devDependencies": {
-        "mocha": "~1.9.0",
-        "chai" : "~1.6.0"
-    },
-
-    "engines": {
-        "nodejs": ">= 0.8.0"
-    },
-
-    "licenses": [
-        {
-            "type": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0"
-        }
-    ],
-
-    "keywords": [
-        "philips",
-        "hue",
-        "api",
-        "living",
-        "color",
-        "colour",
-        "automation",
-        "light",
-        "lighting",
-        "bridge"
-    ]
+    {
+      "name:": "Jon Long",
+      "email": "jon@linesandwaves.com"
+    }
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peter-murray/node-hue-api"
+  },
+  "bugs": {
+    "url": "https://github.com/peter-murray/node-hue-api/issues"
+  },
+  "dependencies": {
+    "xml2js": "~0.2.2",
+    "q": "~0.9.3",
+    "q-io": "~1.6.5",
+    "parseUri": "~1.2.3-2",
+    "traits": "~0.4.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.9.0",
+    "chai": "~1.6.0"
+  },
+  "engines": {
+    "nodejs": ">= 0.8.0"
+  },
+  "licenses": [
+    {
+      "type": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "keywords": [
+    "philips",
+    "hue",
+    "api",
+    "living",
+    "color",
+    "colour",
+    "automation",
+    "light",
+    "lighting",
+    "bridge"
+  ]
 }
