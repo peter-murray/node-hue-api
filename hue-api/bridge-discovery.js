@@ -27,7 +27,7 @@ module.exports.networkSearch = function (timeout) {
  * @returns {Q.promise} A promise that will resolve the addresses of the bridges, or {null} if a callback was provided.
  */
 module.exports.locateBridges = function (cb) {
-    var promise = http.invoke(discovery.upnpLookup, {host: "www.meethue.com"});
+    var promise = http.invoke(discovery.upnpLookup, {host: "www.meethue.com", ssl: true});
     return utils.promiseOrCallback(promise, cb);
 };
 
@@ -94,16 +94,20 @@ function _parseDescription(xml) {
                     "number"     : data.root.device[0].modelNumber[0],
                     "serial"     : data.root.device[0].serialNumber[0],
                     "udn"        : data.root.device[0].UDN[0]
-                },
-                //TODO this is not currently implemented in 1.0 version
-                "service"     : {
-                    "type"       : data.root.device[0].serviceList[0].service[0].serviceType[0],
-                    "id"         : data.root.device[0].serviceList[0].service[0].serviceId[0],
-                    "controlUrl" : data.root.device[0].serviceList[0].service[0].controlURL[0],
-                    "eventSubUrl": data.root.device[0].serviceList[0].service[0].eventSubURL[0],
-                    "scpdUrl"    : data.root.device[0].serviceList[0].service[0].SCPDURL[0]
                 }
             };
+
+            if (data.root.device[0].serviceList && data.root.device[0].serviceList[0]) {
+                //TODO this is not currently implemented in 1.0 version
+                result.service = {
+                    "type"       : data.root.device[0].serviceList[0].service[0].serviceType[0],
+                        "id"         : data.root.device[0].serviceList[0].service[0].serviceId[0],
+                        "controlUrl" : data.root.device[0].serviceList[0].service[0].controlURL[0],
+                        "eventSubUrl": data.root.device[0].serviceList[0].service[0].eventSubURL[0],
+                        "scpdUrl"    : data.root.device[0].serviceList[0].service[0].SCPDURL[0]
+                };
+            }
+
             deferred.resolve(result);
         }
     });

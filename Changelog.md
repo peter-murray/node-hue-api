@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.2.3
+- Updated endpoint for hue discovery to use https
+- Swapped out q-io http for request 2.36.0
+- Fixed error in the discovery XML processing
+
 ## 0.2.1
 - Corrected typo in the transitionTime for the parameters to pass the light
 

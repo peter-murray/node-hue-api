@@ -1,26 +1,32 @@
 'use strict';
 
-var http = require("q-io/http"),
-    BufferStream = require("q-io/buffer-stream"),
-    util = require("util"),
-    errors = require("./errors.js");
+var url = require("url")
+    , util = require("util")
+    , requestUtil = require("request-util")
+    , errors = require("./errors.js")
+    ;
 
 module.exports = {
     invoke: _invoke
 };
 
 function _invoke(command, parameters) {
-    var options = _buildOptions(command, parameters),
-        promise;
+    var options = _buildOptions(command, parameters)
+        , promise
+        ;
 
-//    console.log("HTTP Request Options");
-//    console.log(JSON.stringify(options, null, 2));
+    promise = requestUtil.request(options)
+        .then(_requireStatusCode200)
+        .then(function (requestResult) {
+                  var result;
 
-    promise = http.request(options).then(_checkResponse);
-
-    if (command.response === "application/json") {
-        promise = promise.then(_convertToJson);
-    }
+                  if (options.json) {
+                      result = _checkForError(requestResult);
+                  } else {
+                      result = requestResult.data;
+                  }
+                  return result;
+              });
 
     if (command.postProcessingFn) {
         promise = promise.then(command.postProcessingFn);
@@ -29,47 +35,44 @@ function _invoke(command, parameters) {
     return promise;
 }
 
-function _convertToJson(response) {
-    var result = _parseJsonResult(response);
-    if (result.error) {
-        throw new errors.ApiError(result.error);
-    } else {
-        result = result.result;
-    }
-    return result;
-}
-
 function _buildOptions(command, parameters) {
     var options = {},
-        hostAndPort,
-        body;
+        body,
+        urlObj = {
+            protocol: parameters.ssl ? "https" : "http",
+            hostname: parameters.host,
+        };
 
-    if (parameters.host) {
-        hostAndPort = parameters.host.split(":");
-        options.host = hostAndPort[0];
-        options.port = hostAndPort[1] || "80";
-    } else {
-        throw new Error("A host name must be provided in the parameters");
-    }
+//    if (parameters.host) {
+//        hostAndPort = parameters.host.split(":");
+//        urlObj.host = hostAndPort[0];
+//        urlObj.port = hostAndPort[1] || "80";
+//    } else {
+//        throw new Error("A host name must be provided in the parameters");
+//    }
 
     options.method = command.method || "GET";
 
     if (command.getPath) {
-        options.path = command.getPath(parameters);
+        urlObj.pathname = command.getPath(parameters);
     } else {
-        //TODO throw an error
         throw new errors.ApiError("Cannot get the path to invoke from the command");
     }
+    options.url = url.format(urlObj);
 
     // Check if the command has body arguments and process them accordingly
     if (command.bodyArguments && command.buildRequestBody) {
         body = command.buildRequestBody(parameters.values);
 
         if (command.bodyType === "application/json") {
-            options.body = new BufferStream(JSON.stringify(body), "utf-8");
+            options.body = JSON.stringify(body);
         } else {
             throw new errors.ApiError("No support for " + command.bodyType + " in requests.");
         }
+    }
+
+    if (command.response === "application/json") {
+        options.json = true;
     }
 
     if (command.response) {
@@ -77,33 +80,21 @@ function _buildOptions(command, parameters) {
         options.headers.Accept = command.response;
     }
 
+    if (parameters.ssl) {
+        options.ssl = parameters.ssl;
+//        options.strictSSL = false;
+    }
+
+    options.timeout = 10000; //TODO make adjustable
+
     return options;
 }
 
-function _checkResponse(response) {
-    function extractResponse(response) {
-        var str = response.toString();
-        return str;
-    }
-
-    var result;
-    if (response.status === 200) {
-        result = response.body.read().then(extractResponse);
-    } else {
-        throw new errors.ApiError(
-            {
-                type: "Response Error",
-                description: "Unexpected response status; " + response.status
-            }
-        );
-    }
-    return result;
-}
-
 function _getError(jsonObject) {
-    var result = null,
-        idx = 0,
-        len = 0;
+    var result = null
+        , idx = 0
+        , len = 0
+        ;
 
     if (jsonObject) {
         if (util.isArray(jsonObject)) {
@@ -116,28 +107,37 @@ function _getError(jsonObject) {
             }
         } else if (jsonObject.error) {
             return {
-                "type": jsonObject.error.type,
+                "type"       : jsonObject.error.type,
                 "description": jsonObject.error.description,
-                "address": jsonObject.error.address
+                "address"    : jsonObject.error.address
             };
         }
     }
     return result;
 }
 
-function _parseJsonResult(result) {
-    var str,
-        jsonResult,
-        jsonError;
+function _checkForError(result) {
+    var jsonResult
+        , jsonError
+        ;
 
-    str = result.toString();
-//    console.log(str);
-
-    jsonResult = JSON.parse(str);
+    jsonResult = result.data;
     jsonError = _getError(jsonResult);
 
-    return {
-        error : jsonError,
-        result: jsonError ? null : jsonResult
-    };
+    if (jsonError) {
+        throw new errors.ApiError(jsonError);
+    }
+    return jsonResult;
+}
+
+function _requireStatusCode200(result) {
+    if (result.statusCode !== 200) {
+        throw new errors.ApiError(
+            {
+                type       : "Response Error",
+                description: "Unexpected response status; " + result.statusCode
+            }
+        );
+    }
+    return result;
 }
