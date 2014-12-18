@@ -40,7 +40,7 @@ function _buildOptions(command, parameters) {
         body,
         urlObj = {
             protocol: parameters.ssl ? "https" : "http",
-            hostname: parameters.host,
+            hostname: parameters.host
         };
 
 //    if (parameters.host) {
@@ -51,6 +51,7 @@ function _buildOptions(command, parameters) {
 //        throw new Error("A host name must be provided in the parameters");
 //    }
 
+    options.timeout = parameters.timeout || 10000;
     options.method = command.method || "GET";
 
     if (command.getPath) {
@@ -82,10 +83,7 @@ function _buildOptions(command, parameters) {
 
     if (parameters.ssl) {
         options.ssl = parameters.ssl;
-//        options.strictSSL = false;
     }
-
-    options.timeout = 10000; //TODO make adjustable
 
     return options;
 }

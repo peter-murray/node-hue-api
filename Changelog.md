@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.2.4
+- Added ability to configure the timeout when communicating with the Hue Bridge
+
 ## 0.2.3
 - Updated endpoint for hue discovery to use https
 - Swapped out q-io http for request 2.36.0

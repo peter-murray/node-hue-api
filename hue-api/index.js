@@ -12,9 +12,10 @@ var Q = require("q"),
     bridgeDiscovery = require("./bridge-discovery");
 
 
-function HueApi(host, username) {
+function HueApi(host, username, timeout) {
     this.host = host;
     this.username = username;
+    this.timeout = timeout || 10000;
 }
 module.exports = HueApi;
 
@@ -842,13 +843,14 @@ function _errorPromise(message) {
  * Creates a default options object for connecting with a Hue Bridge.
  *
  * @param api The api that contains the username and host for the bridge.
- * @returns {{host: *, username: *}}
+ * @returns {{host: *, username: *, timeout: *}}
  * @private
  */
 function _defaultOptions(api) {
     return {
         "host"    : api.host,
-        "username": api.username
+        "username": api.username,
+        "timeout": api.timeout
     };
 }
 

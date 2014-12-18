@@ -1460,6 +1460,30 @@ If the deletion was successful, then ``true`` will be returned from the promise,
 as in the case if the schedule does not exist.
 
 
+## Advanced Options
+
+If there are issues with the Bridge not responding in time for a result of error to be delivered, then you
+may need to tweak the timeout settings for the API. When this happens you will get an
+`ETIMEOUT` error.
+
+The way to set a maximum timeout when interacting with the bridge is done when you instantiate the ``HueApi``.
+
+```js
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi;
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    timeout = 20000 // timeout in milliseconds
+    api;
+
+api = new HueApi(host, password, timeout);
+```
+
+The default timeout, when onw is not specified will be 10000ms (10 seconds). This is usually enough time for the bridge
+to respond unless you are returning a very large result (like the complete state for the bridge in a large installation)
+
+
 ## License
 Copyright 2013. All Rights Reserved.
 
@@ -1468,7 +1492,3 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 You may obtain a copy of the License at <http://www.apache.org/licenses/LICENSE-2.0>.
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/peter-murray/node-hue-api/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-

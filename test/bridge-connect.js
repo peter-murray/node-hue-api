@@ -32,4 +32,19 @@ describe("Hue API", function () {
             hue.connect().fail(failureCheck).done();
         });
     });
+
+    describe("#creation", function() {
+
+        it("should have a default timeout", function(){
+            var hue = new api.HueApi(testValues.host, testValues.username);
+
+            expect(hue).to.have.property("timeout", 10000);
+        });
+
+        it("should have a non-default timeout if specified", function(){
+            var hue = new api.HueApi(testValues.host, testValues.username, 30000);
+
+            expect(hue).to.have.property("timeout", 30000);
+        });
+    });
 });
