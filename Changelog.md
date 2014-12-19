@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.2.5
+- Fixes for RGB conversion into XY co-ordinates for lamps to give better accuracy compared to previous implementation using HSL
+
 ## 0.2.4
 - Added ability to configure the timeout when communicating with the Hue Bridge
 

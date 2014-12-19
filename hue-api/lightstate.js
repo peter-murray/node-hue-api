@@ -1,7 +1,8 @@
 "use strict";
 
-var utils = require("./utils"),
-    State = function () {
+var utils = require("./utils");
+
+var State = function () {
     };
 
 /**
@@ -102,7 +103,11 @@ State.prototype.transition = function (seconds) {
  * @return {State}
  */
 State.prototype.rgb = function (r, g, b) {
-    utils.combine(this, _getHSLStateFromRGB(r, g, b));
+    // The conversion to rgb is now done in the xy space, but to do so requires knowledge of the limits of the light's
+    // color gamut.
+    // To cater for this, we store the rgb value requested, and convert it to xy when the user applies it.
+    utils.combine(this, {rgb: [r, g, b]});
+    //utils.combine(this, _getHSLStateFromRGB(r, g, b)); // Was not particularly reliable conversion
     return this;
 };
 
@@ -167,6 +172,7 @@ function _getEffectState(value) {
     };
 }
 
+//TODO this is not that reliable at the extremes of ranges of values
 /**
  * Gets the HSL/HSB value from the RGB values provided
  * @param red

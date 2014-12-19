@@ -68,9 +68,11 @@ describe("Light State", function () {
         });
 
         it("'rgb'", function () {
-            state.rgb(200, 200, 200);
-            expect(state).to.have.keys("hue", "sat", "bri");
-            //TODO could put checks in for values...
+            state.rgb(200, 100, 0);
+            expect(state).to.have.keys("rgb");
+            expect(state.rgb[0]).to.equal(200);
+            expect(state.rgb[1]).to.equal(100);
+            expect(state.rgb[2]).to.equal(0);
         });
     });
 

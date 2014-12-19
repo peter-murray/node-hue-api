@@ -4,5 +4,8 @@ module.exports = {
     lightsCount  : 16,
     locateTimeout: 7000,
     maxScheduleNameLength: 32,
-    testLightId: 4
+    testLightId: 6,
+    hueLightId: 6,
+    luxLightId: 15,
+    livingColorLightId: 1
 };

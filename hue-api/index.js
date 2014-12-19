@@ -1,15 +1,17 @@
 "use strict";
 
-var Q = require("q"),
-    http = require("./httpPromise"),
-    ApiError = require("./errors").ApiError,
-    utils = require("./utils"),
-    lightsApi = require("./commands/lights-api"),
-    groupsApi = require("./commands/groups-api"),
-    schedulesApi = require("./commands/schedules-api"),
-    configurationApi = require("./commands/configuration-api"),
-    scheduledEvent = require("./scheduledEvent"),
-    bridgeDiscovery = require("./bridge-discovery");
+var Q = require("q")
+    , http = require("./httpPromise")
+    , ApiError = require("./errors").ApiError
+    , utils = require("./utils")
+    , rgb = require("./rgb")
+    , lightsApi = require("./commands/lights-api")
+    , groupsApi = require("./commands/groups-api")
+    , schedulesApi = require("./commands/schedules-api")
+    , configurationApi = require("./commands/configuration-api")
+    , scheduledEvent = require("./scheduledEvent")
+    , bridgeDiscovery = require("./bridge-discovery")
+    ;
 
 
 function HueApi(host, username, timeout) {
@@ -301,8 +303,23 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
     options.values = stateValues;
 
     if (!promise) {
-        promise = http.invoke(lightsApi.setLightState, options);
+        // We have not errored, so check if we need to convert an rgb value
+
+        if (stateValues.rgb) {
+            promise = this.lightStatus(id)
+                .then(function(lightDetails) {
+                    options.values.xy = rgb.convertRGBtoXY(stateValues.rgb, lightDetails);
+                    delete options.values.rgb;
+                })
+                .then(function() {
+                    return http.invoke(lightsApi.setLightState, options);
+                })
+            ;
+        } else {
+            promise = http.invoke(lightsApi.setLightState, options);
+        }
     }
+
     return utils.promiseOrCallback(promise, cb);
 };
 
