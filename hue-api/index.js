@@ -300,7 +300,8 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
     promise = _setLightIdOption(options, id);
 
     //TODO stateValues need to be injected properly so that they can be checked and validated
-    options.values = stateValues;
+    // Need to ensure we take a copy of the state values (as if we use rgb values you can end up making unwanted changes)
+    options.values = JSON.parse(JSON.stringify(stateValues));
 
     if (!promise) {
         // We have not errored, so check if we need to convert an rgb value

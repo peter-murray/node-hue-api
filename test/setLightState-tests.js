@@ -140,5 +140,23 @@ describe("Hue API", function () {
                     done();
                 });
             });
-        });    });
+        });
+
+        //TODO turn this into a proper test that can validate the colours correctly
+        //describe("with single state shared across multiple lights", function() {
+        //
+        //    it("should set on and xy values", function(done) {
+        //        state.on().rgb(255, 0, 0);
+        //
+        //        hue.setLightState(4, state)
+        //            .then(function(){
+        //                return hue.setLightState(5, state);
+        //            })
+        //            .then(function() {
+        //                done();
+        //            })
+        //            .done();
+        //    });
+        //});
+    });
 });
