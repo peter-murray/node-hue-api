@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.2.6
+- Fixes a bug introduced in 0.2.5 that would remove the rgb state value from a LightState object thereby making
+different to what was originally set if using it in multiple `setLightState()` calls
+
 ## 0.2.5
 - Fixes for RGB conversion into XY co-ordinates for lamps to give better accuracy compared to previous implementation using HSL
 
