@@ -36,7 +36,7 @@ and as such there will be no breaking changes to the library that has occurred i
 ## Philips Hue Resources
 
 There are a number of resources where users have detailed documentation on the Philips Hue Bridge;
- - The Official Phillips Hue Documentation <http://developers.meethue.com/index.html>
+ - The Official Phillips Hue Documentation <http://www.developers.meethue.com>
  - Unofficial Hue Documentation: <http://burgestrand.github.com/hue-api/>
  - Hack the Hue: <http://rsmck.co.uk/hue>
  - Hue Hackers Mailing List: <https://groups.google.com/forum/#!forum/hue-hackers>
