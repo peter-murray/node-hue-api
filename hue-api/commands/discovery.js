@@ -50,6 +50,7 @@ function _bridgeResult(bridge) {
     // Just ignoring the mac address and changing the name for the ip address field
     return {
         id       : bridge.id,
+        name     : bridge.name,
         ipaddress: bridge.internalipaddress
     };
 }
