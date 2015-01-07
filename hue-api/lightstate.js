@@ -38,7 +38,7 @@ State.prototype.alert = function (isLong) {
  * Adds the on state
  * @return {State}
  */
-State.prototype.on = function () {
+State.prototype.turnOn = function () {
     utils.combine(this, _getOnState());
     return this;
 };
@@ -47,10 +47,13 @@ State.prototype.on = function () {
  * Adds the off state
  * @return {State}
  */
-State.prototype.off = function () {
+State.prototype.turnOff = function () {
     utils.combine(this, _getOffState());
     return this;
 };
+
+State.prototype.off = State.prototype.turnOff;
+State.prototype.on = State.prototype.turnOn;
 
 /**
  * Adds the brightness state
