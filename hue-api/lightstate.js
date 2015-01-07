@@ -3,7 +3,8 @@
 var utils = require("./utils");
 
 var State = function () {
-    };
+    this.internalState = {};
+};
 
 /**
  * Creates a new state object to pass to a Philips Hue Light
@@ -20,7 +21,8 @@ module.exports.create = function () {
  * @return {State}
  */
 State.prototype.white = function (colorTemp, brightPercentage) {
-    utils.combine(this, _getWhiteState(colorTemp, brightPercentage));
+    this.resetColor();
+    utils.combine(this.internalState, _getWhiteState(colorTemp, brightPercentage));
     return this;
 };
 
@@ -30,7 +32,7 @@ State.prototype.white = function (colorTemp, brightPercentage) {
  * @return {State}
  */
 State.prototype.alert = function (isLong) {
-    utils.combine(this, _getAlertState(isLong));
+    utils.combine(this.internalState, _getAlertState(isLong));
     return this;
 };
 
@@ -39,7 +41,7 @@ State.prototype.alert = function (isLong) {
  * @return {State}
  */
 State.prototype.on = function () {
-    utils.combine(this, _getOnState());
+    utils.combine(this.internalState, _getOnState());
     return this;
 };
 
@@ -48,7 +50,7 @@ State.prototype.on = function () {
  * @return {State}
  */
 State.prototype.off = function () {
-    utils.combine(this, _getOffState());
+    utils.combine(this.internalState, _getOffState());
     return this;
 };
 
@@ -58,7 +60,7 @@ State.prototype.off = function () {
  * @return {State}
  */
 State.prototype.brightness = function (value) {
-    utils.combine(this, _getBrightState(value));
+    utils.combine(this.internalState, _getBrightState(value));
     return this;
 };
 
@@ -70,7 +72,8 @@ State.prototype.brightness = function (value) {
  * @return {State}
  */
 State.prototype.hsl = function (hue, saturation, luminosity) {
-    utils.combine(this, _getHSLState(hue, saturation, luminosity));
+    this.resetColor();
+    utils.combine(this.internalState, _getHSLState(hue, saturation, luminosity));
     return this;
 };
 
@@ -81,7 +84,8 @@ State.prototype.hsl = function (hue, saturation, luminosity) {
  * @return {State}
  */
 State.prototype.xy = function (x, y) {
-    utils.combine(this, _getXYState(x, y));
+    this.resetColor();
+    utils.combine(this.internalState, _getXYState(x, y));
     return this;
 };
 
@@ -91,7 +95,7 @@ State.prototype.xy = function (x, y) {
  * @return {State}
  */
 State.prototype.transition = function (seconds) {
-    utils.combine(this, _getTransitionState(seconds));
+    utils.combine(this.internalState, _getTransitionState(seconds));
     return this;
 };
 
@@ -103,11 +107,12 @@ State.prototype.transition = function (seconds) {
  * @return {State}
  */
 State.prototype.rgb = function (r, g, b) {
+    this.resetColor();
     // The conversion to rgb is now done in the xy space, but to do so requires knowledge of the limits of the light's
     // color gamut.
     // To cater for this, we store the rgb value requested, and convert it to xy when the user applies it.
-    utils.combine(this, {rgb: [r, g, b]});
-    //utils.combine(this, _getHSLStateFromRGB(r, g, b)); // Was not particularly reliable conversion
+    utils.combine(this.internalState, {rgb: [r, g, b]});
+    //utils.combine(this.internalState, _getHSLStateFromRGB(r, g, b)); // Was not particularly reliable conversion
     return this;
 };
 
@@ -117,9 +122,19 @@ State.prototype.rgb = function (r, g, b) {
  * @return {State}
  */
 State.prototype.effect = function (value) {
-    utils.combine(this, _getEffectState(value));
+    utils.combine(this.internalState, _getEffectState(value));
     return this;
 };
+
+State.prototype.getData = function () {
+    return this.internalState;
+}
+
+State.prototype.resetColor = function () {
+    delete this.internalState.xy;
+	delete this.internalState.rgb;
+	delete this.internalState.ct;
+}
 
 function _getXYState(x, y) {
     return {

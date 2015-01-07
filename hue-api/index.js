@@ -301,6 +301,8 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
 
     //TODO stateValues need to be injected properly so that they can be checked and validated
     // Need to ensure we take a copy of the state values (as if we use rgb values you can end up making unwanted changes)
+    if(stateValues.getData)
+        stateValues = stateValues.getData();
     options.values = JSON.parse(JSON.stringify(stateValues));
 
     if (!promise) {
@@ -340,7 +342,10 @@ HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
     promise = _setGroupIdOption(options, id);
 
     //TODO stateValues need to be injected properly so that they can be checked and validated
-    options.values = stateValues;
+    // Need to ensure we take a copy of the state values (as if we use rgb values you can end up making unwanted changes)
+    if(stateValues.getData)
+        stateValues = stateValues.getData();
+    options.values = JSON.parse(JSON.stringify(stateValues));
 
     if (!promise) {
         promise = http.invoke(groupsApi.setGroupState, options);
