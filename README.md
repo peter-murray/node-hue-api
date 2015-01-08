@@ -25,7 +25,7 @@ in the firmware of the Phillips Hue Bridge.
 
 
 ## Work In Progress
-There is still some work to be done around completing the ability to define schedules in a bette way that properly
+There is still some work to be done around completing the ability to define schedules in a better way that properly
 validates the command that is to be run as part of the schedule. With the changes introduced in version ``0.2.0`` of this
 library it should be easier to accomplish in an upcoming release.
 
@@ -119,7 +119,7 @@ Philips Hue website), then you will need to register your application with the H
 Registration requires you to issue a request to the Bridge after pressing the Link Button on the Bridge (although you can
 now do this via the API too if you already have an existing user account on the Bridge).
 
-Ths library offer two functions to register new devices/users with the Hue Bridge. These are detailed below.
+This library offer two functions to register new devices/users with the Hue Bridge. These are detailed below.
 
 
 ### Bridge Configuration
