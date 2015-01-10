@@ -332,8 +332,8 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
 
     if (!promise) {
         // We have not errored, so check if we need to convert an rgb value
-
-        if (stateValues.rgb) {
+        // This will be the case if rgb is no longer the method defined in lightstate.js
+        if (!isFunction(stateValues.rgb)) {
             promise = this.lightStatus(id)
                 .then(function (lightDetails) {
                     options.values.xy = rgb.convertRGBtoXY(stateValues.rgb, lightDetails);
@@ -1021,4 +1021,11 @@ function _isScheduleIdValid(id) {
     } else {
         return false;
     }
+}
+
+/** check that something is a function or not.
+ */
+function isFunction(functionToCheck) {
+ var getType = {};
+ return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
 }
