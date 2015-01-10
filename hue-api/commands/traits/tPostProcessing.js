@@ -1,20 +1,37 @@
 "use strict";
 
-var Trait = require("traits").Trait,
-    ApiError = require("../../errors").ApiError;
+var util = require("util")
+    , Trait = require("traits").Trait
+    , ApiError = require("../../errors").ApiError
+    ;
 
 module.exports = function (fn) {
-    if (!fn) {
-        throw new ApiError("A post processing function must be provided");
+    var processingFunctions;
+
+    if (arguments.length === 0) {
+        throw new ApiError("At least one post processing functions must be provided");
     }
 
-    if (typeof fn !== "function") {
-        throw new ApiError("The post processing function must be a function; " + typeof fn );
-    }
+    processingFunctions = validateFunction(Array.prototype.slice.call(arguments));
 
-    return Trait(
-        {
-            "postProcessingFn" : fn
-        }
-    );
+    return Trait({
+        "postProcessing": processingFunctions
+    });
 };
+
+function validateFunction(fn) {
+    var result = [];
+
+    if (util.isArray(fn)) {
+        fn.forEach(function (actualFn) {
+            result = result.concat(validateFunction(actualFn));
+        });
+    } else {
+        if (typeof fn !== "function") {
+            throw new ApiError("The post processing function must be a function; " + typeof fn);
+        }
+        result.push(fn);
+    }
+
+    return result;
+}

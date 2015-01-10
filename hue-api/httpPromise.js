@@ -15,21 +15,29 @@ function _invoke(command, parameters) {
         , promise
         ;
 
-    promise = requestUtil.request(options)
+    promise = requestUtil.request(options);
+
+    if (command.statusCodeMap) {
+        promise = promise.then(generateErrorsIfMatched(command.statusCodeMap));
+    }
+
+    promise = promise
         .then(_requireStatusCode200)
         .then(function (requestResult) {
-                  var result;
+            var result;
 
-                  if (options.json) {
-                      result = _checkForError(requestResult);
-                  } else {
-                      result = requestResult.data;
-                  }
-                  return result;
-              });
+            if (options.json) {
+                result = _checkForError(requestResult);
+            } else {
+                result = requestResult.data;
+            }
+            return result;
+        });
 
-    if (command.postProcessingFn) {
-        promise = promise.then(command.postProcessingFn);
+    if (command.postProcessing) {
+        command.postProcessing.forEach(function (fn) {
+            promise = promise.then(fn);
+        });
     }
 
     return promise;
@@ -43,13 +51,9 @@ function _buildOptions(command, parameters) {
             hostname: parameters.host
         };
 
-//    if (parameters.host) {
-//        hostAndPort = parameters.host.split(":");
-//        urlObj.host = hostAndPort[0];
-//        urlObj.port = hostAndPort[1] || "80";
-//    } else {
-//        throw new Error("A host name must be provided in the parameters");
-//    }
+    if (parameters.port) {
+        urlObj.port = parameters.port;
+    }
 
     options.timeout = parameters.timeout || 10000;
     options.method = command.method || "GET";
@@ -105,9 +109,9 @@ function _getError(jsonObject) {
             }
         } else if (jsonObject.error) {
             return {
-                "type"       : jsonObject.error.type,
+                "type": jsonObject.error.type,
                 "description": jsonObject.error.description,
-                "address"    : jsonObject.error.address
+                "address": jsonObject.error.address
             };
         }
     }
@@ -132,10 +136,23 @@ function _requireStatusCode200(result) {
     if (result.statusCode !== 200) {
         throw new errors.ApiError(
             {
-                type       : "Response Error",
-                description: "Unexpected response status; " + result.statusCode
+                type: "Response Error",
+                description: "Unexpected response status; " + result.statusCode,
+                statusCode: result.statusCode
             }
         );
     }
     return result;
+}
+
+function generateErrorsIfMatched(map) {
+    return function(result) {
+        if (map && map[result.statusCode]) {
+            throw new errors.ApiError({
+                type: result.statusCode,
+                message: map[result.statusCode]
+            });
+        }
+        return result;
+    };
 }

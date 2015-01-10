@@ -52,7 +52,7 @@ describe("ScheduleEvent", function () {
         it("should not accept invalid date strings", function () {
             try {
                 scheduledEvent.on("1995-00-00T00:00:00");
-                expect.fail("should have got a parsing error");
+                throw new Error("should have got a parsing error");
             }
             catch (error) {
                 if (error instanceof ApiError) {

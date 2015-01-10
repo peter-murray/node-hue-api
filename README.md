@@ -19,10 +19,6 @@ swallowed silently.
 For a list of changes, please refer to the change log;
 [Changes](Changelog.md)
 
-Please note that a number of breaking changes have occurred in moving from version 0.1.x to 0.2.x, but these were necessary to
-provide more consistency in the API and to ensure that moving forward the library will be able to better adjust to changes
-in the firmware of the Phillips Hue Bridge.
-
 
 ## Work In Progress
 There is still some work to be done around completing the ability to define schedules in a better way that properly
@@ -58,6 +54,7 @@ Both of these methods are useful if you do not know the IP Address of the bridge
 The offical Hue documentation recommends an approach to finding bridges by using both UPnP and N-UPnP in parallel
 to find your bridges on the network. This API library provided you with both options, but leaves it
 to the developer to decide on the approach to be used, i.e. fallback, parallel, or just one type.
+
 
 #### nupnpSearch() or locateBridges()
 This API function makes use of the official API endpoint that reveals the bridges on a network. It is a call through to
@@ -118,7 +115,7 @@ Hue Bridges Found: [{"id":"001788096103","ipaddress":"192.168.2.129"}]
 
 
 ### Registering a new Device/User with the Bridge
-Once you have discovered the IP Address for your bridge (either from the locate/search function, or looking it up on the
+Once you have discovered the IP Address for your bridge (either from the UPnP/N-UPnP function, or looking it up on the
 Philips Hue website), then you will need to register your application with the Hue Bridge.
 
 Registration requires you to issue a request to the Bridge after pressing the Link Button on the Bridge (although you can
@@ -159,35 +156,51 @@ This will provide results detailing the configuration of the bridge (IP Address,
 ```
 {
   "name": "Philips hue",
-  "mac": "00:x:xx:xx:xx:xx",
-  "dhcp": true,
-  "ipaddress": "192.168.2.129",
-  "netmask": "255.255.255.0",
-  "gateway": "192.168.2.1",
-  "proxyaddress": "none",
-  "proxyport": 0,
-  "UTC": "2013-06-15T13:20:08",
-  "whitelist": {
-    "51780342fd7746f2fb4e65c30b91d7": {
-      "last use date": "2013-05-29T20:29:51",
-      "create date": "2013-05-29T20:29:51",
-      "name": "Node.js API"
+    "zigbeechannel": 11,
+    "mac": "xx:xx:xx:xx:xx:xx",
+    "dhcp": false,
+    "ipaddress": "192.168.2.245",
+    "netmask": "255.255.255.0",
+    "gateway": "192.168.2.254",
+    "proxyaddress": "none",
+    "proxyport": 0,
+    "UTC": "2015-01-10T13:18:51",
+    "localtime": "2015-01-10T13:18:51",
+    "timezone": "Europe/London",
+    "whitelist": {
+      "fG2EZIaS2pZuSeKH": {
+        "last use date": "2015-01-09T22:54:21",
+        "create date": "2014-05-18T17:11:10",
+        "name": "philips.lighting.hue#iPad"
+      },
+      "0f607264fc6318a92b9e13c65db7cd3c": {
+        "last use date": "2014-12-23T17:25:16",
+        "create date": "2014-12-23T17:14:30",
+        "name": "iPad"
+      }
     },
-    "08a902b95915cdd9b75547cb50892dc4": {
-      "last use date": "1987-01-06T22:53:37",
-      "create date": "2013-04-02T13:39:18",
-      "name": "Node Hue Api Tests User"
+    "swversion": "01018228",
+    "apiversion": "1.5.0",
+    "swupdate": {
+      "updatestate": 0,
+      "checkforupdate": false,
+      "devicetypes": {
+        "bridge": false,
+        "lights": []
+      },
+      "url": "",
+      "text": "",
+      "notify": false
+    },
+    "linkbutton": false,
+    "portalservices": true,
+    "portalconnection": "connected",
+    "portalstate": {
+      "signedon": true,
+      "incoming": true,
+      "outgoing": true,
+      "communication": "connected"
     }
-  },
-  "swversion": "01005825",
-  "swupdate": {
-    "updatestate": 0,
-    "url": "",
-    "text": "",
-    "notify": false
-  },
-  "linkbutton": false,
-  "portalservices": true
 }
 ```
 
@@ -203,6 +216,46 @@ For this reason, if you want to validate that the user account used to connect t
 look for a field that is not present in the above result, like the ``mac``, ``ipaddress`` or ``linkbutton`` would be good
 properties to check.
 
+
+### Software and API Version
+The version of the software and API for the bridge is available from the `config` function, but out of convenience there
+is also a `getVersion` function which filters the `config` return data to just give you the version details.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var hostname = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api;
+
+api = new HueApi(hostname, username);
+
+// --------------------------
+// Using a promise
+api.getVersion().then(displayResult).done();
+
+// --------------------------
+// Using a callback
+api.getVersion(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+```
+
+This will result in data output as follows;
+```
+{
+    "name": "Philips hue",
+    "version": {
+        "api": "1.5.0",
+        "software": "01018228"
+    }
+}
+```
 
 ### Registering without an existing Device/User ID
 A user can be registered on the Bridge using ``registerUser()`` or ``createUser()`` functions. This is useful when you have not got
@@ -856,11 +909,10 @@ If the call is successful, then ``true`` will be returned by the function call, 
 
 
 ## Working with Groups
-The Groups API for the Phillips Hue Bridge is not complete at this time, with some of API endpoints not officially
-supported yet. This API does attempt to provide functions to invoke these end points, but in testing, some of them have
-been identified as being problematic, in that they report success, but nothing on the actual Bridge changes. In most of
-these cases, restarting the Bridge (pulling the power cable) resulted in the calls working again for a short period of
-time. Your mileage may vary if you are creating and modifying these newly created groups...
+The Hue Bridge can support groups of lights so that you can do things like setting a colour and status to a group
+of lights instead of just a single light.
+
+There is a special "All Lights" Group with an id of `0` that is defined in the bridge that a user cannot modify.
 
 ### Obtaining all Groups from the Bridge
 To obtain all the groups defined in the bridge use the __groups()__ function;
@@ -897,21 +949,38 @@ This will produce an array of values detailing the id and names of the groups;
 [
   {
     "id": "0",
-    "name": "All Lights"
+    "name": "Lightset 0",
+    "type": "LightGroup"
   },
   {
     "id": "1",
-    "name": "VRC 1"
+    "name": "VRC 1",
+    "type": "LightGroup",
+    "lights": [1, 2, 3, 4, 5]
   }
 ]
 ```
-The "All Lights" Group is a special instance and will always exist and have the id of "0" as specified in the Hue Api
-documentation.
+The "Lightset 0" Group is a special instance and will always exist and have the id of "0" as specified in the Hue Api
+documentation. Due to this internal group being maintained by the bridge internally, it will not return an array of light
+ids like any of the other types of Groups.
+
+The `groups` function will return all types of Groups in the bridge, these include new types of groups that support the
+new [Hue Beyond|http://www2.meethue.com/en-us/the-range/hue-beyond].
+
+To support the addition of these new types of groups, and the fact that most users will only want a subset of the types
+there are now three new functions that will filter the types of groups for you;
+* `luminaries` Will obtain only the *Luminarie* groups (i.e. a collection of lights that make up a single device). These are not user modifiable.
+* `lightSources` Will obtain the *Lightsource* groups (i.e. a subset of the lights in a Luminarie). These are not user modifiable.
+* `lightGroups` Will obtain the defined groups in the bridge
 
 
 ### Obtaining the Details of a Group Definition
-To obtain the details of the lights that make up a group (and some extra information like the last action that was performed)
+To get the specific details of the lights that make up a group (and some extra information like the last action that was performed)
 use the __getGroup(id)__ function.
+
+In Hue Bridge API version 1.4+ the full data for the group will be returned when obtaining all groups via the `groups`
+or `lightGroups` functions. The only exception to this is the special All Lights Group, id 0, which requires the use of
+a specific lookup to obtain the full details.
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
@@ -942,7 +1011,7 @@ Which will return produce a result like;
 ```
 {
   "id": "0",
-  "name": "All Lights",
+  "name": "Lightset 0",
   "lights": [
     "1",
     "2",
@@ -950,6 +1019,7 @@ Which will return produce a result like;
     "4",
     "5"
   ],
+  "type": "LightGroup",
   "lastAction": {
     "on": true,
     "bri": 128,
@@ -971,9 +1041,43 @@ A function ``setGroupLightState()`` exists for interacting with a group of light
 particular state. This function is identical to that of the ``setLightState()`` function above, except that it works on
 groups instead of a single light.
 
-In the early versions of this library the group and individual lights were controlled via a single ``setLightState()``
-function, but this has been removed from version _0.2.x_ as it was not clear that a single boolean changed the target for the
-function invocation which felt wrong.
+
+### Create a New Group
+To create a new group use the __createGroup(name, lightIds)__ function;
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username);
+
+// Create a new Group on the bridge
+
+// --------------------------
+// Using a promise
+api.createGroup("a new group", [4, 5])
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.createGroup("group name", [1, 4, 5], function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+```
+
+The function will return a promise with a result that contains the id of the newly created group;
+```
+{
+  "id": "2"
+}
+```
 
 
 ### Updating a Group
@@ -983,9 +1087,9 @@ It is possible to update the associated lights and the name of a group after it 
 You can set the name, the lightIds or both with this function, just omit what you do not want to set, it will work out which
 parameter was passed based on type, a String for the name and an array for the light ids.
 
-When invoking this function ``true`` will be returned if the Bridge accepts the requested change, but under some circumstances
-if the group has just been created, then Bridge reports success, but does not actually change the configuration details. In these
-cases, a restart of the Bridge might resolve the issue.
+When invoking this function ``true`` will be returned if the Bridge accepts the requested change.
+It can take take a short period of time before the bridge will actually reflect the change requested, in experience 1.5
+seconds has always covered the necessary time to effect the change, but it could be quicker than that.
 
 Changing the name of an existing group;
 ```js
@@ -1069,47 +1173,6 @@ api.updateGroup(1, "group name", [4, 5], function(err, result){
     if (err) throw err;
     displayResults(result);
 });
-```
-
-
-### Create a New Group
-The creation of groups is not officially supported in the released Hue API from Phillips (version 1.0). This has been
-tested on a Hue Bridge, but use at your own risk *(you may have to reset the bridge to factory defaults if something goes wrong)*.
-
-To create a new group use the __createGroup(name, lightIds)__ function;
-
-```js
-var HueApi = require("node-hue-api").HueApi;
-
-var displayResults = function(result) {
-    console.log(JSON.stringify(result, null, 2));
-};
-
-var host = "192.168.2.129",
-    username = "08a902b95915cdd9b75547cb50892dc4",
-    api = new HueApi(host, username);
-
-// Create a new Group on the bridge
-
-// --------------------------
-// Using a promise
-api.createGroup("a new group", [4, 5])
-    .then(displayResults)
-    .done();
-
-// --------------------------
-// Using a callback
-api.createGroup("group name", [1, 4, 5], function(err, result){
-    if (err) throw err;
-    displayResults(result);
-});
-```
-
-The function will return a promise with a result that contains the id of the newly created group;
-```
-{
-  "id": "2"
-}
 ```
 
 
@@ -1467,6 +1530,8 @@ as in the case if the schedule does not exist.
 
 ## Advanced Options
 
+### Timeouts
+
 If there are issues with the Bridge not responding in time for a result of error to be delivered, then you
 may need to tweak the timeout settings for the API. When this happens you will get an
 `ETIMEOUT` error.
@@ -1485,9 +1550,30 @@ var host = "192.168.2.129",
 api = new HueApi(host, password, timeout);
 ```
 
-The default timeout, when onw is not specified will be 10000ms (10 seconds). This is usually enough time for the bridge
+The default timeout, when not specified will be 10000ms (10 seconds). This is usually enough time for the bridge
 to respond unless you are returning a very large result (like the complete state for the bridge in a large installation)
 
+
+### Bridge Port Number
+
+If you are running your bridge over a router or using some kind of NAT, it may be possible that the Hue Bridge is not
+running on the default port. If this is the case, then you can set the port number as an advanced configuration option
+when creating the API connection to the bridge.
+
+*Please note that for normal usage, you should never set the port value.*
+
+```js
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi;
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    timeout = 20000 // timeout in milliseconds,
+    port = 8080 // not the default port for the bridge,
+    api;
+
+api = new HueApi(host, password, timeout, port);
+```
 
 ## License
 Copyright 2013. All Rights Reserved.

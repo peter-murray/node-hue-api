@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.2.7
+- Added functions `nupnpSearch` and `upnpSearch` for bridge discovery and deprecated old search function references
+- Updated the Groups API and documentation to support latest Hue Bridge software version
+- `LightGroup 0` name now provided from the bridge, rather than called `All Lights`
+- Provided separate functions for the different types of groups that are now possible in Bridge API version 1.4+
+- Added advanced option to specify the port number for the bridge
+- Added convenience `getVersion` function to obtain software and API versions of the bridge
+
 ## 0.2.6
 - Fixes a bug introduced in 0.2.5 that would remove the rgb state value from a LightState object thereby making
 different to what was originally set if using it in multiple `setLightState()` calls

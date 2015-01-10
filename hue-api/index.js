@@ -14,12 +14,39 @@ var Q = require("q")
     ;
 
 
-function HueApi(host, username, timeout) {
+function HueApi(host, username, timeout, port) {
     this.host = host;
     this.username = username;
     this.timeout = timeout || 10000;
+
+    // By default users should not specify this and just leave undefined
+    if (port) {
+        this.port = port;
+    }
 }
 module.exports = HueApi;
+
+/**
+ * Gets the version data for the Philips Hue Bridge.
+ *
+ * @param cb An optional callback function if you don't want to be informed via a promise.
+ * @returns {Q.promise} A promise will be provided that will resolve to the version data for the bridge, or {null} if a
+ * callback was provided.
+ */
+HueApi.prototype.getVersion = function (cb) {
+    var promise = this.config()
+        .then(function (data) {
+            return {
+                name: data.name,
+                version: {
+                    api: data.apiversion,
+                    software: data.swversion
+                }
+            };
+        });
+
+    return utils.promiseOrCallback(promise, cb);
+}
 
 /**
  * Loads the description for the Philips Hue.
@@ -60,7 +87,7 @@ HueApi.prototype.connect = HueApi.prototype.config;
  * @param cb An optional callback function if you don't want to be informed via a promise.
  * @returns {Q.promise} A promise with the result, or {null} if a callback function was provided
  */
-HueApi.prototype.getFullState = function(cb) {
+HueApi.prototype.getFullState = function (cb) {
     var options = _defaultOptions(this),
         promise = http.invoke(configurationApi.getFullState, options);
 
@@ -178,9 +205,9 @@ HueApi.prototype.registeredUsers = function (cb) {
                     device = list[key];
                     devices.push(
                         {
-                            "name"    : device.name,
+                            "name": device.name,
                             "username": key,
-                            "created" : device["create date"],
+                            "created": device["create date"],
                             "accessed": device["last use date"]
                         }
                     );
@@ -308,11 +335,11 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
 
         if (stateValues.rgb) {
             promise = this.lightStatus(id)
-                .then(function(lightDetails) {
+                .then(function (lightDetails) {
                     options.values.xy = rgb.convertRGBtoXY(stateValues.rgb, lightDetails);
                     delete options.values.rgb;
                 })
-                .then(function() {
+                .then(function () {
                     return http.invoke(lightsApi.setLightState, options);
                 })
             ;
@@ -353,12 +380,48 @@ HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
  * Obtains all the groups from the Hue Bridge as an Array of {id: {*}, name: {*}} objects.
  *
  * @param cb An optional callback function to use if you do not want to use a promise for the results.
- * @return A promise that will set the specified state on the light, or {null} if a callback was provided.
+ * @return A promise that will obtain the groups, or {null} if a callback was provided.
  */
 HueApi.prototype.groups = function (cb) {
     var options = _defaultOptions(this),
         promise = http.invoke(groupsApi.getAllGroups, options);
 
+    return utils.promiseOrCallback(promise, cb);
+};
+
+
+/**
+ * Obtains all the Luminaries from the Hue Bridge as an Array of {id: {*}, name: {*}} objects.
+ *
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @return A promise that will obtain the luminaries, or {null} if a callback was provided.
+ */
+HueApi.prototype.luminaires = function (cb) {
+    var promise = this._filterGroups("Luminaire");
+    return utils.promiseOrCallback(promise, cb);
+};
+
+
+/**
+ * Obtains all the LightSources from the Hue Bridge as an Array of {id: {*}, name: {*}} objects.
+ *
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @return A promise that will obtain the lightsources, or {null} if a callback was provided.
+ */
+HueApi.prototype.lightSources = function (cb) {
+    var promise = this._filterGroups("Lightsource");
+    return utils.promiseOrCallback(promise, cb);
+};
+
+
+/**
+ * Obtains all the LightGroups from the Hue Bridge as an Array of {id: {*}, name: {*}} objects.
+ *
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @return A promise that will obtain the LightGroups, or {null} if a callback was provided.
+ */
+HueApi.prototype.lightGroups = function (cb) {
+    var promise = this._filterGroups("LightGroup");
     return utils.promiseOrCallback(promise, cb);
 };
 
@@ -376,17 +439,19 @@ HueApi.prototype.getGroup = function (id, cb) {
 
     //TODO find a way to make this a normal post processing action in the groups-api, the id from the call needs to be injected...
     function processGroupResult(group) {
-        return {
-            "id"  : String(id),
-
-            // Inject our "known name" for the all lights group if necessary
-            "name": id === 0 ? groupsApi.NAME_ALL_LIGHTS : group.name,
-
-            "lights"    : group.lights,
+        var result = {
+            "id": String(id),
+            "name": group.name,
+            "type": group.type,
+            "lights": group.lights,
             "lastAction": group.action
-
-            // Hue Api has a placeholder for scenes which are currently not used.
         };
+
+        if (group.type === "Luminaire" && group.modelid) {
+            result.modelid = group.modelid;
+        }
+
+        return result;
     }
 
     promise = _setGroupIdOption(options, id);
@@ -423,6 +488,8 @@ HueApi.prototype.updateGroup = function (id, name, lightIds, cb) {
             cb = param;
         } else if (Array.isArray(param)) {
             options.values.lights = utils.createStringValueArray(param);
+        } else if (param === undefined || param === null) {
+            // Ignore it
         } else {
             options.values.name = param;
         }
@@ -457,7 +524,7 @@ HueApi.prototype.createGroup = function (name, lightIds, cb) {
         promise;
 
     options.values = {
-        name  : name,
+        name: name,
         lights: utils.createStringValueArray(lightIds)
     };
 
@@ -474,9 +541,6 @@ HueApi.prototype.createGroup = function (name, lightIds, cb) {
  * @return {*} A promise that will return <true> if the deletion was successful, or null if a callback was provided.
  */
 HueApi.prototype.deleteGroup = function (id, cb) {
-    // In version 1.0 of the Phillips Hue API this is not officially supported and has been reverse engineered from
-    // tinkering with the api end points...
-
     var options = _defaultOptions(this),
         promise = _setGroupIdOptionForModification(options, id);
 
@@ -599,6 +663,25 @@ HueApi.prototype.updateSchedule = function (id, schedule, cb) {
 // PRIVATE METHODS
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+HueApi.prototype._filterGroups = function (type) {
+    var self = this;
+
+    return self.groups()
+        .then(function (groups) {
+            var results = [];
+
+            if (groups) {
+                groups.forEach(function (group) {
+                    if (group.type === type) {
+                        results.push(group);
+                    }
+                })
+            }
+
+            return results;
+        });
+};
+
 /**
  * Creates a new schedule in the Hue Bridge.
  *
@@ -640,7 +723,7 @@ function _setCreateUserOptions(options, username, deviceType) {
     }
 
     options.values = {
-        "username"  : validatedUsername,
+        "username": validatedUsername,
         "devicetype": deviceType || "Node.js API"
     };
 
@@ -865,11 +948,17 @@ function _errorPromise(message) {
  * @private
  */
 function _defaultOptions(api) {
-    return {
-        "host"    : api.host,
+    var result = {
+        "host": api.host,
         "username": api.username,
         "timeout": api.timeout
     };
+
+    if (api.port) {
+        result.port = api.port;
+    }
+
+    return result;
 }
 
 /**
