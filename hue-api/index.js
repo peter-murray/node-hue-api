@@ -4,13 +4,13 @@ var Q = require("q")
     , http = require("./httpPromise")
     , ApiError = require("./errors").ApiError
     , utils = require("./utils")
-    , rgb = require("./rgb")
     , lightsApi = require("./commands/lights-api")
     , groupsApi = require("./commands/groups-api")
     , schedulesApi = require("./commands/schedules-api")
     , configurationApi = require("./commands/configuration-api")
     , scheduledEvent = require("./scheduledEvent")
     , bridgeDiscovery = require("./bridge-discovery")
+    , lightState = require("./lightstate")
     ;
 
 
@@ -321,29 +321,34 @@ HueApi.prototype.setLightName = function (id, name, cb) {
  * @return A promise that will set the specified state on the light, or {null} if a callback was provided.
  */
 HueApi.prototype.setLightState = function (id, stateValues, cb) {
-    var options = _defaultOptions(this),
-        promise;
+    var options = _defaultOptions(this)
+        , state
+        , promise
+        ;
 
     promise = _setLightIdOption(options, id);
-
-    //TODO stateValues need to be injected properly so that they can be checked and validated
-    // Need to ensure we take a copy of the state values (as if we use rgb values you can end up making unwanted changes)
-    options.values = JSON.parse(JSON.stringify(stateValues));
 
     if (!promise) {
         // We have not errored, so check if we need to convert an rgb value
 
-        if (stateValues.rgb) {
+        if (lightState.isLightState(stateValues)) {
+            state = stateValues;
+        } else {
+            state = lightState.create(stateValues);
+        }
+
+        if (state.hasRGB()) {
             promise = this.lightStatus(id)
                 .then(function (lightDetails) {
-                    options.values.xy = rgb.convertRGBtoXY(stateValues.rgb, lightDetails);
-                    delete options.values.rgb;
+                    state = state.applyRGB(lightDetails.modelid);
+                    options.values = state.payload();
                 })
                 .then(function () {
                     return http.invoke(lightsApi.setLightState, options);
                 })
             ;
         } else {
+            options.values = state.payload();
             promise = http.invoke(lightsApi.setLightState, options);
         }
     }

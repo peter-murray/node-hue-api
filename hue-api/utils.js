@@ -67,6 +67,12 @@ module.exports.combine = function (obj, values) {
     return obj;
 };
 
+module.exports.isFunction = function(object) {
+    var getClass = {}.toString;
+
+    return object && getClass.call(object) === '[object Function]';
+};
+
 /**
  * Parses a JSON response checking for success on all changes.
  * @param result The JSON object to parse for success messages.

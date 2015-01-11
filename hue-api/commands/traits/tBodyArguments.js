@@ -72,6 +72,16 @@ var _createBodyArgumentTrait = function (options) {
         }
     }
 
+    if (options.type === "list") {
+        if (options.listType) {
+            traitProperties.valueType = Trait.create(Object.prototype, _createBodyArgumentTrait(options.listType));
+        }
+    }
+
+    if (options.defaultValue) {
+        traitProperties.defaultValue = options.defaultValue;
+    }
+
     if (options.minValue !== undefined && options.maxValue !== undefined) {
         traitProperties.range = {"min": options.minValue, "max": options.maxValue};
     }

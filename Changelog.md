@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0
+- Massive refactoring of `LightState` which is a breaking change from version `0.2.7`
+- LightState convenience functions to support simpler creation of new states
+- Modified the way that RGB is converted to an XY value for light state objects
+
+
 ## 0.2.7
 - Added functions `nupnpSearch` and `upnpSearch` for bridge discovery and deprecated old search function references
 - Updated the Groups API and documentation to support latest Hue Bridge software version
