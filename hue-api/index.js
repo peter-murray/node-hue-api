@@ -26,6 +26,7 @@ function HueApi(host, username, timeout, port) {
 }
 module.exports = HueApi;
 
+
 /**
  * Gets the version data for the Philips Hue Bridge.
  *
@@ -46,7 +47,9 @@ HueApi.prototype.getVersion = function (cb) {
         });
 
     return utils.promiseOrCallback(promise, cb);
-}
+};
+HueApi.prototype.version = HueApi.prototype.getVersion;
+
 
 /**
  * Loads the description for the Philips Hue.
@@ -58,6 +61,8 @@ HueApi.prototype.description = function (cb) {
     var promise = bridgeDiscovery.description(this.host);
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getDescription = HueApi.prototype.description;
+
 
 /**
  * Reads the bridge configuration and returns it as a JSON object.
@@ -71,14 +76,8 @@ HueApi.prototype.config = function (cb) {
 
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getConfig = HueApi.prototype.config;
 
-/**
- * Performs a connection check on the bridge. This is the same as running HueApi.config().
- * This method is kept only as a backwards compatibility feature with 0.1.x, but will be removed in a future release.
- *
- * Refer to HueApi.config() for details.
- */
-HueApi.prototype.connect = HueApi.prototype.config;
 
 /**
  * Obtains the complete state for the Bridge. This is considered to be a very expensive operation and should not be invoked
@@ -93,6 +92,8 @@ HueApi.prototype.getFullState = function (cb) {
 
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.fullState = HueApi.prototype.getFullState;
+
 
 /**
  * Allows a new user/device to be registered with the Philips Hue Bridge. This will return the name of the user that was
@@ -131,13 +132,6 @@ HueApi.prototype.registerUser = function (host, username, deviceDescription, cb)
     }
     return utils.promiseOrCallback(promise, cb);
 };
-
-
-/**
- * Creates a new User in the Phillips Hue Bridge.
- *
- * Refer to HueApi.registerUser() for more details.
- */
 HueApi.prototype.createUser = HueApi.prototype.registerUser;
 
 
@@ -177,13 +171,6 @@ HueApi.prototype.deleteUser = function (username, cb) {
     }
     return utils.promiseOrCallback(promise, cb);
 };
-
-
-/**
- * Unregisters an existing user from the Phillips Hue Bridge.
- *
- * Refer ro HueApi.deleteUser() for more details.
- */
 HueApi.prototype.unregisterUser = HueApi.prototype.deleteUser;
 
 
@@ -220,6 +207,7 @@ HueApi.prototype.registeredUsers = function (cb) {
     var promise = this.config().then(processUsers);
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getRegisteredUsers = HueApi.prototype.registeredUsers;
 
 
 /**
@@ -236,6 +224,7 @@ HueApi.prototype.lights = function (cb) {
 
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getLights = HueApi.prototype.lights;
 
 
 /**
@@ -257,6 +246,7 @@ HueApi.prototype.lightStatus = function (id, cb) {
     }
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getLightStatus = HueApi.prototype.lightStatus;
 
 
 /**
@@ -271,6 +261,7 @@ HueApi.prototype.newLights = function (cb) {
 
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getNewLights = HueApi.prototype.newLights;
 
 
 /**
@@ -393,6 +384,8 @@ HueApi.prototype.groups = function (cb) {
 
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getGroups = HueApi.prototype.groups;
+HueApi.prototype.getAllGroups = HueApi.prototype.groups;
 
 
 /**
@@ -405,6 +398,7 @@ HueApi.prototype.luminaires = function (cb) {
     var promise = this._filterGroups("Luminaire");
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getLuminaires = HueApi.prototype.luminaires;
 
 
 /**
@@ -417,6 +411,7 @@ HueApi.prototype.lightSources = function (cb) {
     var promise = this._filterGroups("Lightsource");
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getLightSources = HueApi.prototype.lightSources;
 
 
 /**
@@ -429,6 +424,7 @@ HueApi.prototype.lightGroups = function (cb) {
     var promise = this._filterGroups("LightGroup");
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getLightGroups = HueApi.prototype.lightGroups;
 
 
 /**
@@ -466,6 +462,7 @@ HueApi.prototype.getGroup = function (id, cb) {
 
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.group = HueApi.prototype.getGroup;
 
 
 /**
@@ -571,6 +568,8 @@ HueApi.prototype.schedules = function (cb) {
 
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.getSchedules = HueApi.prototype.schedules;
+
 
 /**
  * Gets the specified schedule by id, which is in an identical format the the Hue API documentation, with the addition
@@ -594,6 +593,7 @@ HueApi.prototype.getSchedule = function (id, cb) {
     }
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.schedule = HueApi.prototype.getSchedule;
 
 
 /**
@@ -607,16 +607,7 @@ HueApi.prototype.getSchedule = function (id, cb) {
 HueApi.prototype.scheduleEvent = function (schedule, cb) {
     return _createSchedule(this, schedule, cb);
 };
-
-
-/**
- * Creates a one time scheduled event.
- * @param schedule {ScheduledEvent}
- * @return A promise that will return the id value of the schedule that was created
- */
-HueApi.prototype.createSchedule = function (schedule, cb) {
-    return _createSchedule(this, schedule, cb);
-};
+HueApi.prototype.createSchedule = HueAPi.prototype.scheduleEvent;
 
 
 /**
