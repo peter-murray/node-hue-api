@@ -140,6 +140,29 @@ module.exports.createStringValueArray = function (values) {
     return result;
 };
 
+module.exports.valueForType = function(type, value) {
+    var result;
+
+    if (type === "bool") {
+        result = Boolean(value);
+    } else if (type === "uint8" || type === "uint16") {
+        result = Math.floor(value);
+        if (result < 0) {
+            result = 0;
+        }
+    } else if (type === "string") {
+        result = String(value);
+    } else if (type === "float") {
+        result = Number(value);
+    } else if (type === "list") {
+        result = util.isArray(value) ? value : [];
+    } else {
+        result = value;
+    }
+
+    return result;
+};
+
 function _asStringValue(value) {
     var result;
 

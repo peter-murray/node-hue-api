@@ -573,45 +573,6 @@ function _getBoundedValue(value, min, max) {
     }
 }
 
-function valueForType(defintion, value) {
-    var result;
-
-    switch (defintion.type) {
-        case "bool":
-        {
-            result = Boolean(value);
-            break;
-        }
-        case "uint8":
-        case "uint16":
-        {
-            result = Math.floor(value);
-
-            if (result < 0) {
-                result = 0;
-            }
-            break;
-        }
-        case "string":
-        {
-            result = String(value);
-            break;
-        }
-        case "float":
-        {
-            result = Number(value);
-            break;
-        }
-        case "list":
-        {
-            result = util.isArray(value) ? value : [];
-            break;
-        }
-        default:
-        {
-            result = value;
-        }
-    }
-
-    return result;
+function valueForType(definition, value) {
+    return utils.valueForType(definition.type, value);
 }
