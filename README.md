@@ -960,9 +960,12 @@ This will produce an array of values detailing the id and names of the groups;
   }
 ]
 ```
-The "Lightset 0" Group is a special instance and will always exist and have the id of "0" as specified in the Hue Api
-documentation. Due to this internal group being maintained by the bridge internally, it will not return an array of light
-ids like any of the other types of Groups.
+Please note, the __Lightset 0__ group, is a special instance and will always exist and have the id of "0" as specified
+in the Hue Api documentation. Due to this internal group being maintained by the bridge internally, it will not return
+an array of light ids like the other groups in the results returned from a call to `groups()`.
+
+If you need to get the full details of the __Lightset 0__ groups, then you can obtain that by using the `getGroup()`
+function, using an id argument of `0`.
 
 The `groups` function will return all types of Groups in the bridge, these include new types of groups that support the
 new [Hue Beyond|http://www2.meethue.com/en-us/the-range/hue-beyond].
