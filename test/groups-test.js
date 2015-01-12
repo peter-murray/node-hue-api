@@ -48,7 +48,7 @@ describe("Hue API", function () {
             });
         });
 
-        describe("#luminaries", function () {
+        describe("#luminaires", function () {
 
             it("using #promise", function (done) {
                 hue.luminaires()

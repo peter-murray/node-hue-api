@@ -391,10 +391,10 @@ HueApi.prototype.groups = function (cb) {
 
 
 /**
- * Obtains all the Luminaries from the Hue Bridge as an Array of {id: {*}, name: {*}} objects.
+ * Obtains all the Luminaires from the Hue Bridge as an Array of {id: {*}, name: {*}} objects.
  *
  * @param cb An optional callback function to use if you do not want to use a promise for the results.
- * @return A promise that will obtain the luminaries, or {null} if a callback was provided.
+ * @return A promise that will obtain the luminaires, or {null} if a callback was provided.
  */
 HueApi.prototype.luminaires = function (cb) {
     var promise = this._filterGroups("Luminaire");

@@ -969,7 +969,7 @@ new [Hue Beyond|http://www2.meethue.com/en-us/the-range/hue-beyond].
 
 To support the addition of these new types of groups, and the fact that most users will only want a subset of the types
 there are now three new functions that will filter the types of groups for you;
-* `luminaries` Will obtain only the *Luminarie* groups (i.e. a collection of lights that make up a single device). These are not user modifiable.
+* `luminaires` Will obtain only the *Luminaire* groups (i.e. a collection of lights that make up a single device). These are not user modifiable.
 * `lightSources` Will obtain the *Lightsource* groups (i.e. a subset of the lights in a Luminarie). These are not user modifiable.
 * `lightGroups` Will obtain the defined groups in the bridge
 
