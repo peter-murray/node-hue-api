@@ -1579,7 +1579,7 @@ api = new HueApi(host, password, timeout, port);
 ```
 
 ## License
-Copyright 2013. All Rights Reserved.
+Copyright 2013-2015. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this library except in compliance with the License.
 
