@@ -15,14 +15,12 @@ var Q = require("q")
 
 
 function HueApi(host, username, timeout, port) {
-    this.host = host;
-    this.username = username;
-    this.timeout = timeout || 10000;
-
-    // By default users should not specify this and just leave undefined
-    if (port) {
-        this.port = port;
-    }
+    this._config = {
+        hostname: host,
+        username: username,
+        timeout: timeout || 10000,
+        port: port || 80
+    };
 }
 module.exports = HueApi;
 
@@ -71,7 +69,7 @@ HueApi.prototype.getDescription = HueApi.prototype.description;
  * @return {Q.promise} A promise with the result, or <null> if a callback function was provided.
  */
 HueApi.prototype.config = function (cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise = http.invoke(configurationApi.getConfiguration, options);
 
     return utils.promiseOrCallback(promise, cb);
@@ -87,7 +85,7 @@ HueApi.prototype.getConfig = HueApi.prototype.config;
  * @returns {Q.promise} A promise with the result, or {null} if a callback function was provided
  */
 HueApi.prototype.getFullState = function (cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise = http.invoke(configurationApi.getFullState, options);
 
     return utils.promiseOrCallback(promise, cb);
@@ -143,7 +141,7 @@ HueApi.prototype.createUser = HueApi.prototype.registerUser;
  * @return {Q.promise} A promise with the result, or <null> if a callback was provided.
  */
 HueApi.prototype.pressLinkButton = function (cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     promise = _setConfigurationOptions(options, {"linkbutton": true});
@@ -162,7 +160,7 @@ HueApi.prototype.pressLinkButton = function (cb) {
  * @returns {Q.promise} A promise with the result of the deletion, or <null> if a callback was provided.
  */
 HueApi.prototype.deleteUser = function (username, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     promise = _setDeleteUserOptions(options, username);
@@ -217,7 +215,7 @@ HueApi.prototype.getRegisteredUsers = HueApi.prototype.registeredUsers;
  * @return A promise that will be provided with the lights object, or {null} if a callback function was provided.
  */
 HueApi.prototype.lights = function (cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     promise = http.invoke(lightsApi.getAllLights, options);
@@ -236,7 +234,7 @@ HueApi.prototype.getLights = HueApi.prototype.lights;
  * @return A promise that will be provided with the light status, or {null} if a callback function was provided.
  */
 HueApi.prototype.lightStatus = function (id, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     promise = _setLightIdOption(options, id);
@@ -256,7 +254,7 @@ HueApi.prototype.getLightStatus = HueApi.prototype.lightStatus;
  * @return A promise that will be provided with the new lights search result, or {null} if a callback function was provided.
  */
 HueApi.prototype.newLights = function (cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise = http.invoke(lightsApi.getNewLights, options);
 
     return utils.promiseOrCallback(promise, cb);
@@ -271,7 +269,7 @@ HueApi.prototype.getNewLights = HueApi.prototype.newLights;
  * @return A promise that will be provided with the new lights, or {null} if a callback function was provided.
  */
 HueApi.prototype.searchForNewLights = function (cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise = http.invoke(lightsApi.searchForNewLights, options);
 
     return utils.promiseOrCallback(promise, cb);
@@ -287,7 +285,7 @@ HueApi.prototype.searchForNewLights = function (cb) {
  * @return A promise that will be provided with the results of setting the name, or {null} if a callback function was provided.
  */
 HueApi.prototype.setLightName = function (id, name, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     promise = _setLightIdOption(options, id);
@@ -312,7 +310,7 @@ HueApi.prototype.setLightName = function (id, name, cb) {
  * @return A promise that will set the specified state on the light, or {null} if a callback was provided.
  */
 HueApi.prototype.setLightState = function (id, stateValues, cb) {
-    var options = _defaultOptions(this)
+    var options = this._defaultOptions(this)
         , state
         , promise
         ;
@@ -357,7 +355,7 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
  * @return {Q.promise} A promise that will set the specified state on the group, or {null} if a callback was provided.
  */
 HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     promise = _setGroupIdOption(options, id);
@@ -379,7 +377,7 @@ HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
  * @return A promise that will obtain the groups, or {null} if a callback was provided.
  */
 HueApi.prototype.groups = function (cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise = http.invoke(groupsApi.getAllGroups, options);
 
     return utils.promiseOrCallback(promise, cb);
@@ -435,7 +433,7 @@ HueApi.prototype.getLightGroups = HueApi.prototype.lightGroups;
  * @return A promise that will set the specified state on the light, or {null} if a callback was provided.
  */
 HueApi.prototype.getGroup = function (id, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     //TODO find a way to make this a normal post processing action in the groups-api, the id from the call needs to be injected...
@@ -477,7 +475,7 @@ HueApi.prototype.group = HueApi.prototype.getGroup;
  * @return A promise with a result of <true> if the update was successful, or null if a callback was provided.
  */
 HueApi.prototype.updateGroup = function (id, name, lightIds, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         parameters = [].slice.call(arguments, 1),
         promise;
 
@@ -510,8 +508,7 @@ HueApi.prototype.updateGroup = function (id, name, lightIds, cb) {
 
 
 /**
- * Creates a new light Group. This API is not officially supported in version 1.0 of the API from Phillips. Invoking
- * this function successfully will result in a new group being created and a result of {id: {Number}} being returned.
+ * Creates a new light Group.
  *
  * @param name The name of the group that we are creating, limited to 16 characters.
  * @param lightIds {Array} of ids for the lights to be included in the group.
@@ -519,10 +516,7 @@ HueApi.prototype.updateGroup = function (id, name, lightIds, cb) {
  * @return {*} A promise that will return the id of the group that was created, or null if a callback was provided.
  */
 HueApi.prototype.createGroup = function (name, lightIds, cb) {
-    // In version 1.0 of the Phillips Hue API this is not officially supported and has been reverse engineered from
-    // tinkering with the api end points...
-
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     options.values = {
@@ -543,7 +537,7 @@ HueApi.prototype.createGroup = function (name, lightIds, cb) {
  * @return {*} A promise that will return <true> if the deletion was successful, or null if a callback was provided.
  */
 HueApi.prototype.deleteGroup = function (id, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise = _setGroupIdOptionForModification(options, id);
 
     if (!promise) {
@@ -553,9 +547,6 @@ HueApi.prototype.deleteGroup = function (id, cb) {
 };
 
 
-//TODO setGroupState() - i.e. turn on lights etc...
-
-
 /**
  * Gets the schedules on the Bridge, as an array of {"id": {String}, "name": {String}} objects.
  *
@@ -563,7 +554,7 @@ HueApi.prototype.deleteGroup = function (id, cb) {
  * @return A promise that will return the results or <null> if a callback was provided.
  */
 HueApi.prototype.schedules = function (cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise = http.invoke(schedulesApi.getAllSchedules, options);
 
     return utils.promiseOrCallback(promise, cb);
@@ -580,7 +571,7 @@ HueApi.prototype.getSchedules = HueApi.prototype.schedules;
  * @returns A promise that will return the results or <null> if a callback was provided.
  */
 HueApi.prototype.getSchedule = function (id, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise = _setScheduleIdOption(options, id);
 
     function parseResults(result) {
@@ -605,9 +596,9 @@ HueApi.prototype.schedule = HueApi.prototype.getSchedule;
  * @return A promise that will return the id value of the schedule that was created, or <null> if a callback was provided.
  */
 HueApi.prototype.scheduleEvent = function (schedule, cb) {
-    return _createSchedule(this, schedule, cb);
+    return this._createSchedule(schedule, cb);
 };
-HueApi.prototype.createSchedule = HueAPi.prototype.scheduleEvent;
+HueApi.prototype.createSchedule = HueApi.prototype.scheduleEvent;
 
 
 /**
@@ -618,7 +609,7 @@ HueApi.prototype.createSchedule = HueAPi.prototype.scheduleEvent;
  * @return {Q.promise} A promise that will return the result of the deletion, or <null> if a callback was provided.
  */
 HueApi.prototype.deleteSchedule = function (id, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     promise = _setScheduleIdOption(options, id);
@@ -639,7 +630,7 @@ HueApi.prototype.deleteSchedule = function (id, cb) {
  * @return {Q.promise} A promise that will return the result, or <null> if a callback was provided.
  */
 HueApi.prototype.updateSchedule = function (id, schedule, cb) {
-    var options = _defaultOptions(this),
+    var options = this._defaultOptions(this),
         promise;
 
     promise = _setScheduleIdOption(options, id);
@@ -658,6 +649,24 @@ HueApi.prototype.updateSchedule = function (id, schedule, cb) {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates a default options object for connecting with a Hue Bridge.
+ *
+ * @returns {{host: *, username: *, timeout: *}}
+ * @private
+ */
+HueApi.prototype._defaultOptions = function() {
+    var config = this._config
+        ;
+
+    return {
+        host: config.hostname,
+        username: config.username,
+        timeout: config.timeout,
+        port: config.port
+    };
+};
 
 HueApi.prototype._filterGroups = function (type) {
     var self = this;
@@ -681,21 +690,20 @@ HueApi.prototype._filterGroups = function (type) {
 /**
  * Creates a new schedule in the Hue Bridge.
  *
- * @param api The HueApi that we are being invoked on.
  * @param schedule The schedule object to create.
  * @param cb An optional callback if you do not want to use the promise for results.
  * @returns {Q.promise} A promise with the creation results, or <null> if a callback was provided.
  * @private
  */
-function _createSchedule(api, schedule, cb) {
-    var options = _defaultOptions(api),
+HueApi.prototype._createSchedule = function(schedule, cb) {
+    var options = this._defaultOptions(),
         promise = _setScheduleOptionsForCreation(options, schedule);
 
     if (!promise) {
         promise = http.invoke(schedulesApi.createSchedule, options);
     }
     return utils.promiseOrCallback(promise, cb);
-}
+};
 
 /**
  * Validates and then injects the username and deviceType details into the options.
@@ -934,27 +942,6 @@ function _errorPromise(message) {
     var deferred = Q.defer();
     deferred.reject(new ApiError(message));
     return deferred.promise;
-}
-
-/**
- * Creates a default options object for connecting with a Hue Bridge.
- *
- * @param api The api that contains the username and host for the bridge.
- * @returns {{host: *, username: *, timeout: *}}
- * @private
- */
-function _defaultOptions(api) {
-    var result = {
-        "host": api.host,
-        "username": api.username,
-        "timeout": api.timeout
-    };
-
-    if (api.port) {
-        result.port = api.port;
-    }
-
-    return result;
 }
 
 /**
