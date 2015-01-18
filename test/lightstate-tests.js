@@ -1,13 +1,8 @@
-//
-//
-// Tests for using the LightState object to build up states for the Hue Bridge.
-//
-//
-
 "use strict";
 
-var expect = require("chai").expect,
-    lightState = require("..").lightState;
+var expect = require("chai").expect
+    , lightState = require("..").lightState
+    ;
 
 describe("#LightState", function () {
 

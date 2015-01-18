@@ -1,13 +1,13 @@
 "use strict";
 
-var expect = require("chai").expect,
-    HueApi = require("../hue-api"),
-    testValues = require("./support/testValues.js");
+var expect = require("chai").expect
+    , HueApi = require("..").api
+    , testValues = require("./support/testValues.js")
+    ;
 
 describe("Hue API", function () {
 
     describe("#setLightName", function () {
-
 
         describe("#promise", function() {
 
@@ -21,7 +21,6 @@ describe("Hue API", function () {
                 hue.setLightName(1,"A New Name").then(checkResults).done();
             });
         });
-
 
         describe("#callback", function () {
 

@@ -1,6 +1,7 @@
-var HueApi = require("../hue-api"),
-    testValues = require("./support/testValues.js"),
-    expect = require("chai").expect;
+var HueApi = require("../").HueApi
+    , testValues = require("./support/testValues.js")
+    , expect = require("chai").expect
+    ;
 
 
 describe("Hue API", function () {

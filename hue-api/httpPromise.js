@@ -4,6 +4,7 @@ var url = require("url")
     , util = require("util")
     , requestUtil = require("request-util")
     , errors = require("./errors.js")
+    , debug = /hue-api/.test(process.env.NODE_DEBUG)
     ;
 
 module.exports = {
@@ -44,7 +45,9 @@ function _invoke(command, parameters) {
 }
 
 function _buildOptions(command, parameters) {
-    var options = {},
+    var options = {
+            debug: debug
+        },
         body,
         urlObj = {
             protocol: parameters.ssl ? "https" : "http",

@@ -1,11 +1,13 @@
 "use strict";
 
-var expect = require("chai").expect,
-    assert = require("chai").assert,
-    HueApi = require("../hue-api"),
-    scheduledEvent = require("../hue-api/scheduledEvent"),
-    ApiError = require("../index").ApiError,
-    testValues = require("./support/testValues.js");
+var expect = require("chai").expect
+    , assert = require("chai").assert
+    , hue = require("..")
+    , HueApi = hue.api
+    , scheduledEvent = hue.scheduledEvent
+    , ApiError = hue.ApiError
+    , testValues = require("./support/testValues.js")
+    ;
 
 describe("Hue API", function () {
 

@@ -56,7 +56,7 @@ HueApi.prototype.version = HueApi.prototype.getVersion;
  * @return {Q.promise} A promise that will be provided with a description object, or {null} if a callback was provided.
  */
 HueApi.prototype.description = function (cb) {
-    var promise = bridgeDiscovery.description(this.host);
+    var promise = bridgeDiscovery.description(this._config.hostname);
     return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.getDescription = HueApi.prototype.description;

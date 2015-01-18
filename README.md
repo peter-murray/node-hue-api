@@ -25,8 +25,16 @@ There is still some work to be done around completing the ability to define sche
 validates the command that is to be run as part of the schedule. With the changes introduced in version ``0.2.0`` of this
 library it should be easier to accomplish in an upcoming release.
 
-The public API as of version 0.2.0+ is close to complete (at least for the current version of the Phillips Hue Bridge firmware),
-and as such there will be no breaking changes to the library that has occurred in moving from version ``0.1.x`` to ``0.2.x``.
+
+## Breaking Changes in moving from 0.2.x to 1.0.x
+There are breaking changes in the transition earlier versions (`0.2.x`) to `1.0.x` to do with the LightState object. The
+changes were required to properly fix the nature of how the `LightState` worked and to make it compatible with the
+underlying API state object that it represents.
+
+The major change in the LightState is that it can now properly support validation of values as stated in the API and can
+convert an object with properties directly into a LightState.
+
+The LightState has also been heavily enriched with convenience functions to make creating states a lot easier.
 
 
 ## Philips Hue Resources
@@ -125,7 +133,7 @@ This library offer two functions to register new devices/users with the Hue Brid
 
 
 ### Bridge Configuration
-You can obtain a summary of the configuration of the Bridge using the ``config()`` or ``connect()`` functions;
+You can obtain a summary of the configuration of the Bridge using the ``config()`` or ``getConfig()`` functions;
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
@@ -142,11 +150,18 @@ api = new HueApi(hostname, username);
 
 // --------------------------
 // Using a promise
-api.connect().then(displayResult).done();
+api.config().then(displayResult).done();
+// using getConfig() alias
+api.getConfig().then(displayResult).done();
 
 // --------------------------
 // Using a callback
-api.connect(function(err, config) {
+api.config(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+// using getConfig() alias
+api.getConfig(function(err, config) {
     if (err) throw err;
     displayResult(config);
 });
@@ -219,7 +234,7 @@ properties to check.
 
 ### Software and API Version
 The version of the software and API for the bridge is available from the `config` function, but out of convenience there
-is also a `getVersion` function which filters the `config` return data to just give you the version details.
+is also a `getVersion` and `version` function which filters the `config` return data to just give you the version details.
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
@@ -237,10 +252,17 @@ api = new HueApi(hostname, username);
 // --------------------------
 // Using a promise
 api.getVersion().then(displayResult).done();
+// or using 'version' alias
+api.version().then(displayResult).done();
 
 // --------------------------
 // Using a callback
 api.getVersion(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+// or using 'version' alias
+api.version(function(err, config) {
     if (err) throw err;
     displayResult(config);
 });
@@ -317,13 +339,55 @@ If the link button was pressed you should get a response that will provide you w
 ```
 
 
+### Bridge Description
+You can obtain the UPnP/Discovery description details of the Bridge using the function ``description()`` or
+``getDescription()``. The result of this will be the contents of the `/description.xml` converted into a JSON object.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var hostname = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api;
+
+api = new HueApi(hostname, username);
+
+// --------------------------
+// Using a promise
+api.description().then(displayResult).done();
+// using alias getDescription()
+api.getDescription().then(displayResult).done();
+
+// --------------------------
+// Using a callback
+api.description(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+// using alias getDescription()
+api.getDescription(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+```
+
+
 ### Validating a Connection to a Philips Hue Bridge
-To connect to a Philips Hue Bridge and obtain some basic details about it you can use the ``connect()`` or ``config()``
-functions which were detailed above.
+To connect to a Philips Hue Bridge and obtain some basic details about it you can use the any
+of the following functions;
+* ``config()`` or ``getConfig()``
+* ``version()`` or ``getVersion()``
+
+The details of the results of these functions are provided above.
 
 
 ### Obtaining the Complete State of the Bridge
-If you have a valid user account in the Bridge, then you can obtain the complete status of the bridge using ``getFullState()``.
+If you have a valid user account in the Bridge, then you can obtain the complete status of the bridge using
+``fullState()`` or ``getFullState()``.
 This function is computationally expensive on the bridge and should not be invoked frequently.
 
 ```js
@@ -342,6 +406,8 @@ api = new HueApi(hostname, username);
 // --------------------------
 // Using a promise
 api.getFullState().then(displayResult).done();
+// or alias fullState()
+api.fullState().then(displayResult).done();
 
 // --------------------------
 // Using a callback
@@ -349,7 +415,13 @@ api.getFullState(function(err, config) {
     if (err) throw err;
     displayResult(config);
 });
+// or alias fullState()
+api.fullState(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
 ```
+
 This will produce a JSON response similar to the following (large parts have been removed from the result below);
 ```
 {

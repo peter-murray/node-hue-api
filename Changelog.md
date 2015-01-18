@@ -7,6 +7,8 @@
 - Removed deprecated `HueApi.connect()` function
 - Added more convenience functions to `HueApi` to provide multiple language options and make functions
 consistent (e.g. `lightState()` and `getLightState()`)
+- Added scene API support
+- Updated HTTP request library to 2.51.0
 
 ## 0.2.7
 - Added functions `nupnpSearch` and `upnpSearch` for bridge discovery and deprecated old search function references
