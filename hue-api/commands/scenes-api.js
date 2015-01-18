@@ -64,8 +64,7 @@ apiTraits.getAllScenes = Trait.compose(
         "1.1",
         "Whitelist"
     ),
-    tDescription("Gets a list of all scenes currently stored in the bridge. Scenes are represented by a scene id, a name and a list of lights which are part of the scene."),
-    tPostProcessing(processAllScenes)
+    tDescription("Gets a list of all scenes currently stored in the bridge. Scenes are represented by a scene id, a name and a list of lights which are part of the scene.")
 );
 
 //TODO Updates a given scene
@@ -104,20 +103,3 @@ module.exports = {
     createScene: Trait.create(Object.prototype, apiTraits.createScene),
     modifyScene: Trait.create(Object.prototype, apiTraits.modifyScene)
 };
-
-function processAllScenes(result) {
-    var scenes = [];
-
-    Object.keys(result).forEach(function (id) {
-        var scene = result[id];
-
-        scenes.push({
-            id: id,
-            name: scene.name,
-            lights: scene.lights,
-            active: scene.active
-        });
-    });
-
-    return scenes;
-}
