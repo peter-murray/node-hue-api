@@ -6,7 +6,7 @@ var util = require("util")
     , lightStateTrait = require("./commands/traits/tLightStateBody")
     ;
 
-var stateDefinitions = lightStateTrait().bodyArguments.value
+var stateDefinitions = lightStateTrait(true).bodyArguments.value
     , State = function () {
         this.reset();
     };

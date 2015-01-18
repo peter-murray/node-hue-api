@@ -6,7 +6,7 @@ var Trait = require("traits").Trait,
 module.exports = function (description) {
     return Trait(
         {
-            "commandDescription" : description
+            commandDescription : description
         }
     );
 };

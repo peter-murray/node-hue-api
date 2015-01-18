@@ -3,59 +3,14 @@
 var Trait = require("traits").Trait,
     ApiError = require("../../errors").ApiError;
 
-module.exports = function (path, method, version, permission, response) {
-    return Trait(
-        {
-            "path" : path,
-            "method": method,
-            "version": version,
-            "permission": permission, //TODO may not be required as this represents the <username> variable in the path
-            "response": response || "application/json",
-
-            "pathParameters": function() {
-                if (! this.path) {
-                    throw new ApiError("The command has no path");
-                }
-
-                return _extractParameters(this.path);
-            },
-
-            "getPath": function(values) {
-                var requiredParameters = this.pathParameters(),
-                    resolvedPath = this.path;
-
-                requiredParameters.forEach(function(reqParam) {
-                    if (values[reqParam] === undefined) {
-                        throw new ApiError("The required parameter '" + reqParam + "' was missing a value.");
-                    }
-
-                    resolvedPath = resolvedPath.replace("<" + reqParam + ">", values[reqParam]);
-                });
-
-                return resolvedPath;
-            },
-
-            "toString": function() {
-                var result = {
-                    "path": this.path,
-                    "method": this.method,
-                    "version": this.version
-                };
-
-                return JSON.stringify(result);
-            }
-        }
-    );
-};
-
-function _extractParameters(str) {
+function extractParameters(str) {
     var parameters = [],
         currentParameter = null,
         currentChar,
         idx = 0;
 
     if (str) {
-        while(idx < str.length){
+        while (idx < str.length) {
             currentChar = str.charAt(idx);
 
             if (currentChar === "<") {
@@ -79,3 +34,48 @@ function _extractParameters(str) {
 
     return parameters;
 }
+
+module.exports = function (path, method, version, permission, response) {
+    return Trait(
+        {
+            path: path,
+            method: method,
+            version: version,
+            permission: permission, //TODO may not be required as this represents the <username> variable in the path
+            response: response || "application/json",
+
+            pathParameters: function () {
+                if (!this.path) {
+                    throw new ApiError("The command has no path");
+                }
+
+                return extractParameters(this.path);
+            },
+
+            getPath: function (values) {
+                var requiredParameters = this.pathParameters(),
+                    resolvedPath = this.path;
+
+                requiredParameters.forEach(function (reqParam) {
+                    if (values[reqParam] === undefined) {
+                        throw new ApiError("The required parameter '" + reqParam + "' was missing a value.");
+                    }
+
+                    resolvedPath = resolvedPath.replace("<" + reqParam + ">", values[reqParam]);
+                });
+
+                return resolvedPath;
+            },
+
+            toString: function () {
+                var result = {
+                    "path": this.path,
+                    "method": this.method,
+                    "version": this.version
+                };
+
+                return JSON.stringify(result);
+            }
+        }
+    );
+};

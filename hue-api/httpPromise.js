@@ -7,46 +7,10 @@ var url = require("url")
     , debug = /hue-api/.test(process.env.NODE_DEBUG)
     ;
 
-module.exports = {
-    invoke: _invoke
-};
-
-function _invoke(command, parameters) {
-    var options = _buildOptions(command, parameters)
-        , promise
-        ;
-
-    promise = requestUtil.request(options);
-
-    if (command.statusCodeMap) {
-        promise = promise.then(generateErrorsIfMatched(command.statusCodeMap));
-    }
-
-    promise = promise
-        .then(_requireStatusCode200)
-        .then(function (requestResult) {
-            var result;
-
-            if (options.json) {
-                result = _checkForError(requestResult);
-            } else {
-                result = requestResult.data;
-            }
-            return result;
-        });
-
-    if (command.postProcessing) {
-        command.postProcessing.forEach(function (fn) {
-            promise = promise.then(fn);
-        });
-    }
-
-    return promise;
-}
-
-function _buildOptions(command, parameters) {
+function buildOptions(command, parameters) {
     var options = {
-            debug: debug
+            debug: debug,
+            headers: {}
         },
         body,
         urlObj = {
@@ -73,18 +37,14 @@ function _buildOptions(command, parameters) {
         body = command.buildRequestBody(parameters.values);
 
         if (command.bodyType === "application/json") {
-            options.body = JSON.stringify(body);
+            options.json = true;
+            options.body = body;
         } else {
             throw new errors.ApiError("No support for " + command.bodyType + " in requests.");
         }
     }
 
-    if (command.response === "application/json") {
-        options.json = true;
-    }
-
     if (command.response) {
-        options.headers = {};
         options.headers.Accept = command.response;
     }
 
@@ -95,7 +55,7 @@ function _buildOptions(command, parameters) {
     return options;
 }
 
-function _getError(jsonObject) {
+function getError(jsonObject) {
     var result = null
         , idx = 0
         , len = 0
@@ -104,7 +64,7 @@ function _getError(jsonObject) {
     if (jsonObject) {
         if (util.isArray(jsonObject)) {
             for (idx = 0, len = jsonObject.length; idx < len; idx++) {
-                result = _getError(jsonObject[idx]);
+                result = getError(jsonObject[idx]);
                 // Stop on the first error
                 if (result) {
                     break;
@@ -112,22 +72,22 @@ function _getError(jsonObject) {
             }
         } else if (jsonObject.error) {
             return {
-                "type": jsonObject.error.type,
-                "description": jsonObject.error.description,
-                "address": jsonObject.error.address
+                type: jsonObject.error.type,
+                description: jsonObject.error.description,
+                address: jsonObject.error.address
             };
         }
     }
     return result;
 }
 
-function _checkForError(result) {
+function checkForError(result) {
     var jsonResult
         , jsonError
         ;
 
     jsonResult = result.data;
-    jsonError = _getError(jsonResult);
+    jsonError = getError(jsonResult);
 
     if (jsonError) {
         throw new errors.ApiError(jsonError);
@@ -135,7 +95,7 @@ function _checkForError(result) {
     return jsonResult;
 }
 
-function _requireStatusCode200(result) {
+function requireStatusCode200(result) {
     if (result.statusCode !== 200) {
         throw new errors.ApiError(
             {
@@ -158,4 +118,37 @@ function generateErrorsIfMatched(map) {
         }
         return result;
     };
+}
+
+module.exports.invoke = function(command, parameters) {
+    var options = buildOptions(command, parameters)
+        , promise
+        ;
+
+    promise = requestUtil.request(options);
+
+    if (command.statusCodeMap) {
+        promise = promise.then(generateErrorsIfMatched(command.statusCodeMap));
+    }
+
+    promise = promise
+        .then(requireStatusCode200)
+        .then(function (requestResult) {
+            var result;
+
+            if (options.headers.Accept === "application/json") {
+                result = checkForError(requestResult);
+            } else {
+                result = requestResult.data;
+            }
+            return result;
+        });
+
+    if (command.postProcessing) {
+        command.postProcessing.forEach(function (fn) {
+            promise = promise.then(fn);
+        });
+    }
+
+    return promise;
 }

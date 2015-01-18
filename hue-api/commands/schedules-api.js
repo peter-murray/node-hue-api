@@ -19,88 +19,28 @@ var Trait = require("traits").Trait,
     utils = require("../utils"),
     apiTraits = {};
 
-apiTraits.getAllSchedules = Trait.compose(
-    tApiMethod("/api/<username>/schedules",
-               "GET",
-               "1.0",
-               "Whitelist"
-    ),
-    tDescription("Gets a list of all schedules that have been added to the bridge."),
-    tPostProcessing(_processAllSchedules)
-);
-
-apiTraits.createSchedule = Trait.compose(
-    tApiMethod("/api/<username>/schedules",
-               "POST",
-               "1.0",
-               "Whitelist"
-    ),
-    tDescription("Allows the user to create new schedules. The bridge can store up to 100 schedules."),
-    tScheduleBody(false),
-    tPostProcessing(_processScheduleResult)
-);
-
-apiTraits.getSchedule = Trait.compose(
-    tApiMethod("/api/<username>/schedules/<id>",
-               "GET",
-               "1.0",
-               "Whitelist"
-    ),
-    tDescription("Allows the user to change attributes of a schedule.")
-);
-
-apiTraits.setScheduleAttributes = Trait.compose(
-    tApiMethod("/api/<username>/schedules/<id>",
-               "PUT",
-               "1.0",
-               "Whitelist"
-    ),
-    tDescription("Gets all attributes for a schedule."),
-    tScheduleBody(true),
-    tPostProcessing(_validateUpdateResults)
-);
-
-apiTraits.deleteSchedule = Trait.compose(
-    tApiMethod("/api/<username>/schedules/<id>",
-               "DELETE",
-               "1.0",
-               "Whitelist"
-    ),
-    tDescription("Deletes a schedule from the bridge."),
-    tPostProcessing(_processDeletion)
-);
-
-
-module.exports = {
-    "getAllSchedules"      : Trait.create(Object.prototype, apiTraits.getAllSchedules),
-    "createSchedule"       : Trait.create(Object.prototype, apiTraits.createSchedule),
-    "getSchedule"          : Trait.create(Object.prototype, apiTraits.getSchedule),
-    "setScheduleAttributes": Trait.create(Object.prototype, apiTraits.setScheduleAttributes),
-    "deleteSchedule"       : Trait.create(Object.prototype, apiTraits.deleteSchedule)
-};
-
-function _processAllSchedules(result) {
+function processAllSchedules(result) {
     var values = [];
 
     Object.keys(result).forEach(function (value) {
         values.push({
-                        "id"  : value,
-                        "name": result[value].name
-                    });
+            id: value,
+            name: result[value].name
+        });
     });
 
     return values;
 }
 
-function _processScheduleResult(result) {
+function processScheduleResult(result) {
     if (!utils.wasSuccessful(result)) {
         throw new ApiError(utils.parseErrors(result).join(", "));
     }
 
-    return {"id": result[0].success.id};
+    return {id: result[0].success.id};
 }
 
-function _processDeletion(result) {
+function processDeletion(result) {
     if (!utils.wasSuccessful(result)) {
         throw new ApiError(utils.parseErrors(result).join(", "));
     }
@@ -108,15 +48,15 @@ function _processDeletion(result) {
     return true;
 }
 
-function _validateUpdateResults(result) {
+function validateUpdateResults(result) {
     var returnValue = {};
 
     if (!utils.wasSuccessful(result)) {
         throw new ApiError(utils.parseErrors(result).join(", "));
     }
 
-    result.forEach(function(value) {
-        Object.keys(value.success).forEach(function(keyValue) {
+    result.forEach(function (value) {
+        Object.keys(value.success).forEach(function (keyValue) {
             // The time values being returned do not appear to be correct from the Bridge, it is almost like
             // they are in a transition state when the function returns the value, as such time values are not
             // going to be returned from this function for now.
@@ -134,3 +74,68 @@ function _validateUpdateResults(result) {
     });
     return returnValue;
 }
+
+apiTraits.getAllSchedules = Trait.compose(
+    tApiMethod(
+        "/api/<username>/schedules",
+        "GET",
+        "1.0",
+        "Whitelist"
+    ),
+    tDescription("Gets a list of all schedules that have been added to the bridge."),
+    tPostProcessing(processAllSchedules)
+);
+
+apiTraits.createSchedule = Trait.compose(
+    tApiMethod(
+        "/api/<username>/schedules",
+        "POST",
+        "1.0",
+        "Whitelist"
+    ),
+    tDescription("Allows the user to create new schedules. The bridge can store up to 100 schedules."),
+    tScheduleBody(false),
+    tPostProcessing(processScheduleResult)
+);
+
+apiTraits.getSchedule = Trait.compose(
+    tApiMethod(
+        "/api/<username>/schedules/<id>",
+        "GET",
+        "1.0",
+        "Whitelist"
+    ),
+    tDescription("Allows the user to change attributes of a schedule.")
+);
+
+apiTraits.setScheduleAttributes = Trait.compose(
+    tApiMethod(
+        "/api/<username>/schedules/<id>",
+        "PUT",
+        "1.0",
+        "Whitelist"
+    ),
+    tDescription("Gets all attributes for a schedule."),
+    tScheduleBody(true),
+    tPostProcessing(validateUpdateResults)
+);
+
+apiTraits.deleteSchedule = Trait.compose(
+    tApiMethod(
+        "/api/<username>/schedules/<id>",
+        "DELETE",
+        "1.0",
+        "Whitelist"
+    ),
+    tDescription("Deletes a schedule from the bridge."),
+    tPostProcessing(processDeletion)
+);
+
+
+module.exports = {
+    "getAllSchedules": Trait.create(Object.prototype, apiTraits.getAllSchedules),
+    "createSchedule": Trait.create(Object.prototype, apiTraits.createSchedule),
+    "getSchedule": Trait.create(Object.prototype, apiTraits.getSchedule),
+    "setScheduleAttributes": Trait.create(Object.prototype, apiTraits.setScheduleAttributes),
+    "deleteSchedule": Trait.create(Object.prototype, apiTraits.deleteSchedule)
+};

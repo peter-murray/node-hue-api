@@ -20,6 +20,9 @@
     {
       "name:": "Jon Long",
       "email": "jon@linesandwaves.com"
+    },
+    {
+      "name": "Knut Sveidqvist"
     }
   ],
   "main": "index.js",
@@ -36,7 +39,7 @@
   "dependencies": {
     "xml2js": "~0.2.2",
     "q": "~1.0.0",
-    "request-util": "~0.0.1",
+    "request-util": "~0.0.2",
     "parseUri": "~1.2.3-2",
     "traits": "~0.4.0"
   },

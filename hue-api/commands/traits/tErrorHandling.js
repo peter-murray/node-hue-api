@@ -11,6 +11,6 @@ module.exports = function (codeMap) {
     }
 
     return Trait({
-        "statusCodeMap": codeMap
+        statusCodeMap: codeMap
     });
 };

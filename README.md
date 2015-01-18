@@ -1599,7 +1599,143 @@ api.deleteSchedule(scheduleId, function(err, result) {
 If the deletion was successful, then ``true`` will be returned from the promise, otherwise an ``ApiError`` will be thrown,
 as in the case if the schedule does not exist.
 
+## Working with scenes
 
+### Obtaining all the Defined scenes
+To obtain all the defined scenes on the Hue Bridge use the ``scenes()`` function.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username);
+
+// --------------------------
+// Using a promise
+api.scenes()
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.scenes(function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+```
+
+The function will return a promise that will provide an array of objects of ``id`` and ``name`` for each schedule;
+```
+[
+  {
+    "id": "1",
+    "name": "Jump! on 0"
+  },
+  {
+    "id": "2",
+    "name": "Jump! on 0"
+  }
+]
+```
+Additionally, bridge scenes should not be confused with the preset scenes stored in the Android and iOS apps. In the
+apps these scenes are stored internally. Once activated they may then appear as a bridge scene.
+
+### Creating a scene
+Creating a scene requires a few things:
+* A scene id, required later to recall/modify the scene
+* A user friendly name
+* A number of lights to be part of the scene
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    scheduledEvent;
+
+// --------------------------
+// Using a promise
+
+    api.createScene("199", "Test Scene", [4])
+    .then(displayResults)
+    .done();
+
+
+// --------------------------
+// Using a callback
+api.createScene("199", "Test Scene", [4], function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+```
+
+The result returned by the promise when creating a new scene will be that of the ``id`` for the newly created schedule;
+```
+{
+  "id": "1"
+}
+```
+
+### Modifying a scene
+```js
+    // --------------------------
+    // Using a promise
+        api.modifyScene(199,4, {"on": true}) // provide a value of false to turn off
+            .then(displayResults)
+            .fail(displayError)
+            .done();
+
+    // --------------------------
+    // Using a callback
+        api.modifyScene(199,4, {"on": true}, function(err, result){
+           if (err) throw err;
+           displayResults(result);
+       });
+```
+
+### Recalling a scene
+
+This is perhaps the reason for having scenes at all. The possibility to recall a scene for a group. By doing that it is
+possible to recall spefic setting in a simple way. You could for instance edit a scene using the ios/andriod apps and
+use this functinoality to recall those settings without releasing new code/configuration.
+
+Recalling a scene is done by using the setGroupLightState functions but there are also two helper functions to make
+things more intuitive.
+
+* recallSceneById - recalls a scene for a group
+* recallSceneByName - recalls a scene for a group from the user friendly name
+The id is extracted from the name, if multiple ids is encountered which often is the case when a scene is edited via an ios/android app the last one is
+ used. Currently this is the scene last saved this is an assumption bases on undocumented handling.
+
+The examples below show the function `recallSceneById()`` The api is the for recallSceneByName same apart from applying
+a name instead of the id.
+
+```js
+    // --------------------------
+    // Using a promise
+
+    api.recallSceneById(0,"199")
+    .then(displayResults)
+    .fail(displayError)
+    .done();
+
+    // --------------------------
+    // Using a callback
+        api.recallSceneById(0, "199", function(err, result){
+           if (err) throw err;
+           displayResults(result);
+       });
+```
 ## Advanced Options
 
 ### Timeouts

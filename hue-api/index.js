@@ -7,6 +7,7 @@ var Q = require("q")
     , lightsApi = require("./commands/lights-api")
     , groupsApi = require("./commands/groups-api")
     , schedulesApi = require("./commands/schedules-api")
+    , scenesApi = require("./commands/scenes-api")
     , configurationApi = require("./commands/configuration-api")
     , scheduledEvent = require("./scheduledEvent")
     , bridgeDiscovery = require("./bridge-discovery")
@@ -439,11 +440,11 @@ HueApi.prototype.getGroup = function (id, cb) {
     //TODO find a way to make this a normal post processing action in the groups-api, the id from the call needs to be injected...
     function processGroupResult(group) {
         var result = {
-            "id": String(id),
-            "name": group.name,
-            "type": group.type,
-            "lights": group.lights,
-            "lastAction": group.action
+            id: String(id),
+            name: group.name,
+            type: group.type,
+            lights: group.lights,
+            lastAction: group.action
         };
 
         if (group.type === "Luminaire" && group.modelid) {
@@ -645,7 +646,126 @@ HueApi.prototype.updateSchedule = function (id, schedule, cb) {
     return utils.promiseOrCallback(promise, cb);
 };
 
+/**
+ * Gets the scenes on the Bridge, as an array of {"id": {String}, "name": {String}} objects.
+ *
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @return A promise that will return the results or <null> if a callback was provided.
+ */
+HueApi.prototype.scenes = function (cb) {
+    var options = _defaultOptions(this),
+        promise = http.invoke(scenesApi.getAllScenes, options);
 
+    return utils.promiseOrCallback(promise, cb);
+};
+
+/**
+ * Creates a new Scene.
+ *
+ * @param name The name of the scene that we are creating, limited to 16 characters.
+ * @param sceneId integer The id for the scene, max value is 199.
+ * @param lightIds {Array} of ids for the lights to be included in the group.
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @return {*} A promise that will return the id of the scene that was created, or null if a callback was provided.
+ */
+HueApi.prototype.createScene = function (sceneId, lightId, name, lightIds, cb) {
+    var options = _defaultOptions(this),
+        promise = _setSceneIdOption(options, id);
+
+    options.values = {
+        name: name,
+        lights: utils.createStringValueArray(lightIds)
+    };
+
+    if (!promise) {
+        promise = http.invoke(scenesApi.createScene, options);
+    }
+    return utils.promiseOrCallback(promise, cb);
+};
+
+/**
+ * Modifies or creates a new scene. Note that these states are not visible via any API calls, but stored in the lights
+ * themselves.
+ *
+ * @param sceneId integer The id for the scene, max value is 199.
+ * @param lightId integer The id of the light to set with this call.
+ * @param stateValues {Object} containing the properties and values to set on the light.
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @return A promise that will set the specified state on the light, or {null} if a callback was provided.
+ */
+HueApi.prototype.modifyScene = function (sceneId, lightId, stateValues, cb) {
+    var options = _defaultOptions(this),
+        promise;
+
+    promise = _setSceneIdOption(options, sceneId);
+    promise = _setSceneLightIdOption(options, lightId);
+
+    //TODO stateValues need to be injected properly so that they can be checked and validated
+    // Need to ensure we take a copy of the state values (as if we use rgb values you can end up making unwanted changes)
+    options.values = JSON.parse(JSON.stringify(stateValues));
+
+    if (!promise) {
+        // We have not errored, so check if we need to convert an rgb value
+
+        if (stateValues.rgb) {
+            promise = this.lightStatus(id)
+                .then(function (lightDetails) {
+                    options.values.xy = rgb.convertRGBtoXY(stateValues.rgb, lightDetails);
+                    delete options.values.rgb;
+                })
+                .then(function () {
+                    return http.invoke(scenesApi.modifyScene, options);
+                })
+            ;
+        } else {
+            promise = http.invoke(scenesApi.modifyScene, options);
+        }
+    }
+
+    return utils.promiseOrCallback(promise, cb);
+};
+
+/**
+ * Helper-function that recalls a scene for a group using setGroupLightState. Reason for existence is simplicity for
+ * user.
+ *
+ * @param id The id of the light which is an integer or a value that can be parsed into an integer value.
+ * @param stateValues {Object} containing the properties and values to set on the light.
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @return A promise that will set the specified state on the light, or {null} if a callback was provided.
+ */
+HueApi.prototype.recallSceneById = function (groupId, sceneId, cb) {
+    return utils.promiseOrCallback(this.setGroupLightState(groupId, {"scene": sceneId}, cb), cb);
+};
+
+/**
+ * Helper function that recalls a scene for a group using setGroupLightState. The id is extracted from the name, if
+ * multiple ids is encountered which often is the case when a scene is edited via an ios/android app the last one is
+ * used. Currently this is the scene last saved this is an assumption bases on undocumented handling.
+ *
+ * @param id The id of the light which is an integer or a value that can be parsed into an integer value.
+ * @param stateValues {Object} containing the properties and values to set on the light.
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @return A promise that will set the specified state on the light, or {null} if a callback was provided.
+ */
+HueApi.prototype.recallSceneByName = function (groupId, sceneName, cb) {
+    var deferred = Q.defer();
+    var scenes = {};
+    var _self = this;
+    _self.scenes().then(function (sceneArray) {
+        sceneArray.forEach(function (scene) {
+            scenes[scene.name] = scene.id;
+        });
+
+        if (typeof scenes[sceneName] !== 'undefined') {
+            _self.setGroupLightState(groupId, {"scene": scenes[sceneName]}).then(function (result) {
+                deferred.resolve(result);
+            });
+        }
+    }).done();
+
+    return utils.promiseOrCallback(deferred.promise, cb);
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -656,7 +776,7 @@ HueApi.prototype.updateSchedule = function (id, schedule, cb) {
  * @returns {{host: *, username: *, timeout: *}}
  * @private
  */
-HueApi.prototype._defaultOptions = function() {
+HueApi.prototype._defaultOptions = function () {
     var config = this._config
         ;
 
@@ -695,7 +815,7 @@ HueApi.prototype._filterGroups = function (type) {
  * @returns {Q.promise} A promise with the creation results, or <null> if a callback was provided.
  * @private
  */
-HueApi.prototype._createSchedule = function(schedule, cb) {
+HueApi.prototype._createSchedule = function (schedule, cb) {
     var options = this._defaultOptions(),
         promise = _setScheduleOptionsForCreation(options, schedule);
 
@@ -932,6 +1052,26 @@ function _setScheduleOptionsForUpdate(options, schedule) {
 }
 
 /**
+ * Validates and then injects the 'id' into the options for a group in the bridge.
+ *
+ * @param options The options to add the 'id' to.
+ * @param sceneId The id of the scene
+ * @return {Q.promise} A promise that will throw an error or null if the scene id was valid.
+ * @private
+ */
+function _setSceneIdOption(options, sceneId) {
+    var errorPromise = null;
+
+    if (!_isSceneIdValid(sceneId)) {
+        errorPromise = _errorPromise("The scene id '" + sceneId + "' is not valid for this Hue Bridge.");
+    } else {
+        options.id = sceneId;
+    }
+
+    return errorPromise;
+}
+
+/**
  * Creates a promise that will generate an ApiError with the provided message.
  *
  * @param message The error message
@@ -1001,6 +1141,21 @@ function _isScheduleIdValid(id) {
     if (parseInt(id, 10) >= 0) {
         //TODO check that this is a valid schedule id for the system
         return id <= 100;
+    } else {
+        return false;
+    }
+}
+/**
+ * Validates that the scene id is valid for this Hue Bridge.
+ *
+ * @param id The id of the group in the Hue Bridge.
+ * @returns {boolean} true if the id is valid for this bridge.
+ * @private
+ */
+function _isSceneIdValid(id) {
+    if (parseInt(id, 10) >= 0) {
+        //TODO check that this is a valid schedule id for the system
+        return id <= 200;
     } else {
         return false;
     }
