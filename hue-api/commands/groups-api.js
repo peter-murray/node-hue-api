@@ -161,10 +161,10 @@ apiTraits.deleteGroup = Trait.compose(
 
 
 module.exports = {
-    "getAllGroups": Trait.create(Object.prototype, apiTraits.getAllGroups),
-    "getGroupAttributes": Trait.create(Object.prototype, apiTraits.getGroupAttributes),
-    "setGroupAttributes": Trait.create(Object.prototype, apiTraits.setGroupAttributes),
-    "setGroupState": Trait.create(Object.prototype, apiTraits.setGroupState),
-    "createGroup": Trait.create(Object.prototype, apiTraits.createGroup),
-    "deleteGroup": Trait.create(Object.prototype, apiTraits.deleteGroup)
+    getAllGroups: Trait.create(Object.prototype, apiTraits.getAllGroups),
+    getGroupAttributes: Trait.create(Object.prototype, apiTraits.getGroupAttributes),
+    setGroupAttributes: Trait.create(Object.prototype, apiTraits.setGroupAttributes),
+    setGroupState: Trait.create(Object.prototype, apiTraits.setGroupState),
+    createGroup: Trait.create(Object.prototype, apiTraits.createGroup),
+    deleteGroup: Trait.create(Object.prototype, apiTraits.deleteGroup)
 };
