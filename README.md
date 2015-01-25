@@ -231,6 +231,43 @@ For this reason, if you want to validate that the user account used to connect t
 look for a field that is not present in the above result, like the ``mac``, ``ipaddress`` or ``linkbutton`` would be good
 properties to check.
 
+//TODO Need to document setting config value and timezones
+
+### Timezones
+To obtain the valid timezones for the bridge, you can use the ``getTimezones()`` or ``timezones()`` function.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var hostname = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api;
+
+api = new HueApi(hostname, username);
+
+// --------------------------
+// Using a promise
+api.getTimezones().then(displayResult).done();
+// or using 'timezones' alias
+api.timezones().then(displayResult).done();
+
+// --------------------------
+// Using a callback
+api.getTimezones(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+// or using 'timezones' alias
+api.timezones(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+```
+
 
 ### Software and API Version
 The version of the software and API for the bridge is available from the `config` function, but out of convenience there
