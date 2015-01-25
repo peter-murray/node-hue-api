@@ -168,22 +168,22 @@ describe("Hue API", function () {
 
         describe("#description()", function () {
 
-            it("using promise", function (done) {
+            it("using #promise", function (done) {
                 testPromise("description", done);
             });
 
-            it("using callback", function (done) {
+            it("using #callback", function (done) {
                 testCallback("description", done);
             });
         });
 
         describe("#getDescription()", function () {
 
-            it("using promise", function (done) {
+            it("using #promise", function (done) {
                 testPromise("getDescription", done);
             });
 
-            it("using callback", function (done) {
+            it("using #callback", function (done) {
                 testCallback("getDescription", done);
             });
         });
@@ -222,23 +222,68 @@ describe("Hue API", function () {
 
         describe("#fullState()", function() {
 
-            it("using promise", function(done) {
+            it("using #promise", function(done) {
                 testPromise("fullState", done);
             });
 
-            it("using callback", function(done) {
+            it("using #callback", function(done) {
                 testCallback("fullState", done);
             });
         });
 
         describe("#getFullState()", function() {
 
-            it("using promise", function(done) {
+            it("using #promise", function(done) {
                 testPromise("fullState", done);
             });
 
-            it("using callback", function(done) {
+            it("using #callback", function(done) {
                 testCallback("getFullState", done);
+            });
+        });
+    });
+
+    describe("info", function() {
+
+        function validateTimezones(cb) {
+            return function(zones) {
+                expect(zones).to.be.defined;
+                expect(zones).to.be.instanceOf(Array);
+                expect(zones).to.have.length.at.least(430);
+                cb();
+            };
+        }
+
+        describe("#getTimezones()", function() {
+
+            it("using #promise", function(done) {
+                hue.getTimezones()
+                    .then(validateTimezones(done))
+                    .done();
+            });
+
+            it("using #callback", function(done) {
+                hue.getTimezones(function(err, zones) {
+                    expect(err).to.be.null;
+
+                    validateTimezones(done)(zones);
+                });
+            });
+        });
+
+        describe("#timezones()", function() {
+            it("using #promise", function(done) {
+                hue.timezones()
+                    .then(validateTimezones(done))
+                    .done();
+            });
+
+            it("using #callback", function(done) {
+                hue.timezones(function(err, zones) {
+                    expect(err).to.be.null;
+
+                    validateTimezones(done)(zones);
+                });
             });
         });
     });
