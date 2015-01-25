@@ -123,7 +123,7 @@ apiTraits.setGroupState = Trait.compose(
         "Whitelist"
     ),
     tDescription("Modifies the state of all lights in a group"),
-    tLightStateBody(true),
+    tLightStateBody(true, true),
     tPostProcessing(processSetLightStateResult)
 );
 

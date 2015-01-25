@@ -22,11 +22,39 @@ var Trait = require("traits").Trait
     ;
 
 function processSceneResult(result) {
+    var response = {}
+        ;
+
     if (!utils.wasSuccessful(result)) {
         throw new ApiError(utils.parseErrors(result).join(", "));
     }
-//todo this can be multiple changes, need to accommodate this
-    return {"id": result[0].success.id};
+
+    function processResultObject(resultEntry) {
+        var obj = resultEntry.success
+            , idMatch = null
+            ;
+
+        Object.keys(obj).forEach(function(key) {
+            var id = key.substr(key.lastIndexOf("/") + 1);
+            response[id] = obj[key];
+
+            if (!idMatch) {
+                idMatch = /scenes\/(.*)\//.exec(key);
+            }
+        });
+
+        if (!response.id && idMatch) {
+            response.id = idMatch[1];
+        }
+    }
+
+    if (Array.isArray(result)) {
+        result.forEach(processResultObject);
+    } else {
+        processResultObject(result);
+    }
+
+    return response;
 }
 
 function validateUpdateResults(result) {
@@ -67,7 +95,6 @@ apiTraits.getAllScenes = Trait.compose(
     tDescription("Gets a list of all scenes currently stored in the bridge. Scenes are represented by a scene id, a name and a list of lights which are part of the scene.")
 );
 
-//TODO Updates a given scene
 apiTraits.createScene = Trait.compose(
     tApiMethod(
         "/api/<username>/scenes/<id>",
@@ -79,8 +106,8 @@ apiTraits.createScene = Trait.compose(
     tBodyArguments(
         "application/json",
         [
-            {name: "name", type: "string", optional: true},//TODO check the optional values
-            {name: "lights", type: "list int", optional: true}
+            {name: "name", type: "string", optional: true},
+            {name: "lights", type: "list int", optional: false}
         ]
     ),
     tPostProcessing(processSceneResult)

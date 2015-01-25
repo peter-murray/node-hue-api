@@ -268,6 +268,8 @@ api.timezones(function(err, config) {
 });
 ```
 
+//TODO setting a time zone
+
 
 ### Software and API Version
 The version of the software and API for the bridge is available from the `config` function, but out of convenience there
@@ -1476,6 +1478,7 @@ the Phillips Hue REST API.
 To help with building a schedule and to perform some basic checking to ensure that values are correct/valid there is a
 helper module ``scheduleEvent`` which can be used the build a valid schedule object.
 
+
 ### Using ScheduleEvent to build a Schedule
 The ``scheduleEvent`` module/function is used to build up a schedule that the Hue Bridge can understand. It is not a
 requirement when creating schedules, but can eliminate some of the basic errors that can result when creating a schedule.
@@ -1636,10 +1639,18 @@ api.deleteSchedule(scheduleId, function(err, result) {
 If the deletion was successful, then ``true`` will be returned from the promise, otherwise an ``ApiError`` will be thrown,
 as in the case if the schedule does not exist.
 
+
 ## Working with scenes
+The Hue Bridge can store up to 200 scenes internally. There is currently no way to delete a scene from the API once it
+is created, although old unused scenes will get overwritten.
+
+Additionally, bridge scenes should not be confused with the preset scenes stored in the Android and iOS apps. In the
+apps these scenes are stored internally. Once activated though, they may then appear as a bridge scene.
+
+
 
 ### Obtaining all the Defined scenes
-To obtain all the defined scenes on the Hue Bridge use the ``scenes()`` function.
+To obtain all the defined bridge scenes on the Hue Bridge use the ``scenes()`` or ``getScenes()`` functions:
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
@@ -1657,6 +1668,10 @@ var host = "192.168.2.129",
 api.scenes()
     .then(displayResults)
     .done();
+// Using 'getScenes' alias
+api.getScenes()
+    .then(displayResults)
+    .done();
 
 // --------------------------
 // Using a callback
@@ -1664,23 +1679,157 @@ api.scenes(function(err, result){
     if (err) throw err;
     displayResults(result);
 });
+// Using 'getScenes' alias
+api.getScenes(function(err, result){
+    if (err) throw err;
+    displayResults(result);
 ```
 
-The function will return a promise that will provide an array of objects of ``id`` and ``name`` for each schedule;
+The function will return an Array of scene definitions consisting of ``id``, ``name`` and ``lights``;
 ```
 [
-  {
-    "id": "1",
-    "name": "Jump! on 0"
-  },
-  {
-    "id": "2",
-    "name": "Jump! on 0"
-  }
+    {
+        "id":"0",
+        "name":"node-hue-test-scene",
+        "lights":["1","2"],
+        "active":true
+    },
+    {
+        "id":"1",
+        "name":"1",
+        "lights":["1"],
+        "active":true
+    },
+    {
+        "id": "OFF-TAP-1",
+        "name": "Tap scene one",
+        "lights": ["1", "2", "3, "4", "5"],
+        "active": true
+    }
 ]
 ```
-Additionally, bridge scenes should not be confused with the preset scenes stored in the Android and iOS apps. In the
-apps these scenes are stored internally. Once activated they may then appear as a bridge scene.
+
+### Get a Scene
+You can obtain a specific scene using the id of the scene and the ``scene()`` or ``getScene()`` function:
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    sceneId = "OFF-TAP-1"
+    ;
+
+// --------------------------
+// Using a promise
+api.scene(sceneId)
+    .then(displayResults)
+    .done();
+// Using 'getScene' alias
+api.getScene(sceneId)
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.scene(sceneId, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+// Using 'getScene' alias
+api.getScene(sceneId, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+```
+
+The functions will return a result of the scene definition, like the following:
+```
+{
+    "id": "OFF-TAP-1",
+    "name": "Tap scene one",
+    "lights": [
+        "1",
+        "2"
+    ],
+    "active": true
+}
+```
+
+
+### Creating a new Scene
+There are multiple definitions on scenes, some of which are stored in the Bridge, others are stored inside the iOS and
+Android applications. This API can only interact and define scenes that are stored inside the Hue Bridge.
+
+When creating a new scene, the current state of the lights that are being included become the state of the lights when
+you activate/recall the scene in the future.
+
+When you create a scene via the API function ``createScene()``, the scene will get an ``id`` that is dynamically generated
+this id will be a combination of the ``scenePrefix`` that was set when the HueApi was instantiated. The default, if you
+do not specify one is ``node-hue-api-`` followed by the next available integer value for all the scenes of that prefix
+that already exist.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    sceneName = "My New Scene",
+    lightIds = [1, 2, 3, 4, 5, 6, 7]
+    ;
+
+// --------------------------
+// Using a promise
+api.createScene(sceneName, lightIds)
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.scene(sceneName, lightIds, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+```
+
+When a new scene is created, you will get a result back of the form;
+```js
+{
+    "id": "node-hue-api-1",
+    "name": "",
+    "lights": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+    ]
+}
+```
+
+The ``name`` value is optional, if one is not specified, then it will be set as the ``id`` that is generated. This is a
+feature of the underlying Hue Bridge, so may change in a future firmware update.
+
+
+### Updating an Existing Scene
+You can update an existing scene by using the ``updateScene()`` function. Just like with the creation of new scenes, the
+current state of the lights being specified will be stored as the state that is recalled then the scene is activated/recalled.
+
+```js
+
+```
+
 
 ### Creating a scene
 Creating a scene requires a few things:

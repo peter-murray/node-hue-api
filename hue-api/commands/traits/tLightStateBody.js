@@ -3,7 +3,7 @@
 var Trait = require("traits").Trait,
     tBodyArguments = require("./tBodyArguments");
 
-module.exports = function (withAlert) {
+module.exports = function (withAlert, withScene) {
     var values = [
         {
             name: "on",
@@ -77,9 +77,17 @@ module.exports = function (withAlert) {
     if (withAlert) {
         values.push({
             name: "alert",
-                type: "string",
+            type: "string",
             defaultValue: "none",
             validValues: ["none", "select", "lselect"],
+            optional: true
+        });
+    }
+
+    if (withScene) {
+        values.push({
+            name: "scene",
+            type: "string",
             optional: true
         });
     }
