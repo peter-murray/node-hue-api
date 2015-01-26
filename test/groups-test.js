@@ -1,11 +1,11 @@
 "use strict";
 
-var HueApi = require("../hue-api")
+var expect = require("chai").expect
+    , Q = require("q")
+    , HueApi = require("../").api
     , ApiError = require("../hue-api/errors").ApiError
     , testValues = require("./support/testValues.js")
     , lightState = require("../").lightState
-    , expect = require("chai").expect
-    , Q = require("q")
     ;
 
 
@@ -133,7 +133,8 @@ describe("Hue API", function () {
                 expect(groupDetails.lights).to.have.length(testValues.lightsCount);
             }
 
-            function failTest() {
+            function failTest(a) {
+                console.log(a);
                 throw new Error("Should not be called");
             }
 
@@ -210,8 +211,9 @@ describe("Hue API", function () {
 
             describe("should create a group and then delete it", function () {
 
-                var groupName = "NodejsApiTest",
-                    createdGroupId;
+                var groupName = "NodejsApiTest"
+                    , createdGroupId
+                    ;
 
                 function validateMissingGroup(err) {
                     expect(err.message).to.contain("resource, /groups/" + createdGroupId);
@@ -268,7 +270,7 @@ describe("Hue API", function () {
                         .then(deleteGroup)
                         .then(_waitForBridge)
                         .then(validateDeletion)
-                        .then(complete)
+                        .then(done)
                         .done();
                 });
 

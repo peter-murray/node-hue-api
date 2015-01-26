@@ -1,8 +1,9 @@
 "use strict";
 
-var expect = require("chai").expect,
-    HueApi = require("../hue-api"),
-    testValues = require("./support/testValues.js");
+var expect = require("chai").expect
+    , HueApi = require("../").BridgeApi
+    , testValues = require("./support/testValues.js")
+    ;
 
 describe("Hue API", function () {
 
@@ -43,7 +44,7 @@ describe("Hue API", function () {
 function _validateLightsResult(results, cb) {
 //    console.log(JSON.stringify(results));
 
-    expect(results).to.exist;
+    expect(results).to.be.defined;
     expect(results).to.have.property("type");
     expect(results).to.have.property("name");
     expect(results).to.have.property("modelid");

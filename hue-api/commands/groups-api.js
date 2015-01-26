@@ -25,8 +25,59 @@ var ALL_LIGHTS_NAME = "Lightset 0"
     , apiTraits = {}
     ;
 
+/**
+ * Parses the results from the All Groups request into a more useful format.
+ * @param result The result from the Hue Bridge.
+ * @returns {Array} An array of groups {"id": {*}, name: {*}} known to the bridge.
+ * @private
+ */
+function processAllGroups(result) {
+    var groupArray = [];
+
+    // There is an implicit all lights group that is not returned in the results of the lookup, so explicitly add it
+    groupArray.push({id: "0", name: ALL_LIGHTS_NAME, type: "LightGroup"});
+
+    Object.keys(result).forEach(function (value) {
+        var group = result[value];
+
+        groupArray.push({
+            id: value,
+            name: group.name,
+            type: group.type,
+            lights: group.lights
+        });
+    });
+    return groupArray;
+}
+
+function ensureSuccessful(result) {
+    if (!utils.wasSuccessful(result)) {
+        throw new ApiError(utils.parseErrors(result).join(", "));
+    }
+    return true;
+}
+
+function processCreateGroup(result) {
+    var idString;
+
+    ensureSuccessful(result);
+
+    idString = result[0].success.id;
+    idString = idString.substr(idString.lastIndexOf("/") + 1);
+
+    return {id: idString};
+}
+
+function processSetLightStateResult(result) {
+    if (!utils.wasSuccessful(result)) {
+        throw new ApiError(utils.parseErrors(result).join(", "));
+    }
+    return true;
+}
+
 apiTraits.getAllGroups = Trait.compose(
-    tApiMethod("/api/<username>/groups",
+    tApiMethod(
+        "/api/<username>/groups",
         "GET",
         "1.0",
         "Whitelist"
@@ -36,7 +87,8 @@ apiTraits.getAllGroups = Trait.compose(
 );
 
 apiTraits.getGroupAttributes = Trait.compose(
-    tApiMethod("/api/<username>/groups/<id>",
+    tApiMethod(
+        "/api/<username>/groups/<id>",
         "GET",
         "1.0",
         "Whitelist"
@@ -46,7 +98,8 @@ apiTraits.getGroupAttributes = Trait.compose(
 );
 
 apiTraits.setGroupAttributes = Trait.compose(
-    tApiMethod("/api/<username>/groups/<id>",
+    tApiMethod(
+        "/api/<username>/groups/<id>",
         "PUT",
         "1.0",
         "Whitelist"
@@ -55,26 +108,28 @@ apiTraits.setGroupAttributes = Trait.compose(
     tBodyArguments(
         "application/json",
         [
-            {"name": "name", "type": "string", "maxLength": 32, "optional": true},
-            {"name": "lights", "type": "list int", "optional": true}
+            {name: "name", type: "string", maxLength: 32, optional: true},
+            {name: "lights", type: "list int", optional: true}
         ]
     ),
     tPostProcessing(ensureSuccessful)
 );
 
 apiTraits.setGroupState = Trait.compose(
-    tApiMethod("/api/<username>/groups/<id>/action",
+    tApiMethod(
+        "/api/<username>/groups/<id>/action",
         "PUT",
         "1.0",
         "Whitelist"
     ),
     tDescription("Modifies the state of all lights in a group"),
-    tLightStateBody(),
+    tLightStateBody(true, true),
     tPostProcessing(processSetLightStateResult)
 );
 
 apiTraits.createGroup = Trait.compose(
-    tApiMethod("/api/<username>/groups",
+    tApiMethod(
+        "/api/<username>/groups",
         "POST",
         "1.0",
         "Whitelist"
@@ -85,15 +140,16 @@ apiTraits.createGroup = Trait.compose(
     tBodyArguments(
         "application/json",
         [
-            {"name": "name", "type": "string", maxLength: 32, "optional": true},
-            {"name": "lights", "type": "list int", "optional": false}
+            {name: "name", type: "string", maxLength: 32, optional: true},
+            {name: "lights", type: "list int", optional: false}
         ]
     ),
     tPostProcessing(processCreateGroup)
 );
 
 apiTraits.deleteGroup = Trait.compose(
-    tApiMethod("/api/<username>/groups/<id>",
+    tApiMethod(
+        "/api/<username>/groups/<id>",
         "DELETE",
         "1.0",
         "Whitelist"
@@ -105,60 +161,10 @@ apiTraits.deleteGroup = Trait.compose(
 
 
 module.exports = {
-    "getAllGroups": Trait.create(Object.prototype, apiTraits.getAllGroups),
-    "getGroupAttributes": Trait.create(Object.prototype, apiTraits.getGroupAttributes),
-    "setGroupAttributes": Trait.create(Object.prototype, apiTraits.setGroupAttributes),
-    "setGroupState": Trait.create(Object.prototype, apiTraits.setGroupState),
-    "createGroup": Trait.create(Object.prototype, apiTraits.createGroup),
-    "deleteGroup": Trait.create(Object.prototype, apiTraits.deleteGroup),
+    getAllGroups: Trait.create(Object.prototype, apiTraits.getAllGroups),
+    getGroupAttributes: Trait.create(Object.prototype, apiTraits.getGroupAttributes),
+    setGroupAttributes: Trait.create(Object.prototype, apiTraits.setGroupAttributes),
+    setGroupState: Trait.create(Object.prototype, apiTraits.setGroupState),
+    createGroup: Trait.create(Object.prototype, apiTraits.createGroup),
+    deleteGroup: Trait.create(Object.prototype, apiTraits.deleteGroup)
 };
-
-/**
- * Parses the results from the All Groups request into a more useful format.
- * @param result The result from the Hue Bridge.
- * @returns {Array} An array of groups {"id": {*}, "name": {*}} known to the bridge.
- * @private
- */
-function processAllGroups(result) {
-    var groupArray = [];
-
-    // There is an implicit all lights group that is not returned in the results of the lookup, so explicitly add it
-    groupArray.push({"id": "0", "name": ALL_LIGHTS_NAME, type: "LightGroup"});
-
-    Object.keys(result).forEach(function (value) {
-        var group = result[value];
-
-        groupArray.push({
-            "id": value,
-            "name": group.name,
-            "type": group.type,
-            "lights": group.lights
-        });
-    });
-    return groupArray;
-}
-
-function processCreateGroup(result) {
-    var idString;
-
-    ensureSuccessful(result);
-
-    idString = result[0].success.id;
-    idString = idString.substr(idString.lastIndexOf("/") + 1);
-
-    return {"id": idString};
-}
-
-function ensureSuccessful(result) {
-    if (!utils.wasSuccessful(result)) {
-        throw new ApiError(utils.parseErrors(result).join(", "));
-    }
-    return true;
-}
-
-function processSetLightStateResult(result) {
-    if (!utils.wasSuccessful(result)) {
-        throw new ApiError(utils.parseErrors(result).join(", "));
-    }
-    return true;
-}

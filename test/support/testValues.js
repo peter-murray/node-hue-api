@@ -15,5 +15,13 @@ module.exports = {
     version: {
         api: "1.5.0",
         software: "01018228"
+    },
+
+    model: {
+        name: "Philips hue bridge 2012",
+        description: "Philips hue Personal Wireless Lighting",
+        number: "929000226503",
+        serial: "001788096103",
+        udn: "uuid:2f402f80-da50-11e1-9b23-001788096103"
     }
 };

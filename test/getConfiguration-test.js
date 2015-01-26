@@ -1,10 +1,11 @@
 "use strict";
 
-var HueApi = require("../hue-api"),
-    ApiError = require("../hue-api/errors").ApiError,
-    testValues = require("./support/testValues.js"),
-    expect = require("chai").expect,
-    Q = require("q");
+var util = require("util")
+    , expect = require("chai").expect
+    , HueApi = require("..").BridgeApi
+    , ApiError = require("..").ApiError
+    , testValues = require("./support/testValues.js")
+    ;
 
 
 describe("Hue API", function () {
@@ -68,7 +69,8 @@ describe("Hue API", function () {
         });
     });
 
-    describe("#getVersion", function () {
+
+    describe("version", function () {
 
         function validateVersionResults(results) {
             expect(results).to.be.an.instanceOf(Object);
@@ -79,21 +81,209 @@ describe("Hue API", function () {
             expect(results.version).to.have.property("software", testValues.version.software);
         }
 
-        it("using #promise", function (done) {
-            hue.getVersion()
-                .then(function (results) {
-                    validateVersionResults(results);
-                    done();
-                })
+        function testPromise(name, done) {
+            hue[name].apply(hue).then(function (results) {
+                validateVersionResults(results);
+                done();
+            })
                 .done();
-        });
+        }
 
-        it("using #callback", function (done) {
-            hue.getVersion(function (err, results) {
+        function testCallback(name, done) {
+            hue[name].apply(hue, [function (err, results) {
                 expect(err).to.be.null;
 
                 validateVersionResults(results);
                 done();
+            }]);
+        }
+
+        describe("#version", function () {
+
+            var fnName = "version";
+
+            it("using #promise", function (done) {
+                testPromise(fnName, done);
+            });
+
+            it("using #callback", function (done) {
+                testCallback(fnName, done);
+            });
+        });
+
+        describe("#getVersion", function () {
+
+            var fnName = "getVersion";
+
+            it("using #promise", function (done) {
+                testPromise(fnName, done);
+            });
+
+            it("using #callback", function (done) {
+                testCallback(fnName, done);
+            });
+        });
+    });
+
+
+    describe("description", function () {
+
+        function validateDescription(desc) {
+            expect(desc).to.have.property("version");
+            expect(desc.version).to.have.property("major", "1");
+            expect(desc.version).to.have.property("minor", "0");
+
+            expect(desc).to.have.property("url", util.format("http://%s:80/", testValues.host));
+            expect(desc).to.have.property("name", util.format("Philips hue (%s)", testValues.host));
+            expect(desc).to.have.property("manufacturer", "Royal Philips Electronics");
+
+            expect(desc).to.have.property("model");
+            expect(desc.model).to.have.property("name", testValues.model.name);
+            expect(desc.model).to.have.property("description", testValues.model.description);
+            expect(desc.model).to.have.property("number", testValues.model.number);
+            expect(desc.model).to.have.property("serial", testValues.model.serial);
+            expect(desc.model).to.have.property("udn", testValues.model.udn);
+
+            expect(desc).to.have.property("icons");
+            expect(desc.icons).to.have.length(2);
+            //TODO could validate an icon...
+        }
+
+        function testPromise(name, done) {
+            hue[name].call(hue)
+                .then(function (description) {
+                    validateDescription(description);
+                    done();
+                })
+                .done();
+        }
+
+        function testCallback(name, done) {
+            hue[name].apply(hue, [function (err, result) {
+                expect(err).to.be.null;
+                validateDescription(result);
+                done();
+            }]);
+        }
+
+        describe("#description()", function () {
+
+            it("using #promise", function (done) {
+                testPromise("description", done);
+            });
+
+            it("using #callback", function (done) {
+                testCallback("description", done);
+            });
+        });
+
+        describe("#getDescription()", function () {
+
+            it("using #promise", function (done) {
+                testPromise("getDescription", done);
+            });
+
+            it("using #callback", function (done) {
+                testCallback("getDescription", done);
+            });
+        });
+    });
+
+    describe("full state", function () {
+
+        function validateFullState(state) {
+            expect(state).to.be.defined;
+            expect(state).to.have.property("lights");
+            expect(state).to.have.property("groups");
+            expect(state).to.have.property("config");
+            expect(state).to.have.property("schedules");
+            expect(state).to.have.property("scenes");
+            expect(state).to.have.property("rules");
+            expect(state).to.have.property("sensors");
+        }
+
+        function testCallback(fnName, done) {
+            hue[fnName].apply(hue, [(function(err, result) {
+                expect(err).to.be.null;
+                validateFullState(result);
+                done();
+            })]
+            );
+        }
+
+        function testPromise(fnName, done) {
+            hue[fnName].call(hue)
+                .then(function(state) {
+                    validateFullState(state);
+                    done();
+                })
+                .done();
+        }
+
+        describe("#fullState()", function() {
+
+            it("using #promise", function(done) {
+                testPromise("fullState", done);
+            });
+
+            it("using #callback", function(done) {
+                testCallback("fullState", done);
+            });
+        });
+
+        describe("#getFullState()", function() {
+
+            it("using #promise", function(done) {
+                testPromise("fullState", done);
+            });
+
+            it("using #callback", function(done) {
+                testCallback("getFullState", done);
+            });
+        });
+    });
+
+    describe("info", function() {
+
+        function validateTimezones(cb) {
+            return function(zones) {
+                expect(zones).to.be.defined;
+                expect(zones).to.be.instanceOf(Array);
+                expect(zones).to.have.length.at.least(430);
+                cb();
+            };
+        }
+
+        describe("#getTimezones()", function() {
+
+            it("using #promise", function(done) {
+                hue.getTimezones()
+                    .then(validateTimezones(done))
+                    .done();
+            });
+
+            it("using #callback", function(done) {
+                hue.getTimezones(function(err, zones) {
+                    expect(err).to.be.null;
+
+                    validateTimezones(done)(zones);
+                });
+            });
+        });
+
+        describe("#timezones()", function() {
+            it("using #promise", function(done) {
+                hue.timezones()
+                    .then(validateTimezones(done))
+                    .done();
+            });
+
+            it("using #callback", function(done) {
+                hue.timezones(function(err, zones) {
+                    expect(err).to.be.null;
+
+                    validateTimezones(done)(zones);
+                });
             });
         });
     });

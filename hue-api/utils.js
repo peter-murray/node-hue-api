@@ -67,6 +67,12 @@ module.exports.combine = function (obj, values) {
     return obj;
 };
 
+module.exports.isFunction = function(object) {
+    var getClass = {}.toString;
+
+    return object && getClass.call(object) === '[object Function]';
+};
+
 /**
  * Parses a JSON response checking for success on all changes.
  * @param result The JSON object to parse for success messages.
@@ -129,6 +135,29 @@ module.exports.createStringValueArray = function (values) {
         });
     } else {
         result.push(_asStringValue(values));
+    }
+
+    return result;
+};
+
+module.exports.valueForType = function(type, value) {
+    var result;
+
+    if (type === "bool") {
+        result = Boolean(value);
+    } else if (type === "uint8" || type === "uint16") {
+        result = Math.floor(value);
+        if (result < 0) {
+            result = 0;
+        }
+    } else if (type === "string") {
+        result = String(value);
+    } else if (type === "float") {
+        result = Number(value);
+    } else if (type === "list") {
+        result = util.isArray(value) ? value : [];
+    } else {
+        result = value;
     }
 
     return result;

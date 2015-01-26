@@ -141,21 +141,20 @@ function _gammaCorrection(value) {
     return result;
 }
 
-function _getLimits(lightDetails) {
+function _getLimits(modelid) {
     var limits = defaultLimits
-        , modelId
         ;
 
-    if (lightDetails.modelid) {
-        modelId = lightDetails.modelid.toLowerCase();
+    if (modelid) {
+        modelid = modelid.toLowerCase();
 
-        if (/^lct/.test(modelId)) {
+        if (/^lct/.test(modelid)) {
             // This is a Hue bulb
             limits = hueLimits;
-        } else if (/^llc/.test(modelId)) {
+        } else if (/^llc/.test(modelid)) {
             // This is a Living Color lamp (Bloom, Iris, etc..)
             limits = livingColorsLimits;
-        } else if (/^lwb/.test(modelId)) {
+        } else if (/^lwb/.test(modelid)) {
             // This is a lux bulb
             limits = defaultLimits;
         } else {
@@ -167,8 +166,8 @@ function _getLimits(lightDetails) {
 }
 
 module.exports = {
-    convertRGBtoXY: function(rgb, lightDetails) {
-        var limits = _getLimits(lightDetails);
+    convertRGBtoXY: function(rgb, modelid) {
+        var limits = _getLimits(modelid);
 
         return _getXYStateFromRGB(rgb[0], rgb[1], rgb[2], limits);
     }

@@ -1,10 +1,11 @@
 "use strict";
 
-var expect = require("chai").expect,
-    assert = require("chai").assert,
-    HueApi = require("../hue-api"),
-    lightState = require("../").lightState,
-    testValues = require("./support/testValues.js");
+var expect = require("chai").expect
+    , assert = require("chai").assert
+    , HueApi = require("..").HueApi
+    , lightState = require("..").lightState
+    , testValues = require("./support/testValues.js")
+    ;
 
 describe("Hue API", function () {
 

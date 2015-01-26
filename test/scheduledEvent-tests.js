@@ -4,10 +4,11 @@
 //
 //
 
-var expect = require("chai").expect,
-    schedule = require("../index").scheduledEvent,
-    ApiError = require("../index").ApiError,
-    testValues = require("./support/testValues");
+var expect = require("chai").expect
+    , schedule = require("..").scheduledEvent
+    , ApiError = require("..").ApiError
+    , testValues = require("./support/testValues")
+    ;
 
 describe("ScheduleEvent", function () {
     var scheduledEvent;

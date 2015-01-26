@@ -6,8 +6,7 @@ Philips Living Color Lamps.
 This library abstracts away the actual Philips Hue Bridge REST API and provides all of the features of the Phillips API and
 a number of useful functions to control the lights and bridge remotely.
 
-The library has undergone a large update for version ``0.2.x``, where it now supports ``callbacks`` and Q ``promises`` for the
-functions of the API.
+The library supports both function ``callbacks`` and Q ``promises`` for all the functions of the API.
 So for each function in the API, if a callback is provided, then a callback will be used to return any results
 or notification of success, in a true Node.js fashion. If the callback is omitted then a promise will be returned for
 use in chaining or in most cases simpler handling of the results.
@@ -15,18 +14,29 @@ use in chaining or in most cases simpler handling of the results.
 When using Q ``promises``, it is necessary to call ``done()`` on any promises that are returned, otherwise errors can be
 swallowed silently.
 
+
 ## Change Log
 For a list of changes, please refer to the change log;
 [Changes](Changelog.md)
 
 
 ## Work In Progress
-There is still some work to be done around completing the ability to define schedules in a better way that properly
-validates the command that is to be run as part of the schedule. With the changes introduced in version ``0.2.0`` of this
-library it should be easier to accomplish in an upcoming release.
+There are still some missing pieces to the library which includes;
+* Rules Api
+* Latest updates to the Schedules API
+* Improved handling of settings/commands for Schedules
+* Setting an RGB value to a groups of lights
 
-The public API as of version 0.2.0+ is close to complete (at least for the current version of the Phillips Hue Bridge firmware),
-and as such there will be no breaking changes to the library that has occurred in moving from version ``0.1.x`` to ``0.2.x``.
+
+## Breaking Changes in moving from 0.2.x to 1.0.x
+There are breaking changes in the transition from eariler `0.2.x` versions to `1.0.x` to do with the LightState object.
+The changes were required to properly fix the nature of how the `LightState` worked and to make it compatible with the
+underlying API state object that it represents.
+
+The major change in the LightState is that it can now properly support validation of values as stated in the API and can
+convert an object with properties directly into a LightState.
+
+The LightState has also been heavily enriched with convenience functions to make creating states a lot easier.
 
 
 ## Philips Hue Resources
@@ -125,7 +135,7 @@ This library offer two functions to register new devices/users with the Hue Brid
 
 
 ### Bridge Configuration
-You can obtain a summary of the configuration of the Bridge using the ``config()`` or ``connect()`` functions;
+You can obtain a summary of the configuration of the Bridge using the ``config()`` or ``getConfig()`` functions;
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
@@ -142,11 +152,18 @@ api = new HueApi(hostname, username);
 
 // --------------------------
 // Using a promise
-api.connect().then(displayResult).done();
+api.config().then(displayResult).done();
+// using getConfig() alias
+api.getConfig().then(displayResult).done();
 
 // --------------------------
 // Using a callback
-api.connect(function(err, config) {
+api.config(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+// using getConfig() alias
+api.getConfig(function(err, config) {
     if (err) throw err;
     displayResult(config);
 });
@@ -216,10 +233,49 @@ For this reason, if you want to validate that the user account used to connect t
 look for a field that is not present in the above result, like the ``mac``, ``ipaddress`` or ``linkbutton`` would be good
 properties to check.
 
+//TODO Need to document setting config value and timezones
+
+### Timezones
+To obtain the valid timezones for the bridge, you can use the ``getTimezones()`` or ``timezones()`` function.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var hostname = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api;
+
+api = new HueApi(hostname, username);
+
+// --------------------------
+// Using a promise
+api.getTimezones().then(displayResult).done();
+// or using 'timezones' alias
+api.timezones().then(displayResult).done();
+
+// --------------------------
+// Using a callback
+api.getTimezones(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+// or using 'timezones' alias
+api.timezones(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+```
+
+//TODO setting a time zone
+
 
 ### Software and API Version
 The version of the software and API for the bridge is available from the `config` function, but out of convenience there
-is also a `getVersion` function which filters the `config` return data to just give you the version details.
+is also a `getVersion` and `version` function which filters the `config` return data to just give you the version details.
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
@@ -237,10 +293,17 @@ api = new HueApi(hostname, username);
 // --------------------------
 // Using a promise
 api.getVersion().then(displayResult).done();
+// or using 'version' alias
+api.version().then(displayResult).done();
 
 // --------------------------
 // Using a callback
 api.getVersion(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+// or using 'version' alias
+api.version(function(err, config) {
     if (err) throw err;
     displayResult(config);
 });
@@ -317,13 +380,55 @@ If the link button was pressed you should get a response that will provide you w
 ```
 
 
+### Bridge Description
+You can obtain the UPnP/Discovery description details of the Bridge using the function ``description()`` or
+``getDescription()``. The result of this will be the contents of the `/description.xml` converted into a JSON object.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var hostname = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api;
+
+api = new HueApi(hostname, username);
+
+// --------------------------
+// Using a promise
+api.description().then(displayResult).done();
+// using alias getDescription()
+api.getDescription().then(displayResult).done();
+
+// --------------------------
+// Using a callback
+api.description(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+// using alias getDescription()
+api.getDescription(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
+```
+
+
 ### Validating a Connection to a Philips Hue Bridge
-To connect to a Philips Hue Bridge and obtain some basic details about it you can use the ``connect()`` or ``config()``
-functions which were detailed above.
+To connect to a Philips Hue Bridge and obtain some basic details about it you can use the any
+of the following functions;
+* ``config()`` or ``getConfig()``
+* ``version()`` or ``getVersion()``
+
+The details of the results of these functions are provided above.
 
 
 ### Obtaining the Complete State of the Bridge
-If you have a valid user account in the Bridge, then you can obtain the complete status of the bridge using ``getFullState()``.
+If you have a valid user account in the Bridge, then you can obtain the complete status of the bridge using
+``fullState()`` or ``getFullState()``.
 This function is computationally expensive on the bridge and should not be invoked frequently.
 
 ```js
@@ -342,6 +447,8 @@ api = new HueApi(hostname, username);
 // --------------------------
 // Using a promise
 api.getFullState().then(displayResult).done();
+// or alias fullState()
+api.fullState().then(displayResult).done();
 
 // --------------------------
 // Using a callback
@@ -349,7 +456,13 @@ api.getFullState(function(err, config) {
     if (err) throw err;
     displayResult(config);
 });
+// or alias fullState()
+api.fullState(function(err, config) {
+    if (err) throw err;
+    displayResult(config);
+});
 ```
+
 This will produce a JSON response similar to the following (large parts have been removed from the result below);
 ```
 {
@@ -1370,6 +1483,7 @@ the Phillips Hue REST API.
 To help with building a schedule and to perform some basic checking to ensure that values are correct/valid there is a
 helper module ``scheduleEvent`` which can be used the build a valid schedule object.
 
+
 ### Using ScheduleEvent to build a Schedule
 The ``scheduleEvent`` module/function is used to build up a schedule that the Hue Bridge can understand. It is not a
 requirement when creating schedules, but can eliminate some of the basic errors that can result when creating a schedule.
@@ -1531,6 +1645,352 @@ If the deletion was successful, then ``true`` will be returned from the promise,
 as in the case if the schedule does not exist.
 
 
+## Working with scenes
+The Hue Bridge can store up to 200 scenes internally. There is currently no way to delete a scene from the API once it
+is created, although old unused scenes will get overwritten.
+
+Additionally, bridge scenes should not be confused with the preset scenes stored in the Android and iOS apps. In the
+apps these scenes are stored internally. Once activated though, they may then appear as a bridge scene.
+
+
+
+### Obtaining all the Defined scenes
+To obtain all the defined bridge scenes on the Hue Bridge use the ``scenes()`` or ``getScenes()`` functions:
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username);
+
+// --------------------------
+// Using a promise
+api.scenes()
+    .then(displayResults)
+    .done();
+// Using 'getScenes' alias
+api.getScenes()
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.scenes(function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+// Using 'getScenes' alias
+api.getScenes(function(err, result){
+    if (err) throw err;
+    displayResults(result);
+```
+
+The function will return an Array of scene definitions consisting of ``id``, ``name`` and ``lights``;
+```
+[
+    {
+        "id":"0",
+        "name":"node-hue-test-scene",
+        "lights":["1","2"],
+        "active":true
+    },
+    {
+        "id":"1",
+        "name":"1",
+        "lights":["1"],
+        "active":true
+    },
+    {
+        "id": "OFF-TAP-1",
+        "name": "Tap scene one",
+        "lights": ["1", "2", "3, "4", "5"],
+        "active": true
+    }
+]
+```
+
+### Get a Scene
+You can obtain a specific scene using the id of the scene and the ``scene()`` or ``getScene()`` function:
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    sceneId = "OFF-TAP-1"
+    ;
+
+// --------------------------
+// Using a promise
+api.scene(sceneId)
+    .then(displayResults)
+    .done();
+// Using 'getScene' alias
+api.getScene(sceneId)
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.scene(sceneId, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+// Using 'getScene' alias
+api.getScene(sceneId, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+```
+
+The functions will return a result of the scene definition, like the following:
+```
+{
+    "id": "OFF-TAP-1",
+    "name": "Tap scene one",
+    "lights": [
+        "1",
+        "2"
+    ],
+    "active": true
+}
+```
+
+
+### Creating a new Scene
+There are multiple definitions on scenes, some of which are stored in the Bridge, others are stored inside the iOS and
+Android applications. This API can only interact and define scenes that are stored inside the Hue Bridge.
+
+When creating a new scene, the current state of the lights that are being included become the state of the lights when
+you activate/recall the scene in the future.
+
+When you create a scene via the API function ``createScene()``, the scene will get an ``id`` that is dynamically generated
+this id will be a combination of the ``scenePrefix`` that was set when the HueApi was instantiated. The default, if you
+do not specify one is ``node-hue-api-`` followed by the next available integer value for all the scenes of that prefix
+that already exist.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    sceneName = "My New Scene",
+    lightIds = [1, 2, 3, 4, 5, 6, 7]
+    ;
+
+// --------------------------
+// Using a promise
+api.createScene(lightIds, sceneName)
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.scene(lightIds, sceneName, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+```
+
+When a new scene is created, you will get a result back of the form;
+```
+{
+    "id": "node-hue-api-1",
+    "name": "My New Scene",
+    "lights": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+    ]
+}
+```
+
+The ``name`` value is optional, if one is not specified, then it will be set as the ``id`` that is generated. This is a
+feature of the underlying Hue Bridge, so may change in a future firmware update.
+
+
+### Updating an Existing Scene
+You can update an existing scene by using the ``updateScene()`` function. Just like with the creation of new scenes, the
+current state of the lights being specified will be stored as the state that is recalled then the scene is activated/recalled.
+
+If you update a scene that does not exist (that is you use a scene id that is not currently in the bridge), then a new scene
+will be created when using this function.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    sceneId = "node-hua-api-1"
+    sceneName = "Updated Scene Name",
+    lightIds = [1, 2]
+    ;
+
+// --------------------------
+// Using a promise
+api.updateScene(sceneId, lightIds, sceneName)
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.updateScene(sceneId, lightIds, sceneName, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+```
+
+Once again as with creating a new scene, the scene `name` is optional and if not set will be set to that of the scenes'
+`id`.
+
+When the scene is updated, you will get a response like the following;
+```
+{
+    "id": "node-hue-api-1",
+    "name": "Updated Scene Name",
+    "lights": [
+        "1",
+        "2"
+    ]
+}
+```
+
+### Set a Light State for a Light in a Scene
+If you need to set a different light state for a light that is part of scene (that is a different state to what it was
+in when the original scene was created), then you can use the `setSceneLightState()` function.
+
+This function allows you to specify the desired values for a single light in a scene, if you want to set the state for
+multiple bulbs, you will have to set it on each one individually.
+
+```js
+var HueApi = require("node-hue-api").HueApi
+    , lightState = require("node-hue-api").lightState
+    ;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.245",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    sceneId = "node-hue-api-2",
+    lightId = 1,
+    state = lightState.create().on().hue(2000)
+    ;
+
+// --------------------------
+// Using a promise
+api.setSceneLightState(sceneId, lightId, state)
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.setSceneLightState(sceneId, lightId, state, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
+```
+
+The results from setting light sate values will be the name of each value being set followed by a value of `true` if
+the change in the value was successful;
+
+```
+{
+    "on": true,
+    "hue": true
+}
+```
+
+
+### Activating or Recalling a Scene
+To recall or activate a scene (synonyms for the same activity) use the ``activateScene()`` or ``recallScene()`` function.
+
+When a scense is being made active, it is possible to also filter the lights in the scene using a group definition to
+limit the lights that will be affected by the scene activation.
+This means you could have defined a scene for all your bulbs, but if you apply a group filter that includes only, say
+the lounge lights, then the scene will be activated only on the lounge lights.
+
+If a group filter is not specified (it is an optional parameter) then the API does no filtering on the lights in the
+scene when it is activated.
+
+```js
+var HueApi = require("node-hue-api").HueApi
+    , lightState = require("node-hue-api").lightState
+    ;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    sceneId = "node-hue-api-2",
+    lightId = 1,
+    state = lightState.create().on().hue(2000)
+    ;
+
+// --------------------------
+// Using a promise
+api.activateScene(sceneId)
+    .then(displayResults)
+    .done();
+// using the "recallScene" alias
+api.recallScene(sceneId)
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.activateScene(sceneId, function(err, result) {
+    if (err) throw err;
+    displayResults(result);
+});
+// using the "recallScene" alias
+api.recallScene(sceneId, function(err, result) {
+    if (err) throw err;
+    displayResults(result);
+});
+```
+
+When a Scene is successfully activated/recalled, the result will be `true`.
+
+### Scenes by Name
+There is no sensible way to dealing with scenes by name currently (firmware version 1.5) as it is possible to define
+multiple scenes with the same name (in fact in testing even editing a scene in the iOS app created a new scene on the
+bridge).
+
+There is an activation flag, but all the scenes from experience remain active, so currently there is nothing to use in
+the data obtained from the Bridge API to help narrow down a scene via it's name.
+
+The scene `id` is the only reliable and consistent way to interact with scene activation/recalling.
+
+
 ## Advanced Options
 
 ### Timeouts
@@ -1550,7 +2010,7 @@ var host = "192.168.2.129",
     timeout = 20000 // timeout in milliseconds
     api;
 
-api = new HueApi(host, password, timeout);
+api = new HueApi(host, username, timeout);
 ```
 
 The default timeout, when not specified will be 10000ms (10 seconds). This is usually enough time for the bridge
@@ -1571,12 +2031,34 @@ var hue = require("node-hue-api"),
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    timeout = 20000 // timeout in milliseconds,
-    port = 8080 // not the default port for the bridge,
+    timeout = 20000, // timeout in milliseconds
+    port = 8080, // not the default port for the bridge
     api;
 
-api = new HueApi(host, password, timeout, port);
+api = new HueApi(host, username, timeout, port);
 ```
+
+
+### Scene Prefix
+If you desire some control over the prefix used when creating scenes, you can explicitly set a prefix via the
+configuration parameters when create the API connection to the bridge.
+
+The default prefix, if one is not specified is `node-hue-api-`.
+
+```js
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi;
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    timeout = null,
+    port = null,
+    scenePrefix = "0012fec-"
+    api;
+
+api = new HueApi(host, username, timeout, port, scenePrefix);
+```
+
 
 ## License
 Copyright 2013-2015. All Rights Reserved.

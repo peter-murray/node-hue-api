@@ -5,20 +5,6 @@ var util = require("util")
     , ApiError = require("../../errors").ApiError
     ;
 
-module.exports = function (fn) {
-    var processingFunctions;
-
-    if (arguments.length === 0) {
-        throw new ApiError("At least one post processing functions must be provided");
-    }
-
-    processingFunctions = validateFunction(Array.prototype.slice.call(arguments));
-
-    return Trait({
-        "postProcessing": processingFunctions
-    });
-};
-
 function validateFunction(fn) {
     var result = [];
 
@@ -35,3 +21,17 @@ function validateFunction(fn) {
 
     return result;
 }
+
+module.exports = function (fn) {
+    var processingFunctions;
+
+    if (arguments.length === 0) {
+        throw new ApiError("At least one post processing functions must be provided");
+    }
+
+    processingFunctions = validateFunction(Array.prototype.slice.call(arguments));
+
+    return Trait({
+        "postProcessing": processingFunctions
+    });
+};

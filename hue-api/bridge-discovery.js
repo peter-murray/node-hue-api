@@ -1,11 +1,12 @@
 "use strict";
 
-var Q = require("q"),
-    parseUri = require("parseUri"),
-    search = require("./search"),
-    http = require("./httpPromise"),
-    utils = require("./utils"),
-    discovery = require("./commands/discovery");
+var Q = require("q")
+    , parseUri = require("parseUri")
+    , search = require("./search")
+    , http = require("./httpPromise")
+    , utils = require("./utils")
+    , discovery = require("./commands/discovery")
+    ;
 
 /**
  * Will locate the Philips Hue Devices on the network. Depending upon the speed and size of the network the timeout
@@ -72,15 +73,20 @@ function _identifyBridges(possibleBridges) {
  * @private
  */
 function _parseDescription(xml) {
-    var xml2js = require("xml2js"),
-        parser = new xml2js.Parser(),
-        deferred = Q.defer();
+    var xml2js = require("xml2js")
+        , parser = new xml2js.Parser()
+        , deferred = Q.defer()
+        ;
 
     parser.parseString(xml, function (err, data) {
+        var result = null
+            , icons
+            ;
+
         if (err) {
             deferred.reject(err);
         } else {
-            var result = {
+            result = {
                 "version"     : {
                     "major": data.root.specVersion[0].major[0],
                     "minor": data.root.specVersion[0].minor[0]
@@ -97,15 +103,22 @@ function _parseDescription(xml) {
                 }
             };
 
-            if (data.root.device[0].serviceList && data.root.device[0].serviceList[0]) {
-                //TODO this is not currently implemented in 1.0 version
-                result.service = {
-                    "type"       : data.root.device[0].serviceList[0].service[0].serviceType[0],
-                        "id"         : data.root.device[0].serviceList[0].service[0].serviceId[0],
-                        "controlUrl" : data.root.device[0].serviceList[0].service[0].controlURL[0],
-                        "eventSubUrl": data.root.device[0].serviceList[0].service[0].eventSubURL[0],
-                        "scpdUrl"    : data.root.device[0].serviceList[0].service[0].SCPDURL[0]
-                };
+            if (data.root.device[0].iconList
+                && data.root.device[0].iconList[0]
+                && data.root.device[0].iconList[0].icon) {
+                icons = [];
+
+                data.root.device[0].iconList[0].icon.forEach(function(icon) {
+                    icons.push({
+                        mimetype: icon.mimetype[0],
+                        height: icon.height[0],
+                        width: icon.width[0],
+                        depth: icon.depth[0],
+                        url: icon.url[0]
+                    });
+                });
+
+                result.icons = icons;
             }
 
             deferred.resolve(result);

@@ -19,100 +19,106 @@ var Trait = require("traits").Trait,
     utils = require("../utils"),
     apiTraits = {};
 
+
+function processUserCreation(result) {
+    return result[0].success.username;
+}
+
+function processDeletionResults(result) {
+    if (!utils.wasSuccessful(result)) {
+        throw new ApiError(utils.parseErrors(result).join(", "));
+    }
+    return true;
+}
+
+function processModificationResults(result) {
+    if (!utils.wasSuccessful(result)) {
+        throw new ApiError(utils.parseErrors(result).join(", "));
+    }
+    return true;
+}
+
 apiTraits.createUser = Trait.compose(
-    tApiMethod("/api",
-               "POST",
-               "1.0",
-               "All"
+    tApiMethod(
+        "/api",
+        "POST",
+        "1.0",
+        "All"
     ),
     tDescription("Creates a new user. The link button on the bridge must be pressed and this command executed within 30 seconds."),
     tBodyArguments(
         "application/json",
         [
-            {"name": "devicetype", "type": "string", "maxLength": 40, "optional": false},
-            {"name": "username", "type": "string", "minLength": 10, "maxLength": 40, "optional": true}
+            {name: "devicetype", type: "string", maxLength: 40, optional: false},
+            {name: "username", type: "string", minLength: 10, maxLength: 40, optional: true}
         ]
     ),
-    tPostProcessing(_processUserCreation)
+    tPostProcessing(processUserCreation)
 );
 
 apiTraits.getConfiguration = Trait.compose(
-    tApiMethod("/api/<username>/config",
-               "GET",
-               "1.0",
-               "Whitelist"
+    tApiMethod(
+        "/api/<username>/config",
+        "GET",
+        "1.0",
+        "Whitelist"
     ),
     tDescription("Returns list of all configuration elements in the bridge. Note all times are stored in UTC.")
 );
 
 apiTraits.modifyConfiguration = Trait.compose(
-    tApiMethod("/api/<username>/config",
-               "PUT",
-               "1.0",
-               "Whitelist"
+    tApiMethod(
+        "/api/<username>/config",
+        "PUT",
+        "1.0",
+        "Whitelist"
     ),
     tDescription("Allows the user to set some configuration values."),
     tBodyArguments(
         "application/json",
         [
-            {"name": "proxyport", "type": "uint16", "optional": true},
-            {"name": "name", "type": "string", "minLength": 4, "maxLength": 16, "optional": true},
-            {"name": "swupdate", "type": "object", "optional": true},
-            {"name": "proxyaddress", "type": "string", "maxLength": 40, "optional": true},
-            {"name": "linkbutton", "type": "boolean", "optional": true},
-            {"name": "ipaddress", "type": "string", "optional": true},
-            {"name": "netmask", "type": "string", "optional": true},
-            {"name": "gateway", "type": "string", "optional": true},
-            {"name": "dhcp", "type": "boolean", "optional": true},
-            {"name": "portalservices", "type": "boolean", "optional": true}
+            {name: "proxyport", type: "uint16", optional: true},
+            {name: "name", type: "string", minLength: 4, maxLength: 16, optional: true},
+            {name: "swupdate", type: "object", optional: true},
+            {name: "proxyaddress", type: "string", maxLength: 40, optional: true},
+            {name: "linkbutton", type: "boolean", optional: true},
+            {name: "ipaddress", type: "string", optional: true},
+            {name: "netmask", type: "string", optional: true},
+            {name: "gateway", type: "string", optional: true},
+            {name: "dhcp", type: "boolean", optional: true},
+            {name: "portalservices", type: "boolean", optional: true}
         ]
     ),
-    tPostProcessing(_processModificationResults)
+    tPostProcessing(processModificationResults)
 );
 
 apiTraits.deleteUser = Trait.compose(
-    tApiMethod("/api/<username>/config/whitelist/<username2>",
-               "DELETE",
-               "1.0",
-               "Whitelist"
+    tApiMethod(
+        "/api/<username>/config/whitelist/<username2>",
+        "DELETE",
+        "1.0",
+        "Whitelist"
     ),
     tDescription("Deletes the specified user <username2>, from the whitelist."),
-    tPostProcessing(_processDeletionResults)
+    tPostProcessing(processDeletionResults)
 );
 
 apiTraits.getFullState = Trait.compose(
-    tApiMethod("/api/<username>",
-               "GET",
-               "1.0",
-               "Whitelist"
+    tApiMethod(
+        "/api/<username>",
+        "GET",
+        "1.0",
+        "Whitelist"
     ),
     tDescription("This command is used to fetch the entire datastore from the device, including settings and state " +
-                 "information for lights, groups, schedules and configuration. It should only be used sparingly as " +
-                 "it is resource intensive for the bridge, but is supplied e.g. for synchronization purposes.")
+    "information for lights, groups, schedules and configuration. It should only be used sparingly as " +
+    "it is resource intensive for the bridge, but is supplied e.g. for synchronization purposes.")
 );
 
 module.exports = {
-    "createUser"         : Trait.create(Object.prototype, apiTraits.createUser),
-    "getConfiguration"   : Trait.create(Object.prototype, apiTraits.getConfiguration),
-    "getFullState"       : Trait.create(Object.prototype, apiTraits.getFullState),
+    "createUser": Trait.create(Object.prototype, apiTraits.createUser),
+    "getConfiguration": Trait.create(Object.prototype, apiTraits.getConfiguration),
+    "getFullState": Trait.create(Object.prototype, apiTraits.getFullState),
     "modifyConfiguration": Trait.create(Object.prototype, apiTraits.modifyConfiguration),
-    "deleteUser"         : Trait.create(Object.prototype, apiTraits.deleteUser)
+    "deleteUser": Trait.create(Object.prototype, apiTraits.deleteUser)
 };
-
-function _processUserCreation(result) {
-    return result[0].success.username;
-}
-
-function _processDeletionResults(result) {
-    if (!utils.wasSuccessful(result)) {
-        throw new ApiError(utils.parseErrors(result).join(", "));
-    }
-    return true;
-}
-
-function _processModificationResults(result) {
-    if (!utils.wasSuccessful(result)) {
-        throw new ApiError(utils.parseErrors(result).join(", "));
-    }
-    return true;
-}
