@@ -9,6 +9,8 @@
 consistent (e.g. `lightState()` and `getLightState()`)
 - Added scene API support
 - Updated HTTP request library to 2.51.0
+- Added timezone retrieval from the bridge
+- Greatly increased test case coverage
 
 ## 0.2.7
 - Added functions `nupnpSearch` and `upnpSearch` for bridge discovery and deprecated old search function references

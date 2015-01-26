@@ -17,16 +17,21 @@ var Q = require("q")
 
 var SCENE_PREFIX = "node-hue-api-";
 
-function HueApi(host, username, timeout, port, scenePrefix) {
-    this._config = {
+function HueApi(config) {
+    this._config = config;
+}
+
+module.exports = function(host, username, timeout, port, scenePrefix) {
+    var config = {
         hostname: host,
         username: username,
         timeout: timeout || 10000,
         port: port || 80,
-        scene_prefix: scenePrefix || SCENE_PREFIX
+        scenePrefix: scenePrefix || SCENE_PREFIX
     };
-}
-module.exports = HueApi;
+
+    return new HueApi(config);
+};
 
 
 /**

@@ -6,8 +6,7 @@ Philips Living Color Lamps.
 This library abstracts away the actual Philips Hue Bridge REST API and provides all of the features of the Phillips API and
 a number of useful functions to control the lights and bridge remotely.
 
-The library has undergone a large update for version ``0.2.x``, where it now supports ``callbacks`` and Q ``promises`` for the
-functions of the API.
+The library supports both function ``callbacks`` and Q ``promises`` for all the functions of the API.
 So for each function in the API, if a callback is provided, then a callback will be used to return any results
 or notification of success, in a true Node.js fashion. If the callback is omitted then a promise will be returned for
 use in chaining or in most cases simpler handling of the results.
@@ -15,20 +14,23 @@ use in chaining or in most cases simpler handling of the results.
 When using Q ``promises``, it is necessary to call ``done()`` on any promises that are returned, otherwise errors can be
 swallowed silently.
 
+
 ## Change Log
 For a list of changes, please refer to the change log;
 [Changes](Changelog.md)
 
 
 ## Work In Progress
-There is still some work to be done around completing the ability to define schedules in a better way that properly
-validates the command that is to be run as part of the schedule. With the changes introduced in version ``0.2.0`` of this
-library it should be easier to accomplish in an upcoming release.
+There are still some missing pieces to the library which includes;
+* Rules Api
+* Latest updates to the Schedules API
+* Improved handling of settings/commands for Schedules
+* Setting an RGB value to a groups of lights
 
 
 ## Breaking Changes in moving from 0.2.x to 1.0.x
-There are breaking changes in the transition earlier versions (`0.2.x`) to `1.0.x` to do with the LightState object. The
-changes were required to properly fix the nature of how the `LightState` worked and to make it compatible with the
+There are breaking changes in the transition from eariler `0.2.x` versions to `1.0.x` to do with the LightState object.
+The changes were required to properly fix the nature of how the `LightState` worked and to make it compatible with the
 underlying API state object that it represents.
 
 The major change in the LightState is that it can now properly support validation of values as stated in the API and can
@@ -1789,23 +1791,23 @@ var host = "192.168.2.129",
 
 // --------------------------
 // Using a promise
-api.createScene(sceneName, lightIds)
+api.createScene(lightIds, sceneName)
     .then(displayResults)
     .done();
 
 // --------------------------
 // Using a callback
-api.scene(sceneName, lightIds, function(err, result){
+api.scene(lightIds, sceneName, function(err, result){
     if (err) throw err;
     displayResults(result);
 });
 ```
 
 When a new scene is created, you will get a result back of the form;
-```js
+```
 {
     "id": "node-hue-api-1",
-    "name": "",
+    "name": "My New Scene",
     "lights": [
         "1",
         "2",
@@ -1826,16 +1828,8 @@ feature of the underlying Hue Bridge, so may change in a future firmware update.
 You can update an existing scene by using the ``updateScene()`` function. Just like with the creation of new scenes, the
 current state of the lights being specified will be stored as the state that is recalled then the scene is activated/recalled.
 
-```js
-
-```
-
-
-### Creating a scene
-Creating a scene requires a few things:
-* A scene id, required later to recall/modify the scene
-* A user friendly name
-* A number of lights to be part of the scene
+If you update a scene that does not exist (that is you use a scene id that is not currently in the bridge), then a new scene
+will be created when using this function.
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
@@ -1847,81 +1841,153 @@ var displayResults = function(result) {
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
     api = new HueApi(host, username),
-    scheduledEvent;
+    sceneId = "node-hua-api-1"
+    sceneName = "Updated Scene Name",
+    lightIds = [1, 2]
+    ;
 
 // --------------------------
 // Using a promise
-
-    api.createScene("199", "Test Scene", [4])
+api.updateScene(sceneId, lightIds, sceneName)
     .then(displayResults)
     .done();
 
-
 // --------------------------
 // Using a callback
-api.createScene("199", "Test Scene", [4], function(err, result){
+api.updateScene(sceneId, lightIds, sceneName, function(err, result){
     if (err) throw err;
     displayResults(result);
 });
 ```
 
-The result returned by the promise when creating a new scene will be that of the ``id`` for the newly created schedule;
+Once again as with creating a new scene, the scene `name` is optional and if not set will be set to that of the scenes'
+`id`.
+
+When the scene is updated, you will get a response like the following;
 ```
 {
-  "id": "1"
+    "id": "node-hue-api-1",
+    "name": "Updated Scene Name",
+    "lights": [
+        "1",
+        "2"
+    ]
 }
 ```
 
-### Modifying a scene
-```js
-    // --------------------------
-    // Using a promise
-        api.modifyScene(199,4, {"on": true}) // provide a value of false to turn off
-            .then(displayResults)
-            .fail(displayError)
-            .done();
+### Set a Light State for a Light in a Scene
+If you need to set a different light state for a light that is part of scene (that is a different state to what it was
+in when the original scene was created), then you can use the `setSceneLightState()` function.
 
-    // --------------------------
-    // Using a callback
-        api.modifyScene(199,4, {"on": true}, function(err, result){
-           if (err) throw err;
-           displayResults(result);
-       });
-```
-
-### Recalling a scene
-
-This is perhaps the reason for having scenes at all. The possibility to recall a scene for a group. By doing that it is
-possible to recall spefic setting in a simple way. You could for instance edit a scene using the ios/andriod apps and
-use this functinoality to recall those settings without releasing new code/configuration.
-
-Recalling a scene is done by using the setGroupLightState functions but there are also two helper functions to make
-things more intuitive.
-
-* recallSceneById - recalls a scene for a group
-* recallSceneByName - recalls a scene for a group from the user friendly name
-The id is extracted from the name, if multiple ids is encountered which often is the case when a scene is edited via an ios/android app the last one is
- used. Currently this is the scene last saved this is an assumption bases on undocumented handling.
-
-The examples below show the function `recallSceneById()`` The api is the for recallSceneByName same apart from applying
-a name instead of the id.
+This function allows you to specify the desired values for a single light in a scene, if you want to set the state for
+multiple bulbs, you will have to set it on each one individually.
 
 ```js
-    // --------------------------
-    // Using a promise
+var HueApi = require("node-hue-api").HueApi
+    , lightState = require("node-hue-api").lightState
+    ;
 
-    api.recallSceneById(0,"199")
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.245",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    sceneId = "node-hue-api-2",
+    lightId = 1,
+    state = lightState.create().on().hue(2000)
+    ;
+
+// --------------------------
+// Using a promise
+api.setSceneLightState(sceneId, lightId, state)
     .then(displayResults)
-    .fail(displayError)
     .done();
 
-    // --------------------------
-    // Using a callback
-        api.recallSceneById(0, "199", function(err, result){
-           if (err) throw err;
-           displayResults(result);
-       });
+// --------------------------
+// Using a callback
+api.setSceneLightState(sceneId, lightId, state, function(err, result){
+    if (err) throw err;
+    displayResults(result);
+});
 ```
+
+The results from setting light sate values will be the name of each value being set followed by a value of `true` if
+the change in the value was successful;
+
+```
+{
+    "on": true,
+    "hue": true
+}
+```
+
+
+### Activating or Recalling a Scene
+To recall or activate a scene (synonyms for the same activity) use the ``activateScene()`` or ``recallScene()`` function.
+
+When a scense is being made active, it is possible to also filter the lights in the scene using a group definition to
+limit the lights that will be affected by the scene activation.
+This means you could have defined a scene for all your bulbs, but if you apply a group filter that includes only, say
+the lounge lights, then the scene will be activated only on the lounge lights.
+
+If a group filter is not specified (it is an optional parameter) then the API does no filtering on the lights in the
+scene when it is activated.
+
+```js
+var HueApi = require("node-hue-api").HueApi
+    , lightState = require("node-hue-api").lightState
+    ;
+
+var displayResults = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api = new HueApi(host, username),
+    sceneId = "node-hue-api-2",
+    lightId = 1,
+    state = lightState.create().on().hue(2000)
+    ;
+
+// --------------------------
+// Using a promise
+api.activateScene(sceneId)
+    .then(displayResults)
+    .done();
+// using the "recallScene" alias
+api.recallScene(sceneId)
+    .then(displayResults)
+    .done();
+
+// --------------------------
+// Using a callback
+api.activateScene(sceneId, function(err, result) {
+    if (err) throw err;
+    displayResults(result);
+});
+// using the "recallScene" alias
+api.recallScene(sceneId, function(err, result) {
+    if (err) throw err;
+    displayResults(result);
+});
+```
+
+When a Scene is successfully activated/recalled, the result will be `true`.
+
+### Scenes by Name
+There is no sensible way to dealing with scenes by name currently (firmware version 1.5) as it is possible to define
+multiple scenes with the same name (in fact in testing even editing a scene in the iOS app created a new scene on the
+bridge).
+
+There is an activation flag, but all the scenes from experience remain active, so currently there is nothing to use in
+the data obtained from the Bridge API to help narrow down a scene via it's name.
+
+The scene `id` is the only reliable and consistent way to interact with scene activation/recalling.
+
+
 ## Advanced Options
 
 ### Timeouts
@@ -1941,7 +2007,7 @@ var host = "192.168.2.129",
     timeout = 20000 // timeout in milliseconds
     api;
 
-api = new HueApi(host, password, timeout);
+api = new HueApi(host, username, timeout);
 ```
 
 The default timeout, when not specified will be 10000ms (10 seconds). This is usually enough time for the bridge
@@ -1962,12 +2028,34 @@ var hue = require("node-hue-api"),
 
 var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
-    timeout = 20000 // timeout in milliseconds,
-    port = 8080 // not the default port for the bridge,
+    timeout = 20000, // timeout in milliseconds
+    port = 8080, // not the default port for the bridge
     api;
 
-api = new HueApi(host, password, timeout, port);
+api = new HueApi(host, username, timeout, port);
 ```
+
+
+### Scene Prefix
+If you desire some control over the prefix used when creating scenes, you can explicitly set a prefix via the
+configuration parameters when create the API connection to the bridge.
+
+The default prefix, if one is not specified is `node-hue-api-`.
+
+```js
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi;
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    timeout = null,
+    port = null,
+    scenePrefix = "0012fec-"
+    api;
+
+api = new HueApi(host, username, timeout, port, scenePrefix);
+```
+
 
 ## License
 Copyright 2013. All Rights Reserved.
