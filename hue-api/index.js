@@ -345,7 +345,21 @@ HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
     options.values = stateValues;
 
     if (!promise) {
+      // We have not errored, so check if we need to convert an rgb value
+
+      if (stateValues.rgb) {
+        promise = this.lightStatus(id)
+        .then(function (lightDetails) {
+          options.values.xy = rgb.convertRGBtoXY(stateValues.rgb, lightDetails);
+          delete options.values.rgb;
+        })
+        .then(function () {
+          return http.invoke(groupsApi.setGroupState, options);
+        })
+        ;
+      } else {
         promise = http.invoke(groupsApi.setGroupState, options);
+      }
     }
     return utils.promiseOrCallback(promise, cb);
 };
