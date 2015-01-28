@@ -27,12 +27,8 @@ function buildLightsResult(result) {
 
     for (id in result) {
         if (result.hasOwnProperty(id)) {
-            lights.push(
-                {
-                    id: id,
-                    name: result[id].name
-                }
-            );
+            result[id].id = id;
+            lights.push(result[id]);
         }
     }
     return {"lights": lights};
