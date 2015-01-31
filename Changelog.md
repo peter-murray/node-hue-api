@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.0.1
+- `lights()` and `getLights()` results now include details of the lights (modelid, type, swversion and uniqueid)
+
 ## 1.0.0
 - Massive refactoring of `LightState` which is a breaking change from version `0.2.7`
 - LightState convenience functions to support simpler creation of new states
