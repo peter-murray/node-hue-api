@@ -21,7 +21,7 @@ function HueApi(config) {
     this._config = config;
 }
 
-module.exports = function(host, username, timeout, port, scenePrefix) {
+module.exports = function (host, username, timeout, port, scenePrefix) {
     var config = {
         hostname: host,
         username: username,
@@ -320,7 +320,7 @@ HueApi.prototype.setLightName = function (id, name, cb) {
  */
 HueApi.prototype.setLightState = function (id, stateValues, cb) {
     var promise = this._getLightStateOptions(id, stateValues)
-        .then(function(options) {
+        .then(function (options) {
             return http.invoke(lightsApi.setLightState, options);
         });
     return utils.promiseOrCallback(promise, cb);
@@ -336,17 +336,10 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
  * @return {Q.promise} A promise that will set the specified state on the group, or {null} if a callback was provided.
  */
 HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
-    var options = this._defaultOptions(),
-        promise;
-
-    promise = _setGroupIdOption(options, id);
-
-    //TODO stateValues need to be injected properly so that they can be checked and validated
-    options.values = stateValues;
-
-    if (!promise) {
-        promise = http.invoke(groupsApi.setGroupState, options);
-    }
+    var promise = this._getGroupLightStateOptions(id, stateValues)
+            .then(function(options) {
+            return http.invoke(groupsApi.setGroupState, options);
+        });
     return utils.promiseOrCallback(promise, cb);
 };
 
@@ -760,7 +753,7 @@ HueApi.prototype.setSceneLightState = function (sceneId, lightId, stateValues, c
     var promise;
 
     promise = this._getLightStateOptions(lightId, stateValues)
-        .then(function(options) {
+        .then(function (options) {
             // Need to set id and lightId correctly, the above call treats the lightId as the id
             options.lightId = options.id;
             options.id = sceneId;
@@ -784,7 +777,7 @@ HueApi.prototype.setSceneLightState = function (sceneId, lightId, stateValues, c
 HueApi.prototype.activateScene = function (sceneId, groupIdFilter, cb) {
     var promise;
 
-    if (typeof(groupIdFilter) === "function"){
+    if (typeof(groupIdFilter) === "function") {
         cb = groupIdFilter;
         groupIdFilter = null;
     }
@@ -794,7 +787,7 @@ HueApi.prototype.activateScene = function (sceneId, groupIdFilter, cb) {
         if (isNaN(groupIdFilter)) {
             groupIdFilter = 0;
         }
-    } catch(err) {
+    } catch (err) {
         groupIdFilter = 0;
     }
 
@@ -855,8 +848,6 @@ HueApi.prototype.getTimezones = function (cb) {
     return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.timezones = HueApi.prototype.getTimezones;
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -941,7 +932,48 @@ HueApi.prototype._getNextSceneId = function () {
         });
 };
 
-HueApi.prototype._getLightStateOptions = function(lightId, stateValues) {
+HueApi.prototype._getGroupLightStateOptions = function (groupId, stateValues) {
+    var self = this
+        , options = self._defaultOptions()
+        , state
+        , deferred
+        , promise
+        ;
+
+    promise = _setGroupIdOption(options, groupId);
+
+    if (!promise) {
+        // No errors in the group id
+
+        if (lightState.isLightState(stateValues)) {
+            state = stateValues;
+        } else {
+            state = lightState.create(stateValues);
+        }
+
+        if (state.hasRGB()) {
+            //TODO RGB is tricky with groups, need to break the group into types and perform conversion
+            // Get all lights in the group,
+            // separate into types based on model
+            // create multiple states per model
+            // return a map of sub groups to states required
+
+            deferred = Q.defer();
+            deferred.reject(new ApiError("RGB state is not supported for groups yet"));
+            promise = deferred.promise;
+        } else {
+            options.values = state.payload();
+
+            deferred = Q.defer();
+            deferred.resolve(options);
+            promise = deferred.promise;
+        }
+    }
+
+    return promise;
+};
+
+HueApi.prototype._getLightStateOptions = function (lightId, stateValues) {
     var self = this
         , options = self._defaultOptions()
         , deferred

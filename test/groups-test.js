@@ -435,6 +435,7 @@ describe("Hue API", function () {
             });
         });
 
+        //TODO these tests need better validation around the body that is generated to be sent to the bridge
         describe("#setGroupLightState", function () {
 
             it("using #promise", function (finished) {

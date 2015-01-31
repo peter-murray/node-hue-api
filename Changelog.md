@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.0.2
+- Fixes issue #41 with sending group light states via the LightState object
+
 ## 1.0.1
 - `lights()` and `getLights()` results now include details of the lights (modelid, type, swversion and uniqueid)
 
