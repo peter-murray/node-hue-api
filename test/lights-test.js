@@ -7,49 +7,63 @@ var expect = require("chai").expect
 
 describe("Hue API", function () {
 
-    describe("#lights", function () {
+    var hue = new HueApi(testValues.host, testValues.username);
 
-        describe("#promise", function() {
+    describe("#lights()", function () {
+
+        describe("#promise", function () {
 
             it("should find some", function (done) {
-                var hue = new HueApi(testValues.host, testValues.username);
-
-                function checkResults(results) {
-                    _validateLightsResult(results, done);
-                }
-
-                hue.lights().then(checkResults).done();
+                hue.lights().then(_validateLightsResult(done)).done();
             });
         });
 
         describe("#callback", function () {
 
             it("should find some lights", function (done) {
-                var hue = new HueApi(testValues.host, testValues.username);
-
                 hue.lights(function (err, results) {
-                    if (err) {
-                        throw err;
-                    }
+                    expect(err).to.be.null;
+                    _validateLightsResult(done)(results);
+                });
+            });
+        });
+    });
 
-                    _validateLightsResult(results, done);
+    describe("#getLights()", function () {
+
+        describe("#promise", function () {
+
+            it("should find some", function (done) {
+                hue.lights().then(_validateLightsResult(done)).done();
+            });
+        });
+
+        describe("#callback", function () {
+
+            it("should find some lights", function (done) {
+                hue.lights(function (err, results) {
+                    expect(err).to.be.null;
+                    _validateLightsResult(done)(results);
                 });
             });
         });
     });
 });
 
-function _validateLightsResult(results, cb) {
-    expect(results).to.exist;
-    expect(results).to.have.property("lights");
-    expect(results.lights).to.have.length(testValues.lightsCount);
+function _validateLightsResult(cb) {
+    return function (results) {
+        expect(results).to.be.defined;
 
-    //TODO do this for all the lights
-    _validateLight(results.lights[0]);
+        expect(results).to.have.property("lights");
+        expect(results.lights).to.have.length(testValues.lightsCount);
 
-    cb();
+        //TODO do this for all the lights
+        _validateLight(results.lights[0]);
+
+        cb();
+    };
 }
 
 function _validateLight(light) {
-    expect(light).to.have.keys("id", "name");
+    expect(light).to.have.keys("id", "name", "modelid", "type", "swversion", "uniqueid");
 }

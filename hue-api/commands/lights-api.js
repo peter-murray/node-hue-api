@@ -17,23 +17,33 @@ var Trait = require("traits").Trait,
     tLightStateBody = require("./traits/tLightStateBody"),
     tPostProcessing = require("./traits/tPostProcessing"),
     ApiError = require("../errors").ApiError,
-    utils = require("../utils"),
-    apiTraits = {};
+    utils = require("../utils")
+    ;
+
+var apiTraits = {}
+    , LIGHT_RESULT_KEYS = [
+        "type", "name", "modelid", "uniqueid", "swversion"
+    ]
+    ;
+
 
 //TODO tie this into the API definition as a post processing step, then apply it via the http.invoke()
 function buildLightsResult(result) {
-    var lights = [],
-        id;
+    var lights = [];
 
-    for (id in result) {
-        if (result.hasOwnProperty(id)) {
-            lights.push(
-                {
-                    id: id,
-                    name: result[id].name
+    if (result) {
+        Object.keys(result).forEach(function (id) {
+            var light = {
+                    id: id
                 }
-            );
-        }
+                , data = result[id]
+                ;
+
+            LIGHT_RESULT_KEYS.forEach(function(key) {
+                light[key] = data[key];
+            });
+            lights.push(light);
+        });
     }
     return {"lights": lights};
 }
