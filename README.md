@@ -38,6 +38,9 @@ convert an object with properties directly into a LightState.
 
 The LightState has also been heavily enriched with convenience functions to make creating states a lot easier.
 
+The function `api.connect()` was removed from the library (as it really did nothing) and was just an alias to
+getting the configuration from the bridge to validate the connection values passed in.
+
 
 ## Philips Hue Resources
 
@@ -686,24 +689,32 @@ This will output a JSON object that will provide details of the lights that the 
   "lights": [
     {
       "id": "1",
-      "name": "Lounge Living Color"
+      "name": "Lounge Living Color",
+      "type": "Extended color light",
+      "modelid": "LCT001",
+      "uniqueid": "00:17:88:01:xx:xx:xx:xx-xx",
+      "swversion": "66013452"
     },
     {
       "id": "2",
-      "name": "Right Bedside"
+      "name": "Right Bedside",
+      "type": "Extended color light",
+      "modelid": "LCT001",
+      "uniqueid": "00:17:88:01:xx:xx:xx:xx-xx",
+      "swversion": "66013452"
     },
     {
       "id": "3",
-      "name": "Left Bedside"
-    },
-    {
-      "id": "4",
-      "name": "Lounge Standing Lamp"
+      "name": "Left Bedside",
+      "type": "Extended color light",
+      "modelid": "LCT001",
+      "uniqueid": "00:17:88:01:xx:xx:xx:xx-xx",
+      "swversion": "66013452"
     }
   ]
 }
 ```
-The "id" values are what you will need to use to interact with the light directly and set the states on it (like on/off, color, etc...).
+The `id` values are what you will need to use to interact with the light directly and set the states on it (like on/off, color, etc...).
 
 ## Interacting with a Hue Light or Living Color Lamp
 The library provides a function, __setLightState()__, that allows you to set the various states on a light connected to the Hue Bridge.
@@ -717,17 +728,61 @@ The majority of the various states that you can set on a Hue Light or Living Col
 ### LightState Options
 The __lightState__ object provides the following methods that can be used to build various states (all of which can be combined);
 
-- __on()__
+The LightState object, provides functions with the same name of the underlying Hue Bridge API properties for lights,
+which take values documented in the official Phillips Hue Lights API:
+
+- __on(value)__ sets the on state, where value it `true` or `false`
+- __bri(value)__ sets the brightness value from 0 to 255
+- __hue(value)__ sets the hue value from 0 to 65535
+- __sat(value)__ sets the saturation value 0 to 255
+- __xy(x, y)__ sets the xy value where x and y is from 0 to 1 in the Philips Color co-ordinate system
+- __ct(colorTemperature)__ Set the color temperature to a value between 153 and 500
+- __alert(long)__ Flashes the light once, or 10 times if `long` is true
+- __effect(effectName)__ Sets the effect on the light(s) where `effectName` is either `none` or `colorloop`
+- __transitiontime(milliseconds)__ Sets a transition time in milliseconds
+
+There are also a number of convenience functions to provide extra functionality or a more natural language for building
+up a desired Light State:
+
+- __turnOn()__
+- __turnOff()__
 - __off()__
-- __alert()__ flash the light once
-- __alert(isLong)__ if isLong is true then the alert will flash 10 times
+
+- __brightness(percentage)__ Set the brightness from 0% to 100% (0% is not off)
+
+- __colorTemperature(ct)__ Alias for the `ct()` function above
+- __colourTemperature(ct)__ Alias for the `ct()` function above
+- __colorTemp(ct)__ Alias for the `ct()` function above
+- __colourTemp(ct)__ Alias for the `ct()` function above
+
+- __saturation(percentage)__ Set the saturation as a percentage value between 0 and 100
+
+- __shortAlert()__ Flashes the light(s) once
+- __alertShort()__ Flashes the light(s) once
+- __longAlert()__ Flashes the light(s) 10 times
+- __alertLong()__ Flashes the light(s) 10 times
+
+- __transitionTime(milliseconds)__ Specify a specific transition time in milliseconds
+- __transition(milliseconds)__ Specify a specific transition time
+- __transitionSlow()__ A slow transition of 800ms
+- __transitionFast()__ A fast transition of 200ms
+- __transitionInstant()__ A transition of 0ms
+- __transitionDefault()__ A transition time of the bridge default (400ms)
+
 - __white(colorTemp, brightPercent)__ where colorTemp is a value between 154 (cool) and 500 (warm) and brightPercent is 0 to 100
-- __brightness(percent)__ where percent is the brightness from 0 to 100
 - __hsl(hue, saturation, brightPercent)__ where hue is a value from 0 to 359, saturation is a percent value from 0 to 100, and brightPercent is from 0 to 100
-- __xy(x, y)__ where x and y is from 0 to 1 in the Philips Color co-ordinate system
-- __rgb(red, green, blue)__ where red, green and blue are values from 0 to 255 - Not all colors can be created by the lights
-- __transition(seconds)__ this can be used with another setting to create a transition effect (like change brightness over 10 seconds)
-- __effect(value)__ this can be set to 'colorloop' or 'none'. The 'colorloop' rotates through all available hues at the current saturation level
+
+- __rgb(r, g, b)__ Sets an RGB value from integers 0-255
+- __rgb([r, g, b])__ Sets an RGB value from an array of integer values 0-255
+
+- __colorLoop()__ Starts a color loop effect (rotates through all available hues at the current saturation level)
+- __colourLoop()__ Starts a color loop effect (rotates through all available hues at the current saturation level)
+- __effectColorLoop()__ Starts a color loop effect (rotates through all available hues at the current saturation level)
+- __effectColourLoop()__ Starts a color loop effect (rotates through all available hues at the current saturation level)
+
+- __copy__ Allows you to create an independent copy of the LightState
+- __reset__ Will completely reset/remove all provided values
+
 
 ### Creating Complex States
 The LightState object provides a simple way to build up JSON object to set multiple values on a Hue Light.
@@ -832,7 +887,9 @@ will be generated with the failure details.
 
 
 ## Setting Light States using custom JSON Object
-You can pass in your own JSON object that contain the setting(s) that you wish to pass to the light via the bridge.
+You can pass in your own JSON object that contain the setting(s) that you wish to pass to the light via the bridge. If
+you do this, then a LightState object will be created from the passed in object, so that it can be properly validated
+and only valid values are passed to the bridge.
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
@@ -860,7 +917,7 @@ If the function call is successful, then you should get a response of true. If t
 
 
 ## Getting the Current Status/State for a Light
-To obtain the current state of a light from the Hue Bridge you can use the __lightStatus()__ function;
+To obtain the current state of a light from the Hue Bridge you can use the `lightStatus()` or `getLightStatus()` function;
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
