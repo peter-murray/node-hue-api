@@ -731,57 +731,52 @@ The __lightState__ object provides the following methods that can be used to bui
 The LightState object, provides functions with the same name of the underlying Hue Bridge API properties for lights,
 which take values documented in the official Phillips Hue Lights API:
 
-- __on(value)__ sets the on state, where value it `true` or `false`
-- __bri(value)__ sets the brightness value from 0 to 255
-- __hue(value)__ sets the hue value from 0 to 65535
-- __sat(value)__ sets the saturation value 0 to 255
-- __xy(x, y)__ sets the xy value where x and y is from 0 to 1 in the Philips Color co-ordinate system
-- __ct(colorTemperature)__ Set the color temperature to a value between 153 and 500
-- __alert(long)__ Flashes the light once, or 10 times if `long` is true
-- __effect(effectName)__ Sets the effect on the light(s) where `effectName` is either `none` or `colorloop`
-- __transitiontime(milliseconds)__ Sets a transition time in milliseconds
+| Function | Details |
+|:-------------|:---------------------|
+| `on(value)`   | Sets the `on` state, where the value is `true` or `false`|
+| `bri(value)`   | Sets the brightness, where value from 0 to 255 |
+| `hue(value)` | Sets the hue, where value from 0 to 65535 |
+| `sat(value)`  | Sets the saturation value from 0 to 255  |
+| `xy(x, y)`      | Sets the xy value where x and y is from 0 to 1 in the Philips Color co-ordinate system |
+| `ct(colorTemperature)` | Set the color temperature to a value between 153 and 500 |
+| `alert(value)` | Sets the alert state to value `none`, `select` or `lselect`. If no parameter is passed will default to `none`. |
+| `effect(effectName)` | Sets the effect on the light(s) where `effectName` is either `none` or `colorloop`. |
+| `transitiontime(milliseconds)` | Sets a transition time in milliseconds |
 
 There are also a number of convenience functions to provide extra functionality or a more natural language for building
 up a desired Light State:
 
-- __turnOn()__
-- __turnOff()__
-- __off()__
-
-- __brightness(percentage)__ Set the brightness from 0% to 100% (0% is not off)
-
-- __colorTemperature(ct)__ Alias for the `ct()` function above
-- __colourTemperature(ct)__ Alias for the `ct()` function above
-- __colorTemp(ct)__ Alias for the `ct()` function above
-- __colourTemp(ct)__ Alias for the `ct()` function above
-
-- __saturation(percentage)__ Set the saturation as a percentage value between 0 and 100
-
-- __shortAlert()__ Flashes the light(s) once
-- __alertShort()__ Flashes the light(s) once
-- __longAlert()__ Flashes the light(s) 10 times
-- __alertLong()__ Flashes the light(s) 10 times
-
-- __transitionTime(milliseconds)__ Specify a specific transition time in milliseconds
-- __transition(milliseconds)__ Specify a specific transition time
-- __transitionSlow()__ A slow transition of 800ms
-- __transitionFast()__ A fast transition of 200ms
-- __transitionInstant()__ A transition of 0ms
-- __transitionDefault()__ A transition time of the bridge default (400ms)
-
-- __white(colorTemp, brightPercent)__ where colorTemp is a value between 154 (cool) and 500 (warm) and brightPercent is 0 to 100
-- __hsl(hue, saturation, brightPercent)__ where hue is a value from 0 to 359, saturation is a percent value from 0 to 100, and brightPercent is from 0 to 100
-
-- __rgb(r, g, b)__ Sets an RGB value from integers 0-255
-- __rgb([r, g, b])__ Sets an RGB value from an array of integer values 0-255
-
-- __colorLoop()__ Starts a color loop effect (rotates through all available hues at the current saturation level)
-- __colourLoop()__ Starts a color loop effect (rotates through all available hues at the current saturation level)
-- __effectColorLoop()__ Starts a color loop effect (rotates through all available hues at the current saturation level)
-- __effectColourLoop()__ Starts a color loop effect (rotates through all available hues at the current saturation level)
-
-- __copy__ Allows you to create an independent copy of the LightState
-- __reset__ Will completely reset/remove all provided values
+| Function | Details |
+|:---------|:--------|
+| `turnOn()` | Turn the lights on |
+| `turnOff()` |Turn the lights off |
+| `off()` |Thurn the lights off |
+| `brightness(percentage)` |Set the brightness from 0% to 100% (0% is not off)|
+| `colorTemperature(ct)` |Alias for the `ct()` function above|
+| `colourTemperature(ct)` |Alias for the `ct()` function above|
+| `colorTemp(ct)`| Alias for the `ct()` function above|
+| `colourTemp(ct)` |Alias for the `ct()` function above|
+| `saturation(percentage)`| Set the saturation as a percentage value between 0 and 100|
+| `shortAlert()` |Flashes the light(s) once|
+| `alertShort()` |Flashes the light(s) once|
+| `longAlert()` |Flashes the light(s) 10 times|
+| `alertLong()` |Flashes the light(s) 10 times|
+| `transitionTime(milliseconds)` |Specify a specific transition time in milliseconds|
+| `transition(milliseconds)` |Specify a specific transition time|
+| `transitionSlow()` |A slow transition of 800ms|
+| `transitionFast()` | A fast transition of 200ms|
+| `transitionInstant()` |A transition of 0ms|
+| `transitionDefault()` |A transition time of the bridge default (400ms)|
+| `white(colorTemp, briPercent)` | where colorTemp is a value between 154 (cool) and 500 (warm) and briPercent is 0 to 100|
+| `hsl(hue, sat, briPercent)` | Where hue is a value from 0 to 359, sat is a saturation percent value from 0 to 100, and briPercent is from 0 to 100|
+| `rgb(r, g, b)` | Sets an RGB value from integers 0-255|
+| `rgb([r, g, b])` | Sets an RGB value from an array of integer values 0-255|
+| `colorLoop()` | Starts a color loop effect (rotates through all available hues at the current saturation level)|
+| `colourLoop()` | Starts a color loop effect (rotates through all available hues at the current saturation level)|
+| `effectColorLoop()` | Starts a color loop effect (rotates through all available hues at the current saturation level)|
+| `effectColourLoop()` | Starts a color loop effect (rotates through all available hues at the current saturation level)|
+| `copy()`| Allows you to create an independent copy of the LightState|
+| `reset()` | Will completely reset/remove all provided values|
 
 
 ### Creating Complex States
