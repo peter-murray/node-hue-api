@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.0.3
+- Fixes issue #44 generating an incorrect error when the id for `setLightState()` is not valid
+
 ## 1.0.2
 - Fixes issue #41 with sending group light states via the LightState object
 
