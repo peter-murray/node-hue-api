@@ -991,23 +991,24 @@ HueApi.prototype._getLightStateOptions = function (lightId, stateValues) {
         } else {
             state = lightState.create(stateValues);
         }
-    }
 
-    if (state.hasRGB()) {
-        promise = self.lightStatus(lightId)
-            .then(function (lightDetails) {
-                state = state.applyRGB(lightDetails.modelid);
-                options.values = state.payload();
+        if (state.hasRGB()) {
+            promise = self.lightStatus(lightId)
+                .then(function (lightDetails) {
+                    state = state.applyRGB(lightDetails.modelid);
+                    options.values = state.payload();
 
-                return options;
-            });
-    } else {
-        options.values = state.payload();
+                    return options;
+                });
+        } else {
+            options.values = state.payload();
 
-        deferred = Q.defer();
-        deferred.resolve(options);
+            deferred = Q.defer();
+            deferred.resolve(options);
 
-        promise = deferred.promise;
+            promise = deferred.promise;
+        }
+
     }
 
     return promise;
