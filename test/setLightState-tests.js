@@ -159,5 +159,23 @@ describe("Hue API", function () {
         //            .done();
         //    });
         //});
+
+        //TODO complete the error checking
+        describe("using an invalid light id", function() {
+
+            it("should fail with appropriate message", function(done) {
+                var state = lightState.create().on().rgb(100, 100, 100);
+
+                hue.setLightState(0, state)
+                    .then(function() {
+                        throw new Error("should not be called");
+                    }, function(err) {
+                        expect(err.message).to.contain("light id");
+                        expect(err.message).to.contain("is not valid");
+                        done();
+                    })
+                    .done();
+            });
+        });
     });
 });

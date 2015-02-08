@@ -337,7 +337,7 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
  */
 HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
     var promise = this._getGroupLightStateOptions(id, stateValues)
-            .then(function(options) {
+        .then(function (options) {
             return http.invoke(groupsApi.setGroupState, options);
         });
     return utils.promiseOrCallback(promise, cb);
@@ -859,7 +859,7 @@ HueApi.prototype._getConfig = function () {
 };
 
 HueApi.prototype._getScenePrefix = function () {
-    return this._getConfig().scene_prefix;
+    return this._getConfig().scenePrefix;
 };
 
 /**
@@ -928,10 +928,53 @@ HueApi.prototype._getNextSceneId = function () {
                 });
             }
 
-            return scenePrefix + (maxId + 1);
+            return "" + scenePrefix + (maxId + 1);
         });
 };
 
+/**
+ * Obtains the lights in a group and separates them into sub groups based on the model.
+ * @param groupId The id of the group.
+ * @returns {Object} A map of modelid to and array of lights that have that model.
+ * @private
+ */
+HueApi.prototype._getGroupLightsByType = function (groupId) {
+    var self = this;
+
+    return Q.all(
+        [
+            self.getGroup(groupId),
+            self.getLights()
+        ])
+        .spread(function (group, allLights) {
+            var map = {}
+                , lightMap = getLightsModelMap(allLights)
+                ;
+
+            if (group && group.lights) {
+                group.lights.forEach(function(lightId) {
+                    var modelid = lightMap[lightId];
+
+                    if (map[modelid]) {
+                        map[modelid].push(lightId);
+                    } else {
+                        map[modelid] = [lightId];
+                    }
+                });
+            }
+
+            return map;
+        });
+};
+
+/**
+ * Generates the light state options for a group
+ * @param groupId The group to apply the state values to
+ * @param stateValues The state of the lights to apply
+ * @returns {Q.promise} That will resolve to a set of options for the group or an array of options to apply subsets of
+ * lights in the group.
+ * @private
+ */
 HueApi.prototype._getGroupLightStateOptions = function (groupId, stateValues) {
     var self = this
         , options = self._defaultOptions()
@@ -961,6 +1004,30 @@ HueApi.prototype._getGroupLightStateOptions = function (groupId, stateValues) {
             deferred = Q.defer();
             deferred.reject(new ApiError("RGB state is not supported for groups yet"));
             promise = deferred.promise;
+
+            //// Separate the lights into models and apply the state to each type
+            //promise = self._getGroupLightsByType(groupId)
+            //    .then(function(groupLightsMap) {
+            //        var models = Object.keys(groupLightsMap)
+            //            , result = []
+            //            ;
+            //
+            //        models.forEach(function(model) {
+            //            var newState = state.copy();
+            //            newState.applyRGB(model);
+            //
+            //            result.push({
+            //                modelid: model,
+            //                lights: groupLightsMap[model],
+            //                state: newState
+            //            });
+            //        });
+            //
+            //        return result;
+            //    })
+            //    .then(function(subgroupsWithState) {
+            //       //TODO need to create options
+            //    });
         } else {
             options.values = state.payload();
 
@@ -1119,6 +1186,18 @@ function _setConfigurationOptions(options, values) {
     }
 
     return errorPromise;
+}
+
+function getLightsModelMap(lightsArray) {
+    var map = {};
+
+    if (Array.isArray(lightsArray)) {
+        lightsArray.forEach(function(light) {
+            map[light.id] = light.modelid;
+        });
+    }
+
+    return map;
 }
 
 /**

@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.0.4
+- Fixes issue #45 creating a scene resulted in a NaN id for the scene created
+
 ## 1.0.3
 - Fixes issue #44 generating an incorrect error when the id for `setLightState()` is not valid
 

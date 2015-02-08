@@ -476,6 +476,20 @@ describe("Hue API", function () {
                     .done();
             });
         });
+
+        describe("#_getGroupLightsByType", function() {
+
+            it("should work for group 0", function(done) {
+                hue._getGroupLightsByType(0)
+                    .then(function(map) {
+
+                        console.log(JSON.stringify(map, null, 2));
+
+                        done();
+                    })
+                    .done();
+            });
+        });
     });
 });
 

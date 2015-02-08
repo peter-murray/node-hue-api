@@ -141,6 +141,7 @@ describe("Hue API", function () {
             return function (result) {
                 expect(result).to.be.defined;
                 expect(result).to.have.property("id");
+                expect(result.id).to.contain("node-hue-api");
                 expect(result).to.have.property("name", name);
 
                 expect(result).to.have.property("lights");
