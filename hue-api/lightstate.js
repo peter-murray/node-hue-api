@@ -179,6 +179,11 @@ State.prototype.transitiontime = function (value) {
     return this;
 };
 
+State.prototype.scene = function (value) {
+    this._addValues(_getSceneId(value));
+    return this;
+}
+
 
 ///////////////////////////////////////////////////////////////////////
 // Convenience functions
@@ -412,6 +417,15 @@ function _getTransitionState(value) {
     return {
         transitiontime: _getTransitionTimeValue(value)
     };
+}
+
+function _getSceneId(value) {
+    var result = {};
+
+    if (value) {
+        result.scene = value;
+    }
+    return result;
 }
 
 function _getWhiteState(colorTemp, brightness) {

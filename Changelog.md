@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.0.5
+- Fixes issue #46 scene id was missing from body sent to the bridge for activation requests
+
 ## 1.0.4
 - Fixes issue #45 creating a scene resulted in a NaN id for the scene created
 
