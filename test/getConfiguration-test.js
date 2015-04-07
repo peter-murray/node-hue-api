@@ -2,6 +2,7 @@
 
 var util = require("util")
     , expect = require("chai").expect
+    , semver = require("semver")
     , HueApi = require("..").BridgeApi
     , ApiError = require("..").ApiError
     , testValues = require("./support/testValues.js")
@@ -77,8 +78,12 @@ describe("Hue API", function () {
 
             expect(results).to.have.property("name");
             expect(results).to.have.property("version");
-            expect(results.version).to.have.property("api", testValues.version.api);
-            expect(results.version).to.have.property("software", testValues.version.software);
+
+            expect(results.version).to.have.property("api");
+            expect(semver.gte(results.version.api, testValues.version.api)).to.be.true;
+
+            expect(results.version).to.have.property("software");
+            expect(parseInt(results.version.software)).to.at.least(parseInt(testValues.version.software));
         }
 
         function testPromise(name, done) {
