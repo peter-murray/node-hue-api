@@ -197,7 +197,7 @@ State.prototype.off = function () {
 State.prototype.turnOff = State.prototype.off;
 
 /**
- * Set the brighness as a percent value
+ * Set the brightness as a percent value
  * @param percentage The brightness percentage value between 0 and 100.
  * @returns {State}
  */
