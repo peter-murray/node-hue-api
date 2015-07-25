@@ -145,9 +145,10 @@ module.exports.valueForType = function(type, value) {
 
     if (type === "bool") {
         result = Boolean(value);
-    } else if (type === "uint8" || type === "uint16") {
+    } else if (type === "uint8" || type === "uint16" || type === "int8" || type === "int16") {
         result = Math.floor(value);
-        if (result < 0) {
+
+        if (/^uint.*/.test(type) && result < 0) {
             result = 0;
         }
     } else if (type === "string") {

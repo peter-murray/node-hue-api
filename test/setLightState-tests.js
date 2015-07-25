@@ -66,6 +66,64 @@ describe("Hue API", function () {
             });
         });
 
+        describe("set brightness increment", function() {
+
+            beforeEach(function(done) {
+                var initialState = lightState.create().on().brightness(50);
+                hue.setLightState(lightId, initialState)
+                    .then(function(result) {
+                        expect(result).to.be.true;
+                        done();
+                    })
+                    .done();
+            });
+
+            function test(value, expected, done) {
+                var initialBrightness;
+
+                // expected is optional
+                if (expected instanceof Function) {
+                    done = expected;
+                    expected = null;
+                }
+
+                state.bri_inc(value);
+
+                hue.getLightStatus(lightId)
+                    .then(function(initial) {
+                        initialBrightness = initial.state.bri;
+                        return hue.setLightState(lightId, state);
+                    })
+                    .then(function(result) {
+                        expect(result).to.be.true;
+                        return hue.getLightStatus(lightId);
+                    })
+                    .then(function(result) {
+                        if (expected === null) {
+                            expected = initialBrightness + value;
+                        }
+                        expect(result.state.bri).to.equal(expected);
+                        done();
+                    })
+                    .done();
+            }
+
+            it("should increment by 1", function(done) {
+                test(1, done);
+            });
+
+            it("should decrement by 20", function(done) {
+                test(-20, done);
+            });
+
+            it("should decrement by 254", function(done) {
+                test(-254, 0, done);
+            });
+
+            it("should increment by 500", function(done) {
+                test(500, 254, done);
+            });
+        });
 
         describe("set multiple states", function() {
 

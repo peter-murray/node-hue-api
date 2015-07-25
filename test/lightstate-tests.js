@@ -657,6 +657,291 @@ describe("#LightState", function () {
                 test([10, 20, 30], null, null, [10, 20, 30]);
             });
         });
+
+        describe("bri_inc", function() {
+
+            describe("#bri_inc", function() {
+                function test(value, expected) {
+                    state.bri_inc(value);
+                    validateBrightnessIncrement(expected);
+                }
+
+                it("should set -254", function() {
+                    test(-254, -254);
+                });
+
+                it("should set 254", function() {
+                    test(254, 254);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -300 as -254", function() {
+                    test(-300, -254);
+                });
+
+                it("should set 1.5 as 1", function() {
+                    test(1.5, 1);
+                });
+            });
+
+            describe("#incrementBrightness", function() {
+                function test(value, expected) {
+                    state.incrementBrightness(value);
+                    validateBrightnessIncrement(expected);
+                }
+
+                it("should set -254", function() {
+                    test(-254, -254);
+                });
+
+                it("should set 254", function() {
+                    test(254, 254);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -300 as -254", function() {
+                    test(-300, -254);
+                });
+
+                it("should set 1.5 as 1", function() {
+                    test(1.5, 1);
+                });
+            });
+        });
+
+        describe("sat_inc", function() {
+
+            describe("#sat_inc", function() {
+
+                function test(value, expected) {
+                    state.sat_inc(value);
+                    validateSaturationIncrement(expected);
+                }
+
+                it("should set -254", function() {
+                    test(-254, -254);
+                });
+
+                it("should set 254", function() {
+                    test(254, 254);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -300 as -254", function() {
+                    test(-300, -254);
+                });
+
+                it("should set 2.4 as 2", function() {
+                    test(2.4, 2);
+                });
+            });
+
+            describe("#incrementSaturation", function() {
+
+                function test(value, expected) {
+                    state.incrementSaturation(value);
+                    validateSaturationIncrement(expected);
+                }
+
+                it("should set -254", function() {
+                    test(-254, -254);
+                });
+
+                it("should set 254", function() {
+                    test(254, 254);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -300 as -254", function() {
+                    test(-300, -254);
+                });
+
+                it("should set 2.4 as 2", function() {
+                    test(2.4, 2);
+                });
+            });
+        });
+
+        describe("hue_inc", function() {
+
+            describe("#hue_inc", function() {
+
+                function test(value, expected) {
+                    state.hue_inc(value);
+                    validateHueIncrement(expected);
+                }
+
+                it("should set -65534", function() {
+                    test(-65534, -65534);
+                });
+
+                it("should set 65534", function() {
+                    test(65534, 65534);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -65570 as -65534", function() {
+                    test(-65570, -65534);
+                });
+
+                it("should set 2.4 as 2", function() {
+                    test(2.4, 2);
+                });
+            });
+
+            describe("#incrementHue", function() {
+
+                function test(value, expected) {
+                    state.incrementHue(value);
+                    validateHueIncrement(expected);
+                }
+
+                it("should set -65534", function() {
+                    test(-65534, -65534);
+                });
+
+                it("should set 65534", function() {
+                    test(65534, 65534);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -65570 as -65534", function() {
+                    test(-65570, -65534);
+                });
+
+                it("should set 2.4 as 2", function() {
+                    test(2.4, 2);
+                });
+            });
+        });
+
+        describe("ct_inc", function() {
+
+            describe("#ct_inc", function() {
+
+                function test(value, expected) {
+                    state.ct_inc(value);
+                    validateCtIncrement(expected);
+                }
+
+                it("should set -65534", function() {
+                    test(-65534, -65534);
+                });
+
+                it("should set 65534", function() {
+                    test(65534, 65534);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -65570 as -65534", function() {
+                    test(-65570, -65534);
+                });
+
+                it("should set -1.2 as -2", function() {
+                    test(-1.2, -2);
+                });
+            });
+
+            describe("#incrementColorTemp", function() {
+
+                function test(value, expected) {
+                    state.incrementColorTemp(value);
+                    validateCtIncrement(expected);
+                }
+
+                it("should set -65534", function() {
+                    test(-65534, -65534);
+                });
+
+                it("should set 65534", function() {
+                    test(65534, 65534);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -65570 as -65534", function() {
+                    test(-65570, -65534);
+                });
+
+                it("should set -1.2 as -2", function() {
+                    test(-1.2, -2);
+                });
+            });
+        });
+
+        describe("xy_inc", function() {
+
+            describe("#xy_inc", function() {
+
+                function test(value, expected) {
+                    state.xy_inc(value);
+                    validateXYIncrement(expected);
+                }
+
+                it("should set -0.5", function() {
+                    test(-0.5, -0.5);
+                });
+
+                it("should set 0.5", function() {
+                    test(0.5, 0.5);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -0.6 as -0.5", function() {
+                    test(-0.6, -0.5);
+                });
+            });
+
+            describe("#incrementXY", function() {
+
+                function test(value, expected) {
+                    state.incrementXY(value);
+                    validateXYIncrement(expected);
+                }
+
+                it("should set -0.5", function() {
+                    test(-0.5, -0.5);
+                });
+
+                it("should set 0.5", function() {
+                    test(0.5, 0.5);
+                });
+
+                it("should set 0", function() {
+                    test(0, 0);
+                });
+
+                it("should set -0.6 as -0.5", function() {
+                    test(-0.6, -0.5);
+                });
+            })
+        });
     });
 
 
@@ -834,5 +1119,25 @@ describe("#LightState", function () {
         expect(payload).to.have.property("rgb");
         expect(payload.rgb).to.be.instanceOf(Array);
         expect(payload.rgb).to.have.members(expected);
+    }
+
+    function validateBrightnessIncrement(expected) {
+        expect(state.payload()).to.have.property("bri_inc", expected);
+    }
+
+    function validateSaturationIncrement(expected) {
+        expect(state.payload()).to.have.property("sat_inc", expected);
+    }
+
+    function validateHueIncrement(expected) {
+        expect(state.payload()).to.have.property("hue_inc", expected);
+    }
+
+    function validateCtIncrement(expected) {
+        expect(state.payload()).to.have.property("ct_inc", expected);
+    }
+
+    function validateXYIncrement(expected) {
+        expect(state.payload()).to.have.property("xy_inc", expected);
     }
 });

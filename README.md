@@ -742,6 +742,11 @@ which take values documented in the official Phillips Hue Lights API:
 | `alert(value)` | Sets the alert state to value `none`, `select` or `lselect`. If no parameter is passed will default to `none`. |
 | `effect(effectName)` | Sets the effect on the light(s) where `effectName` is either `none` or `colorloop`. |
 | `transitiontime(milliseconds)` | Sets a transition time in milliseconds |
+| `bri_inc(value)`| Increments/Decrements the brightness by the value specified. Accepts values -254 to 254. |
+| `sat_inc(value)`| Increments/Decrements the saturation by the value specified. Accepts values -254 to 254. |
+| `hue_inc(value)`| Increments/Decrements the hue by the value specified. Accepts values -65534 to 65534. |
+| `ct_inc(value)` | Increments/Decrements the color temperature by the value specified. Accepts values -65534 to 65534. |
+| `xy_inc(value)` | Increments/Decrements the xy co-ordinate by the value specified. Accepts values -0.5 to 0.5. |
 
 There are also a number of convenience functions to provide extra functionality or a more natural language for building
 up a desired Light State:
@@ -752,11 +757,19 @@ up a desired Light State:
 | `turnOff()` |Turn the lights off |
 | `off()` |Thurn the lights off |
 | `brightness(percentage)` |Set the brightness from 0% to 100% (0% is not off)|
+| `incrementBrightness(value)` |Alias for the `bri_inc()` function above |
 | `colorTemperature(ct)` |Alias for the `ct()` function above|
 | `colourTemperature(ct)` |Alias for the `ct()` function above|
 | `colorTemp(ct)`| Alias for the `ct()` function above|
 | `colourTemp(ct)` |Alias for the `ct()` function above|
+| `incrementColorTemp(value)` |Alias for the `ct_inc()` function above |
+| `incrementColorTemperature(value)` |Alias for the `ct_inc()` function above |
+| `incrementColourTemp(value)` |Alias for the `ct_inc()` function above |
+| `incrementColourTemperature(value)` |Alias for the `ct_inc()` function above |
 | `saturation(percentage)`| Set the saturation as a percentage value between 0 and 100|
+| `incrementSaturation(value)` |Alias for the `sat_inc()` function above |
+| `incrementXY(value)` |Alias for the `xy_inc()` function above |
+| `incrementHue(value)` |Alias for the `hue_inc()` function above |
 | `shortAlert()` |Flashes the light(s) once|
 | `alertShort()` |Flashes the light(s) once|
 | `longAlert()` |Flashes the light(s) 10 times|

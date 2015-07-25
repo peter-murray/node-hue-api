@@ -10,14 +10,14 @@
 // Hue API documentation, than having it scatter piece meal through various other classes and functions.
 //
 
-var Trait = require("traits").Trait,
-    tApiMethod = require("./traits/tApiMethod"),
-    tDescription = require("./traits/tDescription"),
-    tBodyArguments = require("./traits/tBodyArguments"),
-    tLightStateBody = require("./traits/tLightStateBody"),
-    tPostProcessing = require("./traits/tPostProcessing"),
-    ApiError = require("../errors").ApiError,
-    utils = require("../utils")
+var Trait = require("traits").Trait
+    , tApiMethod = require("./traits/tApiMethod")
+    , tDescription = require("./traits/tDescription")
+    , tBodyArguments = require("./traits/tBodyArguments")
+    , tLightStateBody = require("./traits/tLightStateBody")
+    , tPostProcessing = require("./traits/tPostProcessing")
+    , ApiError = require("../errors").ApiError
+    , utils = require("../utils")
     ;
 
 var apiTraits = {}

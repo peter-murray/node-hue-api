@@ -71,6 +71,46 @@ module.exports = function (withAlert, withScene) {
             minValue: 0,
             maxValue: 65535,
             optional: true
+        },
+
+        {
+            name: "bri_inc",
+            type: "int8",
+            minValue: -254,
+            maxValue: 254,
+            optional: true
+        },
+
+        {
+            name: "sat_inc",
+            type: "int8",
+            minValue: -254,
+            maxValue: 254,
+            optional: true
+        },
+
+        {
+            name: "hue_inc",
+            type: "int16",
+            minValue: -65534,
+            maxValue: 65534,
+            optional: true
+        },
+
+        {
+            name: "ct_inc",
+            type: "int16",
+            minValue: -65534,
+            maxValue: 65534,
+            optional: true
+        },
+
+        {
+            name: "xy_inc",
+            type: "float",
+            minValue: -0.5,
+            maxValue: 0.5,
+            optional: true
         }
     ];
 

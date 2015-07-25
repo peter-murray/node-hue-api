@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.1.0
+- Added support for increment values in light state, issue #54
+
 ## 1.0.5
 - Fixes issue #46 scene id was missing from body sent to the bridge for activation requests
 

@@ -179,10 +179,60 @@ State.prototype.transitiontime = function (value) {
     return this;
 };
 
+/**
+ * Increments/Decrements the brightness value for the lights.
+ * @param value An amount to change the current brightness by, -254 to 254.
+ * @returns {State}
+ */
+State.prototype.bri_inc = function (value) {
+    this._addValues(_getBrightnessIncrementState(value));
+    return this;
+};
+
+/**
+ * Increments/Decrements the saturation value for the lights.
+ * @param value An amount to change the current saturation by, -254 to 254.
+ * @returns {State}
+ */
+State.prototype.sat_inc = function (value) {
+    this._addValues(_getSaturationIncrementState(value));
+    return this;
+};
+
+/**
+ * Increments/Decrements the Hue value for the lights.
+ * @param value An amount to change the current hue by, -65534 to 65534.
+ * @returns {State}
+ */
+State.prototype.hue_inc = function (value) {
+    this._addValues(_getHueIncrementState(value));
+    return this;
+};
+
+/**
+ * Increments/Decrements the color temperature value for the lights.
+ * @param value An amount to change the current color temperature by, -65534 to 65534.
+ * @returns {State}
+ */
+State.prototype.ct_inc = function (value) {
+    this._addValues(_getCtIncrementState(value));
+    return this;
+};
+
+/**
+ * Increments/Decrements the XY value for the lights.
+ * @param value An amount to change the current XY by, -0.5 to 0.5.
+ * @returns {State}
+ */
+State.prototype.xy_inc = function (value) {
+    this._addValues(_getXYIncrementState(value));
+    return this;
+};
+
 State.prototype.scene = function (value) {
     this._addValues(_getSceneId(value));
     return this;
-}
+};
 
 
 ///////////////////////////////////////////////////////////////////////
@@ -205,14 +255,27 @@ State.prototype.brightness = function (percentage) {
     return this.bri(_convertBrightPercentToHueValue(percentage));
 };
 
+State.prototype.incrementBrightness = State.prototype.bri_inc;
+
 State.prototype.colorTemperature = State.prototype.ct;
 State.prototype.colourTemperature = State.prototype.ct;
 State.prototype.colorTemp = State.prototype.ct;
 State.prototype.colourTemp = State.prototype.ct;
 
+State.prototype.incrementColorTemp = State.prototype.ct_inc;
+State.prototype.incrementColorTemperature = State.prototype.ct_inc;
+State.prototype.incrementColourTemp = State.prototype.ct_inc;
+State.prototype.incrementColourTemperature = State.prototype.ct_inc;
+
+State.prototype.incrementHue = State.prototype.hue_inc;
+
+State.prototype.incrementXY = State.prototype.xy_inc;
+
 State.prototype.saturation = function (percentage) {
     return this.sat(_convertSaturationPercentToHueValue(percentage));
 };
+
+State.prototype.incrementSaturation = State.prototype.sat_inc;
 
 State.prototype.shortAlert = function () {
     return this.alert("select");
@@ -419,6 +482,36 @@ function _getTransitionState(value) {
     };
 }
 
+function _getBrightnessIncrementState(value) {
+    return {
+        bri_inc: _getBrightnessIncrementValue(value)
+    }
+}
+
+function _getSaturationIncrementState(value) {
+    return {
+        sat_inc: _getSaturationIncrementValue(value)
+    }
+}
+
+function _getHueIncrementState(value) {
+    return {
+        hue_inc: _getHueIncrementValue(value)
+    }
+}
+
+function _getCtIncrementState(value) {
+    return {
+        ct_inc: _getCtIncrementValue(value)
+    }
+}
+
+function _getXYIncrementState(value) {
+    return {
+        xy_inc: _getXYIncrementValue(value)
+    }
+}
+
 function _getSceneId(value) {
     var result = {};
 
@@ -452,6 +545,31 @@ function _convertMilliSecondsToTransitionTime(value) {
 function _getTransitionTimeValue(value) {
     var transition = stateDefinitions.transitiontime;
     return valueForType(transition, _getRangeValue(transition, value));
+}
+
+function _getBrightnessIncrementValue(value) {
+    var bri_inc = stateDefinitions.bri_inc;
+    return valueForType(bri_inc, _getRangeValue(bri_inc, value));
+}
+
+function _getSaturationIncrementValue(value) {
+    var sat_inc = stateDefinitions.sat_inc;
+    return valueForType(sat_inc, _getRangeValue(sat_inc, value));
+}
+
+function _getHueIncrementValue(value) {
+    var hue_inc = stateDefinitions.hue_inc;
+    return valueForType(hue_inc, _getRangeValue(hue_inc, value));
+}
+
+function _getCtIncrementValue(value) {
+    var ct_inc = stateDefinitions.ct_inc;
+    return valueForType(ct_inc, _getRangeValue(ct_inc, value));
+}
+
+function _getXYIncrementValue(value) {
+    var xy_inc = stateDefinitions.xy_inc;
+    return valueForType(xy_inc, _getRangeValue(xy_inc, value));
 }
 
 function convertPercentToValue(definition, percent) {
