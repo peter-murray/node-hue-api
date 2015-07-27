@@ -151,4 +151,13 @@ module.exports.invoke = function(command, parameters) {
     }
 
     return promise;
-}
+};
+
+module.exports.simpleGet = function(uri) {
+    return requestUtil.request({uri: uri})
+        .then(requireStatusCode200)
+        .then(function(result) {
+            return result.data;
+        })
+        ;
+};

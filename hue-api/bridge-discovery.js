@@ -44,7 +44,6 @@ module.exports.description = function (host) {
         .then(_parseDescription);
 };
 
-
 /**
  * Identifies the bridges based on the response from possible devices from SSDP search
  * @param possibleBridges The results from the search to be processed.
@@ -52,19 +51,33 @@ module.exports.description = function (host) {
  * @private
  */
 function _identifyBridges(possibleBridges) {
-    var lookups = [],
-        path,
-        uri;
+    var lookups = []
+        , path
+        //, uri
+        ;
 
     for (path in possibleBridges) {
         if (possibleBridges.hasOwnProperty(path)) {
-            uri = parseUri(path);
-            lookups.push(module.exports.description(uri.host).then(_getHueBridgeHost));
+            //uri = parseUri(path);
+            lookups.push(followLocationResponse(path).then(_getHueBridgeHost));
         }
     }
     return Q.all(lookups);
 }
 
+/**
+ * Performs a GET on the provided path, the location response from the bridge.
+ * This function expects there to be an XML description document present at the provided path.
+ * @param path The path in the LOCATION response from SSDP lookup.
+ */
+function followLocationResponse(path) {
+    return http.simpleGet(path)
+        .then(_parseDescription)
+        .fail(function (err) {
+            // Do nothing with services that do not respond with an XML document
+        })
+        ;
+}
 
 /**
  * Parses the XML Description and converts it into an Object.
@@ -87,19 +100,19 @@ function _parseDescription(xml) {
             deferred.reject(err);
         } else {
             result = {
-                "version"     : {
+                "version": {
                     "major": data.root.specVersion[0].major[0],
                     "minor": data.root.specVersion[0].minor[0]
                 },
-                "url"         : data.root.URLBase[0],
-                "name"        : data.root.device[0].friendlyName[0],
+                "url": data.root.URLBase[0],
+                "name": data.root.device[0].friendlyName[0],
                 "manufacturer": data.root.device[0].manufacturer[0],
-                "model"       : {
-                    "name"       : data.root.device[0].modelName[0],
+                "model": {
+                    "name": data.root.device[0].modelName[0],
                     "description": data.root.device[0].modelDescription[0],
-                    "number"     : data.root.device[0].modelNumber[0],
-                    "serial"     : data.root.device[0].serialNumber[0],
-                    "udn"        : data.root.device[0].UDN[0]
+                    "number": data.root.device[0].modelNumber[0],
+                    "serial": data.root.device[0].serialNumber[0],
+                    "udn": data.root.device[0].UDN[0]
                 }
             };
 
@@ -108,7 +121,7 @@ function _parseDescription(xml) {
                 && data.root.device[0].iconList[0].icon) {
                 icons = [];
 
-                data.root.device[0].iconList[0].icon.forEach(function(icon) {
+                data.root.device[0].iconList[0].icon.forEach(function (icon) {
                     icons.push({
                         mimetype: icon.mimetype[0],
                         height: icon.height[0],

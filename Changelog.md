@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.1.1
+- Fixes issue #52, respecting the LOCATION value from SSDP lookups
+
 ## 1.1.0
 - Added support for increment values in light state, issue #54
 
