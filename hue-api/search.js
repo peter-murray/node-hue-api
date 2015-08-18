@@ -49,12 +49,16 @@ function SSDPSearch(timeout) {
         }
     });
 
+    // Commented because it causes:
+    // (node) warning: possible EventEmitter memory leak detected. 11 listeners added. Use emitter.setMaxListeners() to increase limit.
+    // when called repeatedly.
+    
     // Clean up if close is not called directly
-    process.on('exit', function () {
-        if (!self.closed) {
-            _close(self);
-        }
-    });
+    // process.on('exit', function () {
+    //     if (!self.closed) {
+    //         _close(self);
+    //    }
+    // });
 }
 SSDPSearch.prototype.__proto__ = EventEmitter.prototype;
 
