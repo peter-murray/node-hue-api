@@ -3,7 +3,9 @@
 var Q = require("q"),
     dgram = require('dgram'),
     EventEmitter = require('events').EventEmitter,
-    util = require("util");
+    util = require("util"),
+     // Used to register process.on('exit', ...) just once
+    exitFunction;
 
 /**
  * Locates possible Philips Hue Bridges on the network.
@@ -50,11 +52,15 @@ function SSDPSearch(timeout) {
     });
 
     // Clean up if close is not called directly
-    process.on('exit', function () {
-        if (!self.closed) {
-            _close(self);
-        }
-    });
+    if (!exitFunction) {
+        exitFunction = function () {
+            if (!self.closed) {
+                _close(self);
+            }
+        };
+        // Clean up if close is not called directly
+        process.on("exit", exitFunction);
+    }
 }
 SSDPSearch.prototype.__proto__ = EventEmitter.prototype;
 
