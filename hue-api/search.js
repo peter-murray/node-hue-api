@@ -5,6 +5,8 @@ var Q = require("q"),
     EventEmitter = require('events').EventEmitter,
     util = require("util");
 
+var socketCleanUp = new SocketCleanUp();
+
 /**
  * Locates possible Philips Hue Bridges on the network.
  * @param timeout The maximum time to wait for responses, or if none provided will default to 5 seconds
@@ -49,12 +51,8 @@ function SSDPSearch(timeout) {
         }
     });
 
-    // Clean up if close is not called directly
-    process.on('exit', function () {
-        if (!self.closed) {
-            _close(self);
-        }
-    });
+    socketCleanUp.add(self);
+    socketCleanUp.registerExitListener();
 }
 SSDPSearch.prototype.__proto__ = EventEmitter.prototype;
 
@@ -79,6 +77,7 @@ function _close(target) {
         target.closed = true;
         target.socket.close();
     }
+    socketCleanUp.remove(target);
 }
 
 function _buildSearchPacket(vars) {
@@ -163,3 +162,47 @@ function _addUnique(array, value) {
         array.push(value);
     }
 }
+
+/**
+ * A socket register to take care of closing all sockets that are opened, if not already closed
+ *
+ * @constructor
+ */
+function SocketCleanUp() {
+    this._searches = [];
+    this._registered = false;
+}
+
+SocketCleanUp.prototype.add = function(search) {
+    this._searches.push(search);
+};
+
+SocketCleanUp.prototype.remove = function(search) {
+    var self = this
+        , searches = self._searches
+        , idx = searches.indexOf(search)
+        ;
+
+    if (idx > -1) {
+        searches.splice(idx, 1)
+    }
+};
+
+SocketCleanUp.prototype.finished = function() {
+    var self = this
+        , searches = self._searches
+        ;
+
+    searches.forEach(function(search) {
+        _close(search);
+    });
+};
+
+SocketCleanUp.prototype.registerExitListener = function() {
+    var self = this;
+
+    if (! self._registered) {
+        process.on("exit", self.finished.bind(self));
+        self._registered = true;
+    }
+};

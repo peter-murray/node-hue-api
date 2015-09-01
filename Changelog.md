@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.2
+- Fixes issue #55, upnp searches re-register the exit handler repeatedly causing issues if you use upnp search multiple
+times during program execution
+
 ## 1.1.1
 - Fixes issue #52, respecting the LOCATION value from SSDP lookups
 
