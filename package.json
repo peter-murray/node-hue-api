@@ -27,7 +27,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
@@ -40,7 +40,6 @@
     "xml2js": "~0.2.2",
     "q": "~1.0.0",
     "request-util": "~0.1.0",
-    "parseUri": "~1.2.3-2",
     "traits": "~0.4.0"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 "use strict";
 
-var Q = require("q")
-    , parseUri = require("parseUri")
+var url = require("url")
+    , Q = require("q")
     , search = require("./search")
     , http = require("./httpPromise")
     , utils = require("./utils")
@@ -157,10 +157,10 @@ function _getHueBridgeHost(description) {
     var uri;
 
     if (_isHueBridge(description)) {
-        uri = parseUri(description.url);
+        uri = url.parse(description.url);
         return {
             "id": description.model.serial,
-            "ipaddress": uri.host
+            "ipaddress": uri.hostname
         };
     }
     return null;
