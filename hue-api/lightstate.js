@@ -332,16 +332,17 @@ State.prototype.white = function (colorTemp, brightPercentage) {
  * @return {State}
  */
 State.prototype.hsl = function (hue, saturation, luminosity) {
-    var t = saturation * (luminosity<50 ? luminosity : 100-luminosity) / 100; // Temp value
-    saturation = Math.round( 200 * t / (luminosity+t) ) |0;
-    luminosity = Math.round( t + luminosity );
+    var temp = saturation * (luminosity < 50 ? luminosity : 100 - luminosity) / 100
+        , satValue = Math.round(200 * temp / (luminosity + temp)) | 0
+        , luminosityValue = Math.round(temp + luminosity)
+        ;
 
-    var hueValue = _getBoundedValue(hue, 0, 360) * 182.5487; // degrees upscaled to 0-65535 range
+    console.log("temp: %s, satValue: %s, luminosity: %s", temp, satValue, luminosityValue)
 
     return this
-        .brightness(luminosity)
-        .hue(hueValue)
-        .sat(_convertSaturationPercentToHueValue(saturation))
+        .brightness(luminosityValue)
+        .hue(_convertHueToHueValue(hue))
+        .sat(_convertSaturationPercentToHueValue(satValue))
         ;
 };
 
@@ -353,11 +354,9 @@ State.prototype.hsl = function (hue, saturation, luminosity) {
  * @return {State}
  */
 State.prototype.hsb = function (hue, saturation, brightness) {
-    var hueValue = _getBoundedValue(hue, 0, 360) * 182.5487; // degrees upscaled to 0-65535 range
-
     return this
         .brightness(brightness)
-        .hue(hueValue)
+        .hue(_convertHueToHueValue(hue))
         .sat(_convertSaturationPercentToHueValue(saturation))
         ;
 };
@@ -551,6 +550,10 @@ function _getWhiteState(colorTemp, brightness) {
 
 /////////////////////////////////
 // Value Functions
+
+function _convertHueToHueValue(hue) {
+    return _getBoundedValue(hue, 0, 360) * 182.5487
+}
 
 function _convertMilliSecondsToTransitionTime(value) {
     var result = 0;

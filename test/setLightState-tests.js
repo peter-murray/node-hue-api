@@ -1,7 +1,6 @@
 "use strict";
 
 var expect = require("chai").expect
-    , assert = require("chai").assert
     , HueApi = require("..").HueApi
     , lightState = require("..").lightState
     , testValues = require("./support/testValues.js")
@@ -147,6 +146,65 @@ describe("Hue API", function () {
             });
         });
 
+        describe("set hsb(0, 100, 100)", function() {
+
+            it("using #promise", function(done) {
+                state.on().hsb(0, 100, 100);
+                hue.setLightState(lightId, state)
+                    .then(function(result) {
+                        expect(result).to.be.true;
+                        return hue.getLightStatus(lightId);
+                    })
+                    .then(function(light) {
+                        var state;
+
+                        expect(light).to.have.property("state");
+                        state = light.state;
+
+                        expect(state).to.have.property("hue", 0);
+                        expect(state).to.have.property("sat", 254);
+                        expect(state).to.have.property("bri", 254);
+                        done();
+                    })
+                    .done();
+            });
+        });
+
+        describe("set hsl(0, 100, 100)", function() {
+
+            it("using #promise", function(done) {
+                state.on().hsl(0, 100, 100);
+                hue.setLightState(lightId, state)
+                    .then(function(result) {
+                        expect(result).to.be.true;
+                        return hue.getLightStatus(lightId);
+                    })
+                    .then(function(light) {
+                        validateHSBState(0, 0, 254)(light);
+                        done();
+                    })
+                    .done();
+            });
+        });
+
+        describe("set hsl(0, 100, 50)", function() {
+
+            it("using #promise", function(done) {
+                state.on().hsl(0, 100, 50);
+                hue.setLightState(lightId, state)
+                    .then(function(result) {
+                        expect(result).to.be.true;
+                        return hue.getLightStatus(lightId);
+                    })
+                    .then(function(light) {
+                        validateHSBState(0, 254, 254)(light);
+                        done();
+                    })
+                    .done();
+            });
+
+        });
+
 //TODO need to put this back in and cater for callbacks
 //        it("should report error on an invalid state", function (done) {
 //            function checkError(error) {
@@ -236,4 +294,17 @@ describe("Hue API", function () {
             });
         });
     });
+
+    function validateHSBState(hue, sat, bri) {
+        return function(light) {
+            var state;
+
+            expect(light).to.have.property("state");
+            state = light.state;
+
+            expect(state).to.have.property("hue", hue);
+            expect(state).to.have.property("sat", sat);
+            expect(state).to.have.property("bri", bri);
+        }
+    }
 });

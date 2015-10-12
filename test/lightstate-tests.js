@@ -610,10 +610,10 @@ describe("#LightState", function () {
         });
 
 
-        describe("#hsl", function() {
+        describe("#hsb", function() {
 
-            function test(h, s, l, expectedHue, expectedSat, expectedBri) {
-                state.hsl(h, s, l);
+            function test(h, s, b, expectedHue, expectedSat, expectedBri) {
+                state.hsb(h, s, b);
                 validateHueState(expectedHue);
                 validateSatState(expectedSat);
                 validateBriState(expectedBri);
@@ -629,6 +629,30 @@ describe("#LightState", function () {
 
             it("should set (180, 50, 25)", function() {
                 test(180, 50, 25, 32858, 127, 63);
+            });
+
+            //TODO validate limits on each parameter
+        });
+
+        describe("#hsl", function() {
+
+            function test(h, s, l, expectedHue, expectedSat, expectedBri) {
+                state.hsl(h, s, l);
+                validateHueState(expectedHue);
+                validateSatState(expectedSat);
+                validateBriState(expectedBri);
+            }
+
+            it("should set (0, 0, 0)", function() {
+                test(0, 0, 0, 0, 0, 0);
+            });
+
+            it("should set (360, 100, 100)", function() {
+                test(360, 100, 100, 65535, 0, 255);
+            });
+
+            it("should set (180, 50, 25)", function() {
+                test(180, 50, 25, 32858, 170, 96);
             });
 
             //TODO validate limits on each parameter
