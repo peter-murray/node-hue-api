@@ -332,10 +332,31 @@ State.prototype.white = function (colorTemp, brightPercentage) {
  * @return {State}
  */
 State.prototype.hsl = function (hue, saturation, luminosity) {
+    var t = saturation * (luminosity<50 ? luminosity : 100-luminosity) / 100; // Temp value
+    saturation = Math.round( 200 * t / (luminosity+t) ) |0;
+    luminosity = Math.round( t + luminosity );
+
     var hueValue = _getBoundedValue(hue, 0, 360) * 182.5487; // degrees upscaled to 0-65535 range
 
     return this
         .brightness(luminosity)
+        .hue(hueValue)
+        .sat(_convertSaturationPercentToHueValue(saturation))
+        ;
+};
+
+/**
+ * Adds the HSB values
+ * @param hue The hue value in degrees 0-360
+ * @param saturation The saturation percentage 0-100
+ * @param brightness The brightness percentage 0-100
+ * @return {State}
+ */
+State.prototype.hsb = function (hue, saturation, brightness) {
+    var hueValue = _getBoundedValue(hue, 0, 360) * 182.5487; // degrees upscaled to 0-65535 range
+
+    return this
+        .brightness(brightness)
         .hue(hueValue)
         .sat(_convertSaturationPercentToHueValue(saturation))
         ;

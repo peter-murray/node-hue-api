@@ -781,7 +781,8 @@ up a desired Light State:
 | `transitionInstant()` |A transition of 0ms|
 | `transitionDefault()` |A transition time of the bridge default (400ms)|
 | `white(colorTemp, briPercent)` | where colorTemp is a value between 154 (cool) and 500 (warm) and briPercent is 0 to 100|
-| `hsl(hue, sat, briPercent)` | Where hue is a value from 0 to 359, sat is a saturation percent value from 0 to 100, and briPercent is from 0 to 100|
+| `hsl(hue, sat, luminosity)` | Where hue is a value from 0 to 359, sat is a saturation percent value from 0 to 100, and luminosity is from 0 to 100|
+| `hsb(hue, sat, brightness)` | Where hue is a value from 0 to 359, sat is a saturation percent value from 0 to 100, and brightness is from 0 to 100|
 | `rgb(r, g, b)` | Sets an RGB value from integers 0-255|
 | `rgb([r, g, b])` | Sets an RGB value from an array of integer values 0-255|
 | `colorLoop()` | Starts a color loop effect (rotates through all available hues at the current saturation level)|
