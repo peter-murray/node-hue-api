@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.0
+- Fixes issue #60, correcting the `hsl` light state calculations and adding `hsb` light state option
+- Fixes issue #57, `parseUri` library removed as there are issues with this when using npm version 3+
+
 ## 1.1.2
 - Fixes issue #55, upnp searches re-register the exit handler repeatedly causing issues if you use upnp search multiple
 times during program execution
