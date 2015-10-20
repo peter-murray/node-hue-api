@@ -337,8 +337,6 @@ State.prototype.hsl = function (hue, saturation, luminosity) {
         , luminosityValue = Math.round(temp + luminosity)
         ;
 
-    console.log("temp: %s, satValue: %s, luminosity: %s", temp, satValue, luminosityValue)
-
     return this
         .brightness(luminosityValue)
         .hue(_convertHueToHueValue(hue))
