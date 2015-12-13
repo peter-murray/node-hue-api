@@ -755,7 +755,7 @@ up a desired Light State:
 |:---------|:--------|
 | `turnOn()` | Turn the lights on |
 | `turnOff()` |Turn the lights off |
-| `off()` |Thurn the lights off |
+| `off()` |Turn the lights off |
 | `brightness(percentage)` |Set the brightness from 0% to 100% (0% is not off)|
 | `incrementBrightness(value)` |Alias for the `bri_inc()` function above |
 | `colorTemperature(ct)` |Alias for the `ct()` function above|
