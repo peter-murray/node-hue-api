@@ -37,25 +37,20 @@
     "url": "https://github.com/peter-murray/node-hue-api/issues"
   },
   "dependencies": {
-    "xml2js": "~0.2.2",
-    "q": "~1.0.0",
+    "xml2js": "~0.4",
+    "q": "~1.4",
     "request-util": "~0.1.0",
     "traits": "~0.4.0"
   },
   "devDependencies": {
-    "mocha": "~1.20.1",
-    "chai": "~1.9.1",
-    "semver": "~4.3.3"
+    "mocha": "~2.3",
+    "chai": "~3.4",
+    "semver": "~5.0"
   },
   "engines": {
     "nodejs": ">= 0.8.0"
   },
-  "licenses": [
-    {
-      "type": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0"
-    }
-  ],
+  "license": "Apache-2.0",
   "keywords": [
     "philips",
     "hue",
