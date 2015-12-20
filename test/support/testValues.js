@@ -2,7 +2,7 @@ module.exports = {
     host         : "192.168.2.245",
     username     : "08a902b95915cdd9b75547cb50892dc4",
 
-    lightsCount  : 19,
+    lightsCount  : 21,
 
     locateTimeout: 7000,
     maxScheduleNameLength: 32,
@@ -18,10 +18,9 @@ module.exports = {
     },
 
     model: {
-        name: "Philips hue bridge 2012",
+        name: "Philips hue bridge 2015",
         description: "Philips hue Personal Wireless Lighting",
-        number: "929000226503",
-        serial: "001788096103",
-        udn: "uuid:2f402f80-da50-11e1-9b23-001788096103"
+        number: "BSB002",
+        udn: "uuid:2f402f80-da50-11e1-9b23-00178823f3a8"
     }
 };

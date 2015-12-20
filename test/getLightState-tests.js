@@ -49,7 +49,7 @@ function _validateLightsResult(results, cb) {
     expect(results).to.have.property("name");
     expect(results).to.have.property("modelid");
     expect(results).to.have.property("swversion");
-    expect(results).to.have.property("pointsymbol");
+    //expect(results).to.have.property("pointsymbol");
 
     expect(results).to.have.property("state");
     expect(results.state).to.have.property("on");

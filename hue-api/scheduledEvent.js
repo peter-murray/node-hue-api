@@ -96,6 +96,7 @@ function _getStringValue(value, maxLength) {
     return result;
 }
 
+//TODO this time is now performed in localtime inside the bridge as of 1.1
 /**
  * Obtains the time as a string in UTC format that can be used to trigger a scheduled event.
  * @param time The time value as a String that can be parsed by Date.parse or a number as the milli seconds since 1970
@@ -117,7 +118,6 @@ function _getTime(time) {
             timeValue = time;
         }
     }
-//    console.log(time);
 
     if (timeValue !== null && !isNaN(timeValue)) {
         timeValue = new Date(timeValue).toJSON();
@@ -126,7 +126,6 @@ function _getTime(time) {
     }
 
     result.time = timeValue.substring(0, timeValue.lastIndexOf("."));
-//    console.log(JSON.stringify(result));
     return result;
 }
 

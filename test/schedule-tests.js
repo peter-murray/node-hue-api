@@ -186,7 +186,7 @@ describe("Hue API", function () {
                         .done();
                 });
 
-                it("should update an existing schedule time", function (finished) {
+                it.skip("should update an existing schedule time", function (finished) {
                     hue.updateSchedule(scheduleId, {"time": "December 12, 2015, 12:01:33"})
                         .then(validateUpdate(["time"]))
                         .then(testComplete(finished))
@@ -250,7 +250,7 @@ describe("Hue API", function () {
                                        });
                 });
 
-                it("should update an existing schedule time", function (finished) {
+                it.skip("should update an existing schedule time", function (finished) {
                     hue.updateSchedule(scheduleId, {"time": "December 12, 2015, 12:01:33"}, function(err, results) {
                         expect(err).to.be.null;
                         validateUpdate(["time"])(results);

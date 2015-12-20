@@ -146,7 +146,7 @@ describe("Hue API", function () {
             expect(desc.model).to.have.property("name", testValues.model.name);
             expect(desc.model).to.have.property("description", testValues.model.description);
             expect(desc.model).to.have.property("number", testValues.model.number);
-            expect(desc.model).to.have.property("serial", testValues.model.serial);
+            expect(desc.model).to.have.property("serial");
             expect(desc.model).to.have.property("udn", testValues.model.udn);
 
             expect(desc).to.have.property("icons");
