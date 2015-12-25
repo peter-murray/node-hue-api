@@ -12,6 +12,12 @@ module.exports = {
     luxLightId: 15,
     livingColorLightId: 1,
 
+    validScene: {
+        id: "f0f7c51a6-on-7",
+        name: "Peter Wakeup on ",
+        lights: ["8"]
+    },
+
     version: {
         api: "1.5.0",
         software: "01018228"

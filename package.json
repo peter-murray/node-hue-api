@@ -39,6 +39,7 @@
   "dependencies": {
     "xml2js": "~0.4",
     "q": "~1.4",
+    "deep-extend": "~0.4.0",
     "request-util": "~0.1.0",
     "traits": "~0.4.0"
   },
@@ -48,7 +49,7 @@
     "semver": "~5.0"
   },
   "engines": {
-    "nodejs": ">= 0.8.0"
+    "nodejs": ">= 4.0.0"
   },
   "license": "Apache-2.0",
   "keywords": [

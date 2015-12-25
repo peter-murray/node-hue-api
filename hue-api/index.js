@@ -1,6 +1,7 @@
 "use strict";
 
 var Q = require("q")
+    , deepExtend = require("deep-extend")
     , http = require("./httpPromise")
     , ApiError = require("./errors").ApiError
     , utils = require("./utils")
@@ -13,6 +14,7 @@ var Q = require("q")
     , scheduledEvent = require("./scheduledEvent")
     , bridgeDiscovery = require("./bridge-discovery")
     , lightState = require("./lightstate")
+    , Scene = require("./scene")
     ;
 
 var SCENE_PREFIX = "node-hue-api-";
@@ -545,8 +547,9 @@ HueApi.prototype.getSchedules = HueApi.prototype.schedules;
  * @returns A promise that will return the results or <null> if a callback was provided.
  */
 HueApi.prototype.getSchedule = function (id, cb) {
-    var options = this._defaultOptions(),
-        promise = _setScheduleIdOption(options, id);
+    var options = this._defaultOptions()
+      , promise = _setScheduleIdOption(options, id)
+      ;
 
     function parseResults(result) {
         result.id = id;
@@ -583,10 +586,9 @@ HueApi.prototype.createSchedule = HueApi.prototype.scheduleEvent;
  * @return {Q.promise} A promise that will return the result of the deletion, or <null> if a callback was provided.
  */
 HueApi.prototype.deleteSchedule = function (id, cb) {
-    var options = this._defaultOptions(),
-        promise;
-
-    promise = _setScheduleIdOption(options, id);
+    var options = this._defaultOptions()
+      , promise = _setScheduleIdOption(options, id)
+      ;
 
     if (!promise) {
         promise = http.invoke(schedulesApi.deleteSchedule, options);
@@ -604,8 +606,9 @@ HueApi.prototype.deleteSchedule = function (id, cb) {
  * @return {Q.promise} A promise that will return the result, or <null> if a callback was provided.
  */
 HueApi.prototype.updateSchedule = function (id, schedule, cb) {
-    var options = this._defaultOptions(),
-        promise;
+    var options = this._defaultOptions()
+      , promise
+      ;
 
     promise = _setScheduleIdOption(options, id);
     if (!promise) {
@@ -633,14 +636,12 @@ HueApi.prototype.scenes = function (cb) {
             var scenes = [];
 
             Object.keys(result).forEach(function (id) {
-                var scene = result[id];
+                var scene = result[id]
+                  , enrichedScene = deepExtend({}, scene)
+                  ;
 
-                scenes.push({
-                    id: id,
-                    name: scene.name,
-                    lights: scene.lights,
-                    active: scene.active
-                });
+                enrichedScene.id = id;
+                scenes.push(enrichedScene);
             });
             return scenes;
         });
@@ -657,95 +658,168 @@ HueApi.prototype.getScenes = HueApi.prototype.scenes;
  * @return A promise that will return the scene or <null> if a callback was provided.
  */
 HueApi.prototype.scene = function (sceneId, cb) {
-    var promise;
+    var options = this._defaultOptions()
+      , promise = _setSceneIdOption(options, sceneId)
+      ;
 
-    promise = this.getScenes()
-        .then(function (allScenes) {
-            var result = null;
+    if (!promise) {
+      // No errors in sceneId
+      promise = http.invoke(scenesApi.getScene, options)
+        .then(function(data) {
+          data.id = sceneId;
+          return data;
+        })
+    }
 
-            if (allScenes) {
-                allScenes.forEach(function (scene) {
-                    if (!result && scene.id === sceneId) {
-                        result = scene;
-                    }
-                })
-            }
-            return result;
-        });
     return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.getScene = HueApi.prototype.scene;
 
+/**
+ * Deletes a Scene (that is stored inside the bridge, not in the lights).
+ * @param sceneId The ID for the scene to delete
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @returns {*} A promise that will return the result from deleting the scene or null if a callback was provided.
+ */
+HueApi.prototype.deleteScene = function(sceneId, cb) {
+    var options = this._defaultOptions()
+      , promise = _setSceneIdOption(options, sceneId)
+      ;
+
+    if (!promise) {
+        // No errors in sceneId
+        promise = http.invoke(scenesApi.deleteScene, options);
+    }
+
+    return utils.promiseOrCallback(promise, cb);
+};
 
 /**
  * Creates a new Scene.
  * When the scene is created, it will store the current state of the lights and will use those "current" settings
  * when the scene is recalled/activated later.
  *
+ * There are two variants to this function, one that accepts lightIds and a name and another that takes a Scene object.
+ * The former is to maintain backwards compatibility with the 1.2.x version of this library.
+ *
  * @param lightIds {Array} of ids for the lights to be included in the scene.
  * @param name {String} The name of the scene to be created. If one is not provided, then the id of the scene will become the name.
+ *
  * @param cb An optional callback function to use if you do not want to use a promise for the results.
  * @return {*} A promise that will return the id of the scene that was created (as well as the values that make up the scene),
  * or null if a callback was provided.
  */
-HueApi.prototype.createScene = function (lightIds, name, cb) {
-    var self = this
-        , promise
-        ;
+HueApi.prototype.createScene = function (scene, cb) {
+    var self = this;
 
-    promise = self._getNextSceneId()
-        .then(function (id) {
-            return self.updateScene(id, lightIds, name);
-        });
-
-    return utils.promiseOrCallback(promise, cb);
+    if (Array.isArray(arguments[0])) {
+        return self.createBasicScene(arguments[0], arguments[1], arguments[2]);
+    } else {
+        return self.createAdvancedScene(arguments[0], arguments[1]);
+    }
 };
 
 /**
- * Update the lights and/or name associated with a scene (or will create a new one if the
- * sceneId is not present in the bridge).
- *
- * @param sceneId {String} The id for the scene in the bridge
- * @param lightIds {Array} An array of light ids to set in the scene
- * @param name {String} An optional name for the scene.
- * @param cb An optional callback function to use if you do not want to use a promise for the results.
- * @return {*} A promise that will return the id of the scene that was updated and the light ids that are now set,
- * or null if a callback was provided.
+ * Provides backwards compatibility for < 1.11.x versions of the Hue Bridge Firmware.
+ * @param lightIds
+ * @param name
+ * @param cb
+ * @returns {*}
  */
-HueApi.prototype.updateScene = function (sceneId, lightIds, name, cb) {
+HueApi.prototype.createBasicScene = function (lightIds, name, cb) {
     var self = this
-        , options = self._defaultOptions()
-        , promise
-        ;
-
-    if (typeof(name) === "function") {
-        cb = name;
-        name = null;
-    }
-
-    //TODO could perform a lookup to ensure the scene id already exists...
-    options.id = sceneId;
+      , options = self._defaultOptions()
+      , promise
+      ;
 
     options.values = {
+        name: name,
         lights: utils.createStringValueArray(lightIds)
     };
-
-    if (name) {
-        options.values.name = name;
-    }
 
     promise = http.invoke(scenesApi.createScene, options);
     return utils.promiseOrCallback(promise, cb);
 };
 
+/**
+ * Provides scene creation for >= 1.11.x firmware versions of the Hue Bridge.
+ * @param scene The Scene object containing the details of the scene to be created.
+ * @param cb An optional callback function to use if you do not want to use a promise chain for the results.
+ * @returns {*}
+ */
+HueApi.prototype.createAdvancedScene = function(scene, cb) {
+    var self = this
+      , options = self._defaultOptions()
+      , promise
+      ;
+
+    //TODO validate the options object
+    options.values = scene;
+
+    promise = http.invoke(scenesApi.createScene, options);
+    return utils.promiseOrCallback(promise, cb);
+};
+
+//TODO scene updates are now done as two different calls one for name and lights (and possible store current state) and a second of just setting individual light states
+/**
+ * Update the lights and/or name associated with a scene (or will create a new one if the
+ * sceneId is not present in the bridge).
+ *
+ * @param sceneId {String} The id for the scene in the bridge
+ * @param scene The configuration of the scene with the details to modify, which can be either a name or an array of
+ * light ids.
+ * @param storeLightState {Boolean} flag to save the current light state of the lights in the scene.
+ *
+ * @param cb An optional callback function to use if you do not want to use a promise for the results.
+ * @return {*} A promise that will return the id of the scene that was updated and the light ids that are now set,
+ * or null if a callback was provided.
+ */
+HueApi.prototype.updateScene = function (sceneId, scene, storeLightState, cb) {
+    var self = this
+        , options = self._defaultOptions()
+        , storeState = !! storeLightState
+        , promise = _setSceneIdOption(options, sceneId)
+        ;
+
+    if (!promise) {
+        // No errors in sceneId
+
+        //TODO validate that we have at least one parameter to modify before calling
+
+        if (typeof(storeLightState) === "function") {
+            cb = storeLightState;
+            storeState = false;
+        }
+
+        options.values = {};
+
+        // Only set the storelightstate to true, as the bridge does not accept a false value for this in version 1.11.0
+        if (storeState) {
+            options.values.storelightstate = true;
+        }
+
+        if (scene) {
+            if (scene.lights) {
+                options.values.lights = utils.createStringValueArray(scene.lights);
+            }
+
+            if (scene.name) {
+                options.values.name = scene.name;
+            }
+        }
+        promise = http.invoke(scenesApi.modifyScene, options);
+    }
+    return utils.promiseOrCallback(promise, cb);
+};
+HueApi.prototype.modifyScene = HueApi.prototype.updateScene;
 
 /**
- * Modifies or creates a new scene. Note that these states are not visible via any API calls, but stored in the lights
- * themselves.
+ * Modifies the light state of one of the lights in a scene.
  *
  * @param sceneId The scene id, which if it does not exist a new scene will be created.
  * @param lightId integer The id of light that is having the state values set.
  * @param stateValues {Object} containing the properties and values to set on the light.
+ *
  * @param cb An optional callback function to use if you do not want to use a promise for the results.
  * @return A promise that will return the state values on the light, or {null} if a callback was provided.
  */
@@ -758,10 +832,12 @@ HueApi.prototype.setSceneLightState = function (sceneId, lightId, stateValues, c
             options.lightId = options.id;
             options.id = sceneId;
 
-            return http.invoke(scenesApi.modifyScene, options);
+            return http.invoke(scenesApi.modifyLightState, options);
         });
     return utils.promiseOrCallback(promise, cb);
 };
+HueApi.prototype.updateSceneLightState = HueApi.prototype.setSceneLightState;
+HueApi.prototype.modifySceneLightState = HueApi.prototype.setSceneLightState;
 
 
 /**
@@ -1337,25 +1413,25 @@ function _setScheduleOptionsForUpdate(options, schedule) {
     return errorPromise;
 }
 
-///**
-// * Validates and then injects the 'id' into the options for a group in the bridge.
-// *
-// * @param options The options to add the 'id' to.
-// * @param sceneId The id of the scene
-// * @return {Q.promise} A promise that will throw an error or null if the scene id was valid.
-// * @private
-// */
-//function _setSceneIdOption(options, sceneId) {
-//    var errorPromise = null;
-//
-//    if (!_isSceneIdValid(sceneId)) {
-//        errorPromise = _errorPromise("The scene id '" + sceneId + "' is not valid for this Hue Bridge.");
-//    } else {
-//        options.id = sceneId;
-//    }
-//
-//    return errorPromise;
-//}
+/**
+ * Validates and then injects the 'id' into the options for a group in the bridge.
+ *
+ * @param options The options to add the 'id' to.
+ * @param sceneId The id of the scene
+ * @return {Q.promise} A promise that will throw an error or null if the scene id was valid.
+ * @private
+ */
+function _setSceneIdOption(options, sceneId) {
+    var errorPromise = null;
+
+    if (!_isSceneIdValid(sceneId)) {
+        errorPromise = _errorPromise("The scene id '" + sceneId + "' is not valid for this Hue Bridge.");
+    } else {
+        options.id = sceneId;
+    }
+
+    return errorPromise;
+}
 
 /**
  * Creates a promise that will generate an ApiError with the provided message.
@@ -1430,4 +1506,8 @@ function _isScheduleIdValid(id) {
     } else {
         return false;
     }
+}
+
+function _isSceneIdValid(id) {
+    return id && (String(id).length > 0);
 }

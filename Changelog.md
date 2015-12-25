@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.0.0
+- Updated all dependencies to latest versions
+- Scenes API changes to support `1.11` version of the Hue Bridge Software
+
 ## 1.2.0
 - Fixes issue #60, correcting the `hsl` light state calculations and adding `hsb` light state option
 - Fixes issue #57, `parseUri` library removed as there are issues with this when using npm version 3+

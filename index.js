@@ -7,8 +7,9 @@
 var bridgeDiscovery = require("./hue-api/bridge-discovery")
     , Hue = require("./hue-api")
     , lightState = require("./hue-api/lightstate")
-    , scheduledEvent = require("./hue-api/scheduledEvent.js")
-    , ApiError = require("./hue-api/errors.js").ApiError
+    , scheduledEvent = require("./hue-api/scheduledEvent")
+    , scene = require("./hue-api/scene")
+    , ApiError = require("./hue-api/errors").ApiError
     ;
 
 
@@ -26,13 +27,14 @@ module.exports = {
     BridgeApi: Hue,
     api: Hue,
 
-    //TODO document this
+    //TODO document this, it is currently broken though
     connect: function(config) {
         return new Hue(config);
     },
 
     lightState: lightState,
     scheduledEvent: scheduledEvent,
+    scene: scene,
 
     upnpSearch: bridgeDiscovery.networkSearch,
     nupnpSearch: bridgeDiscovery.locateBridges,

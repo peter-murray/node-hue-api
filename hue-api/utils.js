@@ -174,3 +174,12 @@ function _asStringValue(value) {
     }
     return result;
 }
+
+module.exports.getStringValue = function(value, maxLength) {
+    var result = value || "";
+
+    if (maxLength && result.length > maxLength) {
+        result = result.substr(0, maxLength);
+    }
+    return result;
+};

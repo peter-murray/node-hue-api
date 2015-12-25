@@ -59,13 +59,13 @@ Schedule.prototype.withName = function(name) {
     // The 1.0 API only accepts up to 32 characters for the name
     var nameCharMax = 32;
 
-    utils.combine(this, {"name": _getStringValue(name, nameCharMax)});
+    utils.combine(this, {"name": utils.getStringValue(name, nameCharMax)});
     return this;
 };
 
 Schedule.prototype.withDescription = function(description) {
     // The 1.0 API only accepts up to 64 characters for the description
-    utils.combine(this, {"description": _getStringValue(description, 64)});
+    utils.combine(this, {"description": utils.getStringValue(description, 64)});
     return this;
 };
 
@@ -86,15 +86,6 @@ Schedule.prototype.withCommand = function(command) {
     utils.combine(this, {"command": commandObject});
     return this;
 };
-
-function _getStringValue(value, maxLength) {
-    var result = value || "";
-
-    if (maxLength && result.length > maxLength) {
-        result = result.substr(0, maxLength);
-    }
-    return result;
-}
 
 //TODO this time is now performed in localtime inside the bridge as of 1.1
 /**
