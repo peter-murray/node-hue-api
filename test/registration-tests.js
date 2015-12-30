@@ -32,43 +32,12 @@ describe("Hue API", function () {
             }
         });
 
-        describe("should register a new user '1234567890'", function () {
-
-            var newUserName = "1234567890";
+        describe("should register a new user", function () {
 
             it("using #promise", function (finished) {
-                disconnectedHue.registerUser(testValues.host, newUserName, "A test user account for the bridge")
+                disconnectedHue.createUser(testValues.host, "A test user account with no name")
                     .then(function (result) {
-                              expect(result).to.equal(newUserName);
-                              createdUser = result;
-                              finished();
-                          })
-                    .done();
-            });
-
-            //TODO no deviceType
-            // TODO no username
-
-            it("using #callback", function (finished) {
-                disconnectedHue.createUser(testValues.host, newUserName, "A test user account for the bridge",
-                                           function (err, result) {
-                                               expect(err).to.be.null;
-                                               expect(result).to.equal(newUserName);
-                                               createdUser = result;
-                                               finished();
-                                           });
-            });
-        });
-
-
-        describe("should register a new user without a username", function () {
-
-            it("using #promise", function (finished) {
-                disconnectedHue.createUser(testValues.host, undefined, "A test user account with no name")
-                    .then(function (result) {
-                              expect(result).to.not.be.undefined;
-                              expect(result).to.not.be.null;
-//                              console.log("Created user: " + result);
+                              expect(result).to.exist;
                               createdUser = result;
                               finished();
                           })
@@ -77,11 +46,9 @@ describe("Hue API", function () {
 
             it("using #callback", function (finished) {
                 disconnectedHue.createUser(testValues.host,
-                                           null,
                                            "A test user account with no name",
                                            function (err, result) {
-                                               expect(result).to.not.be.undefined;
-                                               expect(result).to.not.be.null;
+                                               expect(result).to.exist;
                                                createdUser = result;
                                                finished();
                                            });
@@ -93,8 +60,7 @@ describe("Hue API", function () {
             it("using #promise", function (finished) {
                 disconnectedHue.createUser(testValues.host)
                     .then(function (result) {
-                              expect(result).to.not.be.null;
-                              expect(result).to.not.be.undefined;
+                              expect(result).to.exist;
                               createdUser = result;
                               finished();
                           })
@@ -105,9 +71,7 @@ describe("Hue API", function () {
                 disconnectedHue.registerUser(testValues.host, function(err, result) {
                     expect(err).to.be.null;
 
-                    expect(result).to.not.be.null;
-                    expect(result).to.not.be.undefined;
-
+                    expect(result).to.exist;
                     createdUser = result;
                     finished();
                 });

@@ -112,33 +112,28 @@ HueApi.prototype.fullState = HueApi.prototype.getFullState;
  * the end user to have pressed the link button on the bridge, before invoking this function.
  *
  * @param host The hostname or IP Address of the Hue Bridge.
- * @param username The username to register.
  * @param deviceDescription The description for the user/device that is being registered. This is a human readable
  * description of the user/device. If one is not provided then a default will be set.
  * @param cb An optional callback function to use if you do not want a promise returned.
  * @return {Q.promise} A promise with the result, or <null> if a callback was provided.
  */
-HueApi.prototype.registerUser = function (host, username, deviceDescription, cb) {
+HueApi.prototype.registerUser = function (host, deviceDescription, cb) {
     var options = {
-            "host": host
-        },
-        promise;
+            host: host,
+            values: {}
+        }
+        , devicetype = "Node.js API"
+        , promise
+        ;
 
-    promise = _setCreateUserOptions(options, username, deviceDescription);
-
-    // Optional argument handling
-    if (!cb) {
-        // Check to see if we have a callback provided as another argument
-        [].slice.call(arguments, 1).forEach(function (arg) {
-            if (typeof arg === "function") {
-                cb = arg;
-            }
-        });
+    if (typeof deviceDescription === "function") {
+        options.values.devicetype = devicetype;
+        cb = deviceDescription;
+    } else {
+        options.values.devicetype = deviceDescription || devicetype
     }
 
-    if (!promise) {
-        promise = http.invoke(configurationApi.createUser, options);
-    }
+    promise = http.invoke(configurationApi.createUser, options);
     return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.createUser = HueApi.prototype.registerUser;
@@ -1174,35 +1169,6 @@ HueApi.prototype._createSchedule = function (schedule, cb) {
     }
     return utils.promiseOrCallback(promise, cb);
 };
-
-/**
- * Validates and then injects the username and deviceType details into the options.
- *
- * @param options The options to inject the values into.
- * @param username The username to create.
- * @param deviceType The device description for the username that is being created.
- * @returns {Q.promise} A promise that contains the error if there is one generated from the injection of values.
- * @private
- */
-function _setCreateUserOptions(options, username, deviceType) {
-    var errorPromise = null,
-        validatedUsername = username || "",
-        usernameOption = configurationApi.createUser.bodyArguments.username;
-
-    //TODO perform validation as per API definition
-    if (validatedUsername.length < usernameOption.minLength) {
-        validatedUsername = undefined;
-    } else if (validatedUsername.length > usernameOption.maxLength) {
-        validatedUsername = undefined;
-    }
-
-    options.values = {
-        "username": validatedUsername,
-        "devicetype": deviceType || "Node.js API"
-    };
-
-    return errorPromise;
-}
 
 /**
  * Validates and then injects the username to be deleted into the options.

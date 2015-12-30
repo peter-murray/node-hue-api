@@ -49,8 +49,7 @@ apiTraits.createUser = Trait.compose(
     tBodyArguments(
         "application/json",
         [
-            {name: "devicetype", type: "string", maxLength: 40, optional: false},
-            {name: "username", type: "string", minLength: 10, maxLength: 40, optional: true}
+            {name: "devicetype", type: "string", maxLength: 40, optional: false}
         ]
     ),
     tPostProcessing(processUserCreation)
