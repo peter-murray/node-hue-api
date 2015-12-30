@@ -11,6 +11,7 @@
 //
 
 var Trait = require("traits").Trait,
+    deepExtend = require("deep-extend"),
     tApiMethod = require("./traits/tApiMethod"),
     tDescription = require("./traits/tDescription"),
     tScheduleBody = require("./traits/tScheduleBody"),
@@ -23,10 +24,7 @@ function processAllSchedules(result) {
     var values = [];
 
     Object.keys(result).forEach(function (value) {
-        values.push({
-            id: value,
-            name: result[value].name
-        });
+        values.push(deepExtend({id: value}, result[value]));
     });
 
     return values;
@@ -115,7 +113,7 @@ apiTraits.setScheduleAttributes = Trait.compose(
         "1.0",
         "Whitelist"
     ),
-    tDescription("Gets all attributes for a schedule."),
+    tDescription("Sets attributes for a schedule."),
     tScheduleBody(true),
     tPostProcessing(validateUpdateResults)
 );

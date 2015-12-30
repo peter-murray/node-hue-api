@@ -1,11 +1,9 @@
 "use strict";
 
 var expect = require("chai").expect
-    , assert = require("chai").assert
     , hue = require("..")
     , HueApi = hue.api
     , scheduledEvent = hue.scheduledEvent
-    , ApiError = hue.ApiError
     , testValues = require("./support/testValues.js")
     ;
 
@@ -34,29 +32,56 @@ describe("Hue API", function () {
     }
 
     function generateTestScheduleEvent() {
-        var now = Date.now(),
-            time = new Date(now);
-
-        // Take into account local time zones and daylight savings
-        time = now + (-1 * time.getTimezoneOffset() * 60 * 60 * 100) + 10000;
-
         return scheduledEvent.create()
             .withName("createTest")
             .withCommand(validCommand)
-            .at(time);
+            .at(Date.now() + 10000);
     }
 
 
     describe("scheduleTests", function () {
 
-        //TODO need a test for get all schedules
+        describe("#getSchedules()", function() {
+
+            describe("should list all scheduled events", function() {
+
+                function validateschedules(cb) {
+                    return function(schedules) {
+                        expect(schedules).to.be.an.instanceof(Array);
+                        expect(schedules).to.have.length.at.least(1);
+
+                        expect(schedules[0]).to.have.property("id");
+                        expect(schedules[0]).to.have.property("name");
+                        expect(schedules[0]).to.have.property("time");
+                        expect(schedules[0]).to.have.property("localtime");
+                        expect(schedules[0]).to.have.property("command");
+                        expect(schedules[0]).to.have.property("created");
+
+                        cb();
+                    }
+                }
+
+                it("using #promise", function(done) {
+                    hue.getSchedules()
+                      .then(validateschedules(done))
+                      .done();
+                });
+
+                it("using #callback", function(done) {
+                    hue.getSchedules(function(err, res) {
+                        expect(err).to.be.null;
+                        validateschedules(done)(res);
+                    });
+                });
+            });
+        });
+
 
         describe("#scheduleEvent", function () {
 
             function checkResults(result) {
                 expect(result).to.exist;
                 expect(result).to.have.property("id").to.not.be.null;
-
                 return result.id;
             }
 
@@ -186,9 +211,9 @@ describe("Hue API", function () {
                         .done();
                 });
 
-                it.skip("should update an existing schedule time", function (finished) {
-                    hue.updateSchedule(scheduleId, {"time": "December 12, 2015, 12:01:33"})
-                        .then(validateUpdate(["time"]))
+                it("should update an existing schedule time", function (finished) {
+                    hue.updateSchedule(scheduleId, {"localtime": "December 12, 2020, 12:01:33"})
+                        .then(validateUpdate(["localtime"]))
                         .then(testComplete(finished))
                         .done();
                 });
@@ -204,7 +229,7 @@ describe("Hue API", function () {
                     var updates = {
                         "name"       : "New Name",
                         "description": "Does Something",
-                        "time"       : "February 18, 2016 00:00:31",
+                        "localtime"  : Date.now() + 100,
                         "command"    : {
                             "address": "/api/0/lights/invalid",
                             "method" : "GET",
@@ -250,10 +275,10 @@ describe("Hue API", function () {
                                        });
                 });
 
-                it.skip("should update an existing schedule time", function (finished) {
-                    hue.updateSchedule(scheduleId, {"time": "December 12, 2015, 12:01:33"}, function(err, results) {
+                it("should update an existing schedule time", function (finished) {
+                    hue.updateSchedule(scheduleId, {"localtime": "December 12, 2020, 12:01:33"}, function(err, results) {
                         expect(err).to.be.null;
-                        validateUpdate(["time"])(results);
+                        validateUpdate(["localtime"])(results);
                         finished();
                     });
                 });
@@ -270,7 +295,7 @@ describe("Hue API", function () {
                     var updates = {
                         "name"       : "New Name",
                         "description": "Does Something",
-                        "time"       : "February 18, 2016 00:00:31",
+                        "localtime"       : "February 18, 2016 00:00:31",
                         "command"    : {
                             "address": "/api/0/lights/invalid",
                             "method" : "GET",

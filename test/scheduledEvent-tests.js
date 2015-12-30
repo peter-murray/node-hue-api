@@ -145,6 +145,20 @@ describe("ScheduleEvent", function () {
     });
 
 
+    describe("withEnabledState()", function() {
+
+        it ("should set an enabled state", function () {
+            scheduledEvent.withEnabledState(true);
+            expect(scheduledEvent).to.have.property("status", "enabled");
+        });
+
+        it ("should set a disabled state", function () {
+            scheduledEvent.withEnabledState(false);
+            expect(scheduledEvent).to.have.property("status", "disabled");
+        });
+    });
+
+
     describe("create() from object", function () {
 
         it("should load name and description values", function () {

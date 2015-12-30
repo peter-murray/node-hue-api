@@ -27,12 +27,16 @@ module.exports.create = function () {
                 schedule.withDescription(arg.description);
             }
 
-            if (arg.time) {
-                schedule.at(arg.time);
+            if (arg.time || arg.localtime) {
+                schedule.at(arg.time || arg.localtime);
             }
 
             if (arg.command) {
                 schedule.withCommand(arg.command);
+            }
+
+            if (arg.status) {
+                scedule.withEnabledState(arg.status);
             }
         }
     }
@@ -54,6 +58,21 @@ Schedule.prototype.when = function (time) {
     utils.combine(this, _getTime(time));
     return this;
 };
+
+//Schedule.prototype.atRandomizedTime = function(time, random) {
+//    //Randomized time	[YYYY]:[MM]:[DD]T[hh]:[mm]:[ss]A[hh]:[mm]:[ss]
+//    //([date]T[time]A[time])
+//};
+//
+//Schedule.prototype.atRecurringTime = function() {
+//    //Recurring times	W[bbb]/T[hh]:[mm]:[ss]
+//    //Every day of the week  given by bbb at given time
+//};
+//
+//Schedule.prototype.atRecurringRandomizedTime = function() {
+//    //Recurring randomized times	W[bbb]/T[hh]:[mm]:[ss]A[hh]:[mm]:[ss]
+//    //Every weekday given by bbb at given left side time, randomized by right side time. Right side time has to be smaller than 12 hours
+//};
 
 Schedule.prototype.withName = function(name) {
     // The 1.0 API only accepts up to 32 characters for the name
@@ -87,6 +106,20 @@ Schedule.prototype.withCommand = function(command) {
     return this;
 };
 
+Schedule.prototype.withEnabledState = function(enabled) {
+    var state;
+
+    if (enabled === "enabled") {
+        state = "enabled";
+    } else if (enabled === "disabled") {
+        state = "disabled";
+    } else {
+        state = enabled ? "enabled" : "disabled";
+    }
+
+    utils.combine(this, {status: state});
+};
+
 //TODO this time is now performed in localtime inside the bridge as of 1.1
 /**
  * Obtains the time as a string in UTC format that can be used to trigger a scheduled event.
@@ -111,12 +144,12 @@ function _getTime(time) {
     }
 
     if (timeValue !== null && !isNaN(timeValue)) {
-        timeValue = new Date(timeValue).toJSON();
+        timeValue = new Date(timeValue).toJSON();//TODO verify this is in local time...
     } else {
         throw new errors.ApiError("Invalid time value, '" + time + "'");
     }
 
-    result.time = timeValue.substring(0, timeValue.lastIndexOf("."));
+    result.localtime = timeValue.substring(0, timeValue.lastIndexOf("."));
     return result;
 }
 
