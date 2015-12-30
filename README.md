@@ -325,7 +325,6 @@ an existing user account on the Bridge to use to access its protected functions.
 var HueApi = require("node-hue-api").HueApi;
 
 var hostname = "192.168.2.129",
-    newUserName = null // You can provide your own username value, but it is normally easier to leave it to the Bridge to create it
     userDescription = "device description goes here";
 
 var displayUserResult = function(result) {
@@ -340,23 +339,20 @@ var hue = new HueApi();
 
 // --------------------------
 // Using a promise
-hue.registerUser(hostname, newUserName, userDescription)
+hue.registerUser(hostname, userDescription)
     .then(displayUserResult)
     .fail(displayError)
     .done();
 
 // --------------------------
 // Using a callback (with default description and auto generated username)
-hue.createUser(hostname, null, null, function(err, user) {
+hue.createUser(hostname, function(err, user) {
 	if (err) throw err;
 	displayUserResult(user);
 });
 ```
 
-If the username value passed in to register a new user is ``null`` or ``undefined`` then the Hue Bridge will create a
-new user with a generated username. It is suggested to allow the bridge to generate this for you automatically.
-
-The description for the user account is also optional, if you do nto provide one, then the default of "Node.js API" will be set.
+The description for the user account is optional, if you do nto provide one, then the default of "Node.js API" will be set.
 
 There is a convenience method, if you have a existing user account when you register a new user, that will programmatically
 press the link button for you. See the details for the function ``pressLinkButton()`` for more details.
