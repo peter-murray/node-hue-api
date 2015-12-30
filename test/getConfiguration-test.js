@@ -4,7 +4,6 @@ var util = require("util")
     , expect = require("chai").expect
     , semver = require("semver")
     , HueApi = require("..").BridgeApi
-    , ApiError = require("..").ApiError
     , testValues = require("./support/testValues.js")
     ;
 

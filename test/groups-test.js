@@ -133,8 +133,7 @@ describe("Hue API", function () {
                 expect(groupDetails.lights).to.have.length(testValues.lightsCount);
             }
 
-            function failTest(a) {
-                console.log(a);
+            function failTest() {
                 throw new Error("Should not be called");
             }
 
@@ -483,6 +482,7 @@ describe("Hue API", function () {
                 hue._getGroupLightsByType(0)
                     .then(function(map) {
 
+                        //TODO sort this test
                         console.log(JSON.stringify(map, null, 2));
 
                         done();

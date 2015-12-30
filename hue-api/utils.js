@@ -41,7 +41,7 @@ module.exports.resolvePromise = function(promise, callback) {
         }
     }
 
-    promise.then(resolveValue).fail(resolveError).done();
+    promise.then(resolveValue).catch(resolveError);
 };
 
 /**

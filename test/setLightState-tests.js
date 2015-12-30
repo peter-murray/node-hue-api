@@ -250,7 +250,6 @@ describe("Hue API", function () {
 
             it("using #callback", function (done) {
                 state.off();
-                console.log(state);
                 hue.setLightState(lightId, state, function(err, result) {
                     expect(err).to.be.null;
                     expect(result).to.be.true;

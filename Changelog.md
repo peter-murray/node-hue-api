@@ -1,8 +1,11 @@
 # Change Log
 
-## 2.0.0
+## 2.0.0-RC1
+- Replaced `request` with `axios` due to request having grown massively in size and only a simplified http request
+library is required that supports promises
 - Updated all dependencies to latest versions
-- Scenes API changes to support `1.11` version of the Hue Bridge Software
+- Scenes API changes to support `1.11` version of the Hue Bridge Software, this produced some breaking changes, read
+the API documentation in the README.md for specifics
 
 ## 1.2.0
 - Fixes issue #60, correcting the `hsl` light state calculations and adding `hsb` light state option
