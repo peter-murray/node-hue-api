@@ -16,6 +16,24 @@ use in chaining or in most cases simpler handling of the results.
 When using Q ``promises``, it is necessary to call ``done()`` on any promises that are returned, otherwise errors can be
 swallowed silently.
 
+## Table of Contents
+- [Change Log](#change-log)
+- [Work In Progress](#work-in-progress)
+- [Breaking Changes in 2.0.x](#breaking-changes-in-20x)
+- [Philips Hue Resources](#philips-hue-resources)
+- [Installation](#installation)
+- [Examples](#examples)
+- [Finding the Lights Attached to the Bridge](#finding-the-lights-attached-to-the-bridge)
+- [Interacting with a Hue Light or Living Color Lamp](#interacting-with-a-hue-light-or-living-color-lamp)
+- [Using LightState to Build States](#using-lightstate-to-build-states)
+- [Turning a Light On/Off using LightState](#turning-a-light-onoff-using-lightstate)
+- [Setting Light States using custom JSON Object](#setting-light-states-using-custom-json-object)
+- [Getting the Current Status/State for a Light](#getting-the-current-statusstate-for-a-light)
+- [Working with Groups](#working-with-groups)
+- [Working with Schedules](#working-with-schedules)
+- [Working with scenes](#working-with-scenes)
+- [Advanced Options](#advanced-options)
+- [License](#license)
 
 ## Change Log
 For a list of changes, please refer to the change log;
