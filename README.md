@@ -42,10 +42,8 @@ For a list of changes, please refer to the change log;
 
 ## Work In Progress
 There are still some missing pieces to the library which includes;
-* Rules Api
-* Latest updates to the Schedules API
+* Rules API
 * Improved handling of settings/commands for Schedules
-* Setting an RGB value to a groups of lights
 
 ## Breaking Changes in 2.0.x
 In version `2.0.x` breaking changes were made to the API so that the library could better integrate with the `1.11`
