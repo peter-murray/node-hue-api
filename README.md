@@ -1432,17 +1432,26 @@ api.schedules(function(err, result){
 });
 ```
 
-The function will return a promise that will provide an array of objects of ``id`` and ``name`` for each schedule;
+The function will return a promise that will provide an array of objects, each containing the complete details fo the schedule;
 ```
 [
   {
-    "id": "1",
-    "name": "Sample Schedule"
+    "id": "9067578731131353",
+    "name": "Alarm",
+    "description": "Peter Wakeup",
+    "command": {
+      "address": "/api/yeM5QamRRFNXfv13/groups/0/action",
+      "body": {
+        "scene": "f0f7c51a6-on-7"
+      },
+      "method": "PUT"
+    },
+    "localtime": "W124/T06:10:00",
+    "time": "W124/T06:10:00",
+    "created": "2015-11-18T22:19:16",
+    "status": "disabled"
   },
-  {
-    "id": "2",
-    "name": "Wake Up"
-  }
+  ...
 ]
 ```
 
@@ -1478,17 +1487,20 @@ api.getSchedule(scheduleId, function(err, result){
 The promise returned by the function will return the details of the schedule in the following format;
 ```
 {
-  "name": "Sample Schedule",
-  "description": "An example of a schedule",
+  "id": "9067578731131353",
+  "name": "Alarm",
+  "description": "Peter Wakeup",
   "command": {
-    "address": "/api/08a902b95915cdd9b75547cb50892dc4/lights/5/state",
+    "address": "/api/yeM5QamRRFNXfv13/groups/0/action",
     "body": {
-      "on": true
+      "scene": "f0f7c51a6-on-7"
     },
     "method": "PUT"
   },
-  "time": "2014-08-01T00:00:00",
-  "id": 1
+  "localtime": "W124/T06:10:00",
+  "time": "W124/T06:10:00",
+  "created": "2015-11-18T22:19:16",
+  "status": "disabled"
 }
 ```
 
