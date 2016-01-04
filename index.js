@@ -9,6 +9,7 @@ var bridgeDiscovery = require("./hue-api/bridge-discovery")
     , lightState = require("./hue-api/lightstate")
     , scheduledEvent = require("./hue-api/scheduledEvent")
     , scene = require("./hue-api/scene")
+    , timer = require("./hue-api/timer")
     , ApiError = require("./hue-api/errors").ApiError
     ;
 
@@ -35,6 +36,7 @@ module.exports = {
     lightState: lightState,
     scheduledEvent: scheduledEvent,
     scene: scene,
+    timer: timer,
 
     upnpSearch: bridgeDiscovery.networkSearch,
     nupnpSearch: bridgeDiscovery.locateBridges,
