@@ -14,22 +14,18 @@ var Q = require("q")
     , scheduledEvent = require("./scheduledEvent")
     , bridgeDiscovery = require("./bridge-discovery")
     , lightState = require("./lightstate")
-    , Scene = require("./scene")
     ;
-
-var SCENE_PREFIX = "node-hue-api-";
 
 function HueApi(config) {
     this._config = config;
 }
 
-module.exports = function (host, username, timeout, port, scenePrefix) {
+module.exports = function (host, username, timeout, port) {
     var config = {
         hostname: host,
         username: username,
         timeout: timeout || 10000,
-        port: port || 80,
-        scenePrefix: scenePrefix || SCENE_PREFIX
+        port: port || 80
     };
 
     return new HueApi(config);
@@ -126,7 +122,7 @@ HueApi.prototype.registerUser = function (host, deviceDescription, cb) {
         , promise
         ;
 
-    if (typeof deviceDescription === "function") {
+    if (utils.isFunction(deviceDescription)) {
         options.values.devicetype = devicetype;
         cb = deviceDescription;
     } else {
@@ -781,7 +777,7 @@ HueApi.prototype.updateScene = function (sceneId, scene, storeLightState, cb) {
 
         //TODO validate that we have at least one parameter to modify before calling
 
-        if (typeof(storeLightState) === "function") {
+        if (utils.isFunction(storeLightState)) {
             cb = storeLightState;
             storeState = false;
         }
@@ -848,7 +844,7 @@ HueApi.prototype.modifySceneLightState = HueApi.prototype.setSceneLightState;
 HueApi.prototype.activateScene = function (sceneId, groupIdFilter, cb) {
     var promise;
 
-    if (typeof(groupIdFilter) === "function") {
+    if (utils.isFunction(groupIdFilter)) {
         cb = groupIdFilter;
         groupIdFilter = null;
     }
@@ -929,10 +925,6 @@ HueApi.prototype._getConfig = function () {
     return this._config;
 };
 
-HueApi.prototype._getScenePrefix = function () {
-    return this._getConfig().scenePrefix;
-};
-
 /**
  * Creates a default options object for connecting with a Hue Bridge.
  *
@@ -972,35 +964,6 @@ HueApi.prototype._filterGroups = function (type) {
 HueApi.prototype._scenes = function () {
     var options = this._defaultOptions();
     return http.invoke(scenesApi.getAllScenes, options);
-};
-
-HueApi.prototype._getNextSceneId = function () {
-    var self = this
-        , scenePrefix = self._getScenePrefix()
-        ;
-
-    return self.scenes()
-        .then(function (allScenes) {
-            var maxId = -1;
-
-            if (allScenes) {
-                allScenes.forEach(function (scene) {
-                    var id;
-
-                    if (scene.id.indexOf(scenePrefix) === 0) {
-                        try {
-                            id = Number(scene.id.substr(scenePrefix.length), 10);
-                            maxId = Math.max(id, maxId);
-                        }
-                        catch (err) {
-                            //Ignore invalid numbers
-                        }
-                    }
-                });
-            }
-
-            return "" + scenePrefix + (maxId + 1);
-        });
 };
 
 /**
