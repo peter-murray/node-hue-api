@@ -1,5 +1,10 @@
 # Change Log
 
+## 2.0.0
+- Removed the ability to specify a username when creating a new user, issue #63
+- Updated the Schedules API to conform with the latest changes in the Schedules API in the Hue Bridge. This is a breaking
+change, refer to the documentation in the README.md for specifics
+
 ## 2.0.0-RC1
 - Replaced `request` with `axios` due to request having grown massively in size and only a simplified http request
 library is required that supports promises
