@@ -2203,12 +2203,9 @@ api.recallScene(sceneId, function(err, result) {
 When a Scene is successfully activated/recalled, the result will be `true`.
 
 ### Scenes by Name
-There is no sensible way to dealing with scenes by name currently (firmware version 1.5) as it is possible to define
+There is no sensible way to dealing with scenes by name currently (firmware version 1.5+) as it is possible to define
 multiple scenes with the same name (in fact in testing even editing a scene in the iOS app created a new scene on the
 bridge).
-
-There is an activation flag, but all the scenes from experience remain active, so currently there is nothing to use in
-the data obtained from the Bridge API to help narrow down a scene via it's name.
 
 The scene `id` is the only reliable and consistent way to interact with scene activation/recalling.
 
@@ -2258,27 +2255,6 @@ var host = "192.168.2.129",
     api;
 
 api = new HueApi(host, username, timeout, port);
-```
-
-
-### Scene Prefix
-If you desire some control over the prefix used when creating scenes, you can explicitly set a prefix via the
-configuration parameters when create the API connection to the bridge.
-
-The default prefix, if one is not specified is `node-hue-api-`.
-
-```js
-var hue = require("node-hue-api"),
-    HueApi = hue.HueApi;
-
-var host = "192.168.2.129",
-    username = "08a902b95915cdd9b75547cb50892dc4",
-    timeout = null,
-    port = null,
-    scenePrefix = "0012fec-"
-    api;
-
-api = new HueApi(host, username, timeout, port, scenePrefix);
 ```
 
 
