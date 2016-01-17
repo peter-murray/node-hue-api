@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.1
+- Changed upper bound on brightness to 254, issue #75
+
 ## 2.0.0
 - Removed the ability to specify a username when creating a new user, issue #63
 - Updated the Schedules API to conform with the latest changes in the Schedules API in the Hue Bridge. This is a breaking
