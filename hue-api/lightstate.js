@@ -94,7 +94,7 @@ State.prototype.on = function (on) {
 
 /**
  * Adds the bri state
- * @param value The hue bri value, 0 to 255.
+ * @param value The hue bri value, 0 to 254.
  * @return {State}
  */
 State.prototype.bri = function (value) {
@@ -658,7 +658,7 @@ function _getCtValue(value) {
 }
 
 /**
- * Brightness values are limited to the range of 0 - 255.
+ * Brightness values are limited to the range of 0 - 254.
  * @param value The value to set as a {String} or {Integer}
  * @return {Number} The brightness value to use.
  */

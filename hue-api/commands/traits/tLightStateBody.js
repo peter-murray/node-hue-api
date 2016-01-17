@@ -15,7 +15,7 @@ module.exports = function (withAlert, withScene) {
             name: "bri",
             type: "uint8",
             minValue: 0,
-            maxValue: 255,
+            maxValue: 254,
             optional: true
         },
 
