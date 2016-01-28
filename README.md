@@ -1,6 +1,6 @@
 # Node Hue API
 
-[![npm version](https://badge.fury.io/js/node-hue-api.svg)](https://badge.fury.io/js/node-hue-api)
+[![npm](https://img.shields.io/npm/v/node-hue-api.svg)](http://npmjs.org/node-hue-api)
 
 An API library for Node.js that interacts with the Philips Hue Bridge to control Philips Hue Light Bulbs and
 Philips Living Color Lamps.
