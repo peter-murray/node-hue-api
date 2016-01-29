@@ -1978,7 +1978,7 @@ feature of the underlying Hue Bridge, so may change in a future firmware update.
 With the advent of version `1.11` Hue Bridge software version, the creation of Scenes was officially added and the number
  of parameters available when creating a scene changed.
 
-The scenes are now stored inside the bridge itself, and to support the multiple combination of parameters availabel you
+The scenes are now stored inside the bridge itself, and to support the multiple combination of parameters available you
 need to provide the settings in a `Scene` object.
 
 ```js
