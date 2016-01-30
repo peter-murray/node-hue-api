@@ -92,6 +92,15 @@ describe("Hue API", function () {
                     .then(validateXY(done, 0.138, 0.08))
                     .done();
             });
+
+            it("shoudl set 128,128,128", function(done) {
+                var state = lightState.create().on().rgb(128,128,128);
+
+                hue.setLightState(id, state)
+                  .then(validateLightStateChange(id))
+                  .then(validateXY(done, 0.3362, 0.3604))
+                  .done();
+            });
         });
 
         describe("for Lux Bulb", function () {
