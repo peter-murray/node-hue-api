@@ -102,6 +102,47 @@ function _getXYStateFromRGB(red, green, blue, limits) {
 }
 
 /**
+ * This function is a rough approximation of the reversal of RGB to xy transform. It is a gross approximation and does
+ * get close, but is not exact.
+ * @param x
+ * @param y
+ * @param brightness
+ * @returns {Array} RGB values
+ * @private
+ *
+ * This function is a modification of the one found at https://github.com/bjohnso5/hue-hacking/blob/master/src/colors.js#L251
+ */
+function _getRGBFromXYState(x, y, brightness) {
+    var Y = brightness
+      , X = (Y / y) * x
+      , Z = (Y / y) * (1 - x - y)
+      , rgb =  [
+          X * 1.612 - Y * 0.203 - Z * 0.302,
+          -X * 0.509 + Y * 1.412 + Z * 0.066,
+          X * 0.026 - Y * 0.072 + Z * 0.962
+      ]
+      ;
+
+    // Apply reverse gamma correction.
+    rgb = rgb.map(function (x) {
+        return (x <= 0.0031308) ? (12.92 * x) : ((1.0 + 0.055) * Math.pow(x, (1.0 / 2.4)) - 0.055);
+    });
+
+    // Bring all negative components to zero.
+    rgb = rgb.map(function (x) { return Math.max(0, x); });
+
+    // If one component is greater than 1, weight components by that value.
+    var max = Math.max(rgb[0], rgb[1], rgb[2]);
+    if (max > 1) {
+        rgb = rgb.map(function (x) { return x / max; });
+    }
+
+    rgb = rgb.map(function (x) { return Math.floor(x * 255); });
+
+    return rgb;
+}
+
+/**
  * When a color is outside the limits, find the closest point on each line in the CIE 1931 'triangle'.
  * @param point {XY} The point that is outside the limits
  * @param limits The limits of the bulb (red, green and blue XY points).
@@ -168,7 +209,7 @@ function _getLimits(modelid) {
 module.exports = {
     convertRGBtoXY: function(rgb, modelid) {
         var limits = _getLimits(modelid);
-
         return _getXYStateFromRGB(rgb[0], rgb[1], rgb[2], limits);
-    }
+    },
+    convertXYtoRGB: _getRGBFromXYState
 };

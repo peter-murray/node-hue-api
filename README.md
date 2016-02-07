@@ -998,6 +998,59 @@ This will produce a JSON object detailing the status of the lamp;
 }
 ```
 
+### Obtaining the RGB Value for a Light
+There is a function to provide the complete light status along with an approximated RGB value (which is a rough conversion
+of the xy state of a light into an RGB value). This is not a perfect conversion but does get close to the current color
+of the lamp.
+
+To obtain the status with the RGB approximation of a lamp use `lightStatusWithRGB()` or `getLightStatusWithRGB()`.
+
+```js
+var HueApi = require("node-hue-api").HueApi;
+
+var displayResult = function(result) {
+    console.log(result);
+};
+
+var displayError = function(err) {
+    console.error(err);
+};
+
+var host = "192.168.2.129",
+    username = "08a902b95915cdd9b75547cb50892dc4",
+    api;
+
+api = new HueApi(host, username);
+api.lightStatusWithRGB(1)
+    .then(displayResult)
+    .fail(displayError)
+    .done();
+```
+
+```js
+{
+  state: {
+    rgb: [ 255, 249, 221 ],
+     on: true,
+     bri: 254,
+     hue: 38265,
+     sat: 92,
+     effect: 'none',
+     xy: [ 0.3362, 0.3604 ],
+     alert: 'none',
+     colormode: 'xy',
+     reachable: true
+  },
+  type: 'Color light',
+  name: 'Living Color Floor',
+  modelid: 'LLC007',
+  manufacturername: 'Philips',
+  uniqueid: '00:17:88:01:00:1b:21:a3-0b',
+  swversion: '4.6.0.8274'
+}
+```
+
+
 ### Searching for New Lights
 When you have added new lights to the system, you need to invoke a search to discover these new lights to allow the Bridge
 to interact with them. The ``searchForNewLights()`` function will invoke a search for any new lights to be added to the

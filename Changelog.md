@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.1.0
+- Added `lightStatusWithRGB()` to provide an approximation of the RGB color value of a lamp, issue #77
+
 ## 2.0.1
 - Changed upper bound on brightness to 254, issue #75
 

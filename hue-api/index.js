@@ -14,6 +14,7 @@ var Q = require("q")
     , scheduledEvent = require("./scheduledEvent")
     , bridgeDiscovery = require("./bridge-discovery")
     , lightState = require("./lightstate")
+    , rgb = require("./rgb")
     ;
 
 function HueApi(config) {
@@ -248,6 +249,22 @@ HueApi.prototype.lightStatus = function (id, cb) {
 };
 HueApi.prototype.getLightStatus = HueApi.prototype.lightStatus;
 
+
+HueApi.prototype.lightStatusWithRGB = function(id, cb) {
+    var promise = this.lightStatus(id);
+
+    promise = promise.then(function(light) {
+        var state = light.state
+          , x = state.xy[0]
+          , y = state.xy[1]
+          , brightness = state.bri / 254
+          ;
+        return deepExtend({state: {rgb: rgb.convertXYtoRGB(x, y, brightness)}}, light);
+    });
+
+    return utils.promiseOrCallback(promise, cb);
+};
+HueApi.prototype.getLightStatusWithRGB = HueApi.prototype.lightStatusWithRGB;
 
 /**
  * Obtains the new lights found by the bridge, dependant upon the last search.
