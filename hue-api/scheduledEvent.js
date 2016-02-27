@@ -36,7 +36,7 @@ module.exports.create = function () {
             }
 
             if (arg.status) {
-                scedule.withEnabledState(arg.status);
+                schedule.withEnabledState(arg.status);
             }
         }
     }
