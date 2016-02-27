@@ -45,6 +45,7 @@ There are still some missing pieces to the library which includes;
 * Rules API
 * Improved handling of settings/commands for Schedules
 
+
 ## Breaking Changes in 2.0.x
 In version `2.0.x` breaking changes were made to the API so that the library could better integrate with the `1.11`
 version of Hue Bridge's software. This involved a number of new API endpoints and changes to types of activities that
@@ -52,6 +53,29 @@ had been wrapped by this library, which the bridge endpoints now offer.
 
 The majority of the changes in the API were with respect to the scenes, as these were stored inside the bridge, instead
 of in the lights. As such the scene APIs have been modified to expose this new functionality.
+
+### Node.js 0.10.x and Early 0.12.x Issues
+In version `2.0.x` the HTTP library was swapped out with a new one `axios`. This library requires that there is a
+`promise` present in Node.js.
+Versions 0.10.x and some early versions of 0.12.x will require a shim to work with the node-hue-api library now.
+
+If you get an error stack trace like the following, you will need the promise shim;
+
+```
+node_modules/axios/lib/axios.js:45
+var promise = Promise.resolve(config);
+^
+ReferenceError: Promise is not defined
+```
+
+The shim dependency is available at [https://github.com/stefanpenner/es6-promise] and can be installed via npm using
+``npm install es6-promise``
+
+Once you have the dependency, you will need to add the following into your code to apply the polyfill:
+
+```js
+require('es6-promise').polyfill();
+```
 
 
 ## Philips Hue Resources
