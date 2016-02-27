@@ -131,7 +131,8 @@ Schedule.prototype.withEnabledState = function(enabled) {
 function _getTime(time) {
     var result = {},
         type = typeof(time),
-        timeValue = null;
+        timeValue = null,
+        isRecurring = /W[0-9]{1,3}\/T\d{2}:\d{2}:\d{2}/.test(time);
 
     if (type === 'string') {
         timeValue = Date.parse(time);
@@ -145,11 +146,11 @@ function _getTime(time) {
 
     if (timeValue !== null && !isNaN(timeValue)) {
         timeValue = new Date(timeValue).toJSON();//TODO verify this is in local time...
-    } else {
+    } else if (!isRecurring) {
         throw new errors.ApiError("Invalid time value, '" + time + "'");
     }
 
-    result.localtime = timeValue.substring(0, timeValue.lastIndexOf("."));
+    result.localtime = isRecurring ? time : timeValue.substring(0, timeValue.lastIndexOf("."));
     return result;
 }
 
