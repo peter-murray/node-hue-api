@@ -11,6 +11,7 @@
 //
 
 var Trait = require("traits").Trait
+    , deepExtend = require("deep-extend")
     , tApiMethod = require("./traits/tApiMethod")
     , tDescription = require("./traits/tDescription")
     , tBodyArguments = require("./traits/tBodyArguments")
@@ -20,11 +21,7 @@ var Trait = require("traits").Trait
     , utils = require("../utils")
     ;
 
-var apiTraits = {}
-    , LIGHT_RESULT_KEYS = [
-        "type", "name", "modelid", "uniqueid", "swversion"
-    ]
-    ;
+var apiTraits = {};
 
 
 //TODO tie this into the API definition as a post processing step, then apply it via the http.invoke()
@@ -33,16 +30,7 @@ function buildLightsResult(result) {
 
     if (result) {
         Object.keys(result).forEach(function (id) {
-            var light = {
-                    id: id
-                }
-                , data = result[id]
-                ;
-
-            LIGHT_RESULT_KEYS.forEach(function(key) {
-                light[key] = data[key];
-            });
-            lights.push(light);
+            lights.push(deepExtend({id: id}, result[id]));
         });
     }
     return {"lights": lights};

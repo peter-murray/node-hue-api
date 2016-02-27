@@ -724,24 +724,69 @@ This will output a JSON object that will provide details of the lights that the 
       "name": "Lounge Living Color",
       "type": "Extended color light",
       "modelid": "LCT001",
+      "manufacturername": "Phillips",
       "uniqueid": "00:17:88:01:xx:xx:xx:xx-xx",
-      "swversion": "66013452"
+      "swversion": "66013452",
+      "state": {
+          "on": true,
+          "bri": 202,
+          "hue": 11315,
+          "sat": 237,
+          "effect": "none",
+          "xy": [
+            0.5534,
+            0.4239
+          ],
+          "alert": "none",
+          "colormode": "xy",
+          "reachable": true
+        }
     },
     {
       "id": "2",
       "name": "Right Bedside",
       "type": "Extended color light",
       "modelid": "LCT001",
+      "manufacturername": "Phillips",
       "uniqueid": "00:17:88:01:xx:xx:xx:xx-xx",
-      "swversion": "66013452"
+      "swversion": "66013452",
+      "state": {
+          "on": true,
+          "bri": 202,
+          "hue": 11315,
+          "sat": 237,
+          "effect": "none",
+          "xy": [
+            0.5534,
+            0.4239
+          ],
+          "alert": "none",
+          "colormode": "xy",
+          "reachable": true
+        }
     },
     {
       "id": "3",
       "name": "Left Bedside",
       "type": "Extended color light",
       "modelid": "LCT001",
+      "manufacturername": "Phillips",
       "uniqueid": "00:17:88:01:xx:xx:xx:xx-xx",
-      "swversion": "66013452"
+      "swversion": "66013452",
+      "state": {
+          "on": true,
+          "bri": 202,
+          "hue": 11315,
+          "sat": 237,
+          "effect": "none",
+          "xy": [
+            0.5534,
+            0.4239
+          ],
+          "alert": "none",
+          "colormode": "xy",
+          "reachable": true
+        }
     }
   ]
 }
@@ -1219,8 +1264,31 @@ This will produce an array of values detailing the id and names of the groups;
   {
     "id": "1",
     "name": "VRC 1",
+    "lights": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
     "type": "LightGroup",
-    "lights": [1, 2, 3, 4, 5]
+    "action": {
+      "on": false,
+      "bri": 162,
+      "hue": 13088,
+      "sat": 213,
+      "effect": "none",
+      "xy": [
+        0.5134,
+        0.4149
+      ],
+      "ct": 467,
+      "alert": "none",
+      "colormode": "xy"
+    }
   }
 ]
 ```

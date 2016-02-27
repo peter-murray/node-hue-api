@@ -11,6 +11,7 @@
 //
 
 var Trait = require("traits").Trait
+    , deepExtend = require("deep-extend")
     , tApiMethod = require("./traits/tApiMethod")
     , tDescription = require("./traits/tDescription")
     , tBodyArguments = require("./traits/tBodyArguments")
@@ -38,14 +39,7 @@ function processAllGroups(result) {
     groupArray.push({id: "0", name: ALL_LIGHTS_NAME, type: "LightGroup"});
 
     Object.keys(result).forEach(function (value) {
-        var group = result[value];
-
-        groupArray.push({
-            id: value,
-            name: group.name,
-            type: group.type,
-            lights: group.lights
-        });
+        groupArray.push(deepExtend({id: value}, result[value]));
     });
     return groupArray;
 }

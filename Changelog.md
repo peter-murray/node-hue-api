@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.0
+- Adding handling for all scheduled event time formats
+- Updated the results for `lights()` and `groups()` to return all information that the bridge provides, e.g. the current
+states. Fixes #82
+- Adding documentation around making the `2.x` versions work under Node.js 0.10.x
+
 ## 2.1.0
 - Added `lightStatusWithRGB()` to provide an approximation of the RGB color value of a lamp, issue #77
 

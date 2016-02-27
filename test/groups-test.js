@@ -28,6 +28,12 @@ describe("Hue API", function () {
                 expect(results[0]).to.have.property("id", "0");
                 expect(results[0]).to.have.property("name", "Lightset 0");
                 expect(results[0]).to.have.property("type", "LightGroup");
+
+                expect(results[1]).to.have.property("id");
+                expect(results[1]).to.have.property("type");
+                expect(results[1]).to.have.property("name");
+                expect(results[1]).to.have.property("lights");
+                expect(results[1]).to.have.property("action");
             }
 
             it("using #promise should retrieve all groups", function (finished) {

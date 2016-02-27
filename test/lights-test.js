@@ -65,5 +65,5 @@ function _validateLightsResult(cb) {
 }
 
 function _validateLight(light) {
-    expect(light).to.have.keys("id", "name", "modelid", "type", "swversion", "uniqueid");
+    expect(light).to.have.keys("id", "name", "modelid", "type", "swversion", "uniqueid", "manufacturername", "state");
 }
