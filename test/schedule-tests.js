@@ -229,7 +229,7 @@ describe("Hue API", function () {
                     var updates = {
                         "name"       : "New Name",
                         "description": "Does Something",
-                        "localtime"  : Date.now() + 100,
+                        "localtime"  : Date.now() + 2000,
                         "command"    : {
                             "address": "/api/0/lights/invalid",
                             "method" : "GET",
@@ -255,6 +255,8 @@ describe("Hue API", function () {
             });
 
             describe("using #callback", function () {
+
+                this.timeout(5000);
 
                 it("should update an existing schedule name", function (finished) {
 
@@ -295,7 +297,7 @@ describe("Hue API", function () {
                     var updates = {
                         "name"       : "New Name",
                         "description": "Does Something",
-                        "localtime"       : "February 18, 2016 00:00:31",
+                        "localtime"  : Date.now() + 3000,
                         "command"    : {
                             "address": "/api/0/lights/invalid",
                             "method" : "GET",

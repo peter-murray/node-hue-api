@@ -32,27 +32,27 @@ describe("ScheduleEvent", function () {
             var timeString = "2013-08-12T12:00:00";
 
             scheduledEvent.on(timeString);
-            expect(scheduledEvent).to.have.property("time").to.equal(timeString);
+            expect(scheduledEvent).to.have.property("localtime").to.equal(timeString);
 
             timeString = "2011-01-01T00:00:01";
             scheduledEvent.on(timeString);
-            expect(scheduledEvent).to.have.property("time").to.equal(timeString);
+            expect(scheduledEvent).to.have.property("localtime").to.equal(timeString);
         });
 
         it("should convert valid Date values from strings", function () {
             var timeString = "October 13, 1975 11:13:00"; //BST which is UTC+1
 
             scheduledEvent.on(timeString);
-            expect(scheduledEvent).to.have.property("time").to.equal("1975-10-13T10:13:00");
+            expect(scheduledEvent).to.have.property("localtime").to.equal("1975-10-13T10:13:00");
 
             timeString = "Wed, 09 Aug 1995 00:00:00 GMT";
             scheduledEvent.on(timeString);
-            expect(scheduledEvent).to.have.property("time").to.equal("1995-08-09T00:00:00");
+            expect(scheduledEvent).to.have.property("localtime").to.equal("1995-08-09T00:00:00");
         });
 
         it("should not accept invalid date strings", function () {
             try {
-                scheduledEvent.on("1995-00-00T00:00:00");
+                scheduledEvent.on("1995-00:00T00:00:00");
                 throw new Error("should have got a parsing error");
             }
             catch (error) {
@@ -68,11 +68,18 @@ describe("ScheduleEvent", function () {
             var time = new Date();
 
             scheduledEvent.on(time);
-            expect(scheduledEvent).to.have.property("time").to.equal(time.toJSON().substr(0, 19));
+            expect(scheduledEvent).to.have.property("localtime").to.equal(time.toJSON().substr(0, 19));
 
             time = new Date(2007, 12, 1, 12, 30, 31);
             scheduledEvent.on(time);
-            expect(scheduledEvent).to.have.property("time").to.equal(time.toJSON().substr(0, 19));
+            expect(scheduledEvent).to.have.property("localtime").to.equal(time.toJSON().substr(0, 19));
+        });
+
+        it ("should accept a recurring time", function() {
+            var recurringTime = "W122/T01:00:00";
+
+            scheduledEvent.atRecurringTime(recurringTime);
+            expect(scheduledEvent).to.have.property("localtime", recurringTime);
         });
     });
 
@@ -169,8 +176,8 @@ describe("ScheduleEvent", function () {
             };
 
             scheduledEvent = schedule.create(values);
-            expect(scheduledEvent).to.have.property("name").to.equal(values.name);
-            expect(scheduledEvent).to.have.property("description").to.equal(values.description);
+            expect(scheduledEvent).to.have.property("name", values.name);
+            expect(scheduledEvent).to.have.property("description", values.description);
 
             expect(scheduledEvent.ignore).to.be.undefined;
 
@@ -184,7 +191,7 @@ describe("ScheduleEvent", function () {
             };
 
             scheduledEvent = schedule.create(values);
-            expect(scheduledEvent).to.have.property("time").to.equal(values.time);
+            expect(scheduledEvent).to.have.property("localtime").to.equal(values.time);
         });
 
         it("should load a command", function () {
@@ -197,6 +204,15 @@ describe("ScheduleEvent", function () {
             _verifyCommandsMatch(scheduledEvent.command, values.command);
         });
 
+
+        it("should load a status", function() {
+            var values = {
+                status: "enabled"
+            };
+
+            scheduledEvent = schedule.create(values);
+            expect(scheduledEvent).to.have.property("status", "enabled");
+        });
 
         //TODO test a completely formed object, name, description, command and time
     });
