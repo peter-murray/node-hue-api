@@ -177,8 +177,8 @@ describe("#LightState", function () {
                     validateBriState(expectedValue);
                 }
 
-                it("should set brightness to 255", function () {
-                    test(255, 255);
+                it("should set brightness to 254", function () {
+                    test(254, 254);
                 });
 
                 it("should set brightness to 0", function () {
@@ -201,8 +201,8 @@ describe("#LightState", function () {
                     validateBriState(expectedValue);
                 }
 
-                it("100% should set brightness to 255", function () {
-                    test(100, 255);
+                it("100% should set brightness to 254", function () {
+                    test(100, 254);
                 });
 
                 it("0% should set brightness to 0", function () {
@@ -589,7 +589,7 @@ describe("#LightState", function () {
             });
 
             it("should set ct=500, bri=100%", function() {
-                test(500, 100, 500, 255);
+                test(500, 100, 500, 254);
             });
 
             it("should set ct=0 to ct 153", function() {
@@ -605,7 +605,7 @@ describe("#LightState", function () {
             });
 
             it("should set bri=150% to bri 100%", function() {
-                test(153, 150, 153, 255);
+                test(153, 150, 153, 254);
             });
         });
 
@@ -624,7 +624,7 @@ describe("#LightState", function () {
             });
 
             it("should set (360, 100, 100)", function() {
-                test(360, 100, 100, 65535, 255, 255);
+                test(360, 100, 100, 65535, 255, 254);
             });
 
             it("should set (180, 50, 25)", function() {
@@ -648,7 +648,7 @@ describe("#LightState", function () {
             });
 
             it("should set (360, 100, 100)", function() {
-                test(360, 100, 100, 65535, 0, 255);
+                test(360, 100, 100, 65535, 0, 254);
             });
 
             it("should set (180, 50, 25)", function() {
