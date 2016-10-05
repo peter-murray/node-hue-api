@@ -394,7 +394,7 @@ hue.createUser(hostname, function(err, user) {
 });
 ```
 
-The description for the user account is optional, if you do nto provide one, then the default of "Node.js API" will be set.
+The description for the user account is optional, if you don't provide one, then the default of "Node.js API" will be set.
 
 There is a convenience method, if you have a existing user account when you register a new user, that will programmatically
 press the link button for you. See the details for the function ``pressLinkButton()`` for more details.
@@ -1902,23 +1902,23 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.scenes()
-    .then(displayResults)
+    .then(displayResult)
     .done();
 // Using 'getScenes' alias
 api.getScenes()
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.scenes(function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 // Using 'getScenes' alias
 api.getScenes(function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 ```
 
 The function will return an Array of scene definitions consisting of ``id``, ``name`` and ``lights``;
