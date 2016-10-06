@@ -6,6 +6,7 @@ var Q = require("q")
     , ApiError = require("./errors").ApiError
     , utils = require("./utils")
     , lightsApi = require("./commands/lights-api")
+    , sensorsApi = require("./commands/sensors-api")
     , groupsApi = require("./commands/groups-api")
     , schedulesApi = require("./commands/schedules-api")
     , scenesApi = require("./commands/scenes-api")
@@ -212,6 +213,22 @@ HueApi.prototype.getRegisteredUsers = HueApi.prototype.registeredUsers;
 
 
 /**
+ * Obtains the details of the individual sensors that are attached to the Philips Hue.
+ *
+ * @param cb An optional callback function to use if you do not want a promise returned.
+ * @return A promise that will be provided with the lights object, or {null} if a callback function was provided.
+ */
+HueApi.prototype.sensors = function (cb) {
+    var options = this._defaultOptions(),
+        promise;
+
+    promise = http.invoke(sensorsApi.getAllSensors, options);
+
+    return utils.promiseOrCallback(promise, cb);
+};
+HueApi.prototype.getSensors = HueApi.prototype.sensors;
+
+/**
  * Obtains the details of the individual lights that are attached to the Philips Hue.
  *
  * @param cb An optional callback function to use if you do not want a promise returned.
@@ -219,7 +236,7 @@ HueApi.prototype.getRegisteredUsers = HueApi.prototype.registeredUsers;
  */
 HueApi.prototype.lights = function (cb) {
     var options = this._defaultOptions(),
-        promise;
+      promise;
 
     promise = http.invoke(lightsApi.getAllLights, options);
 
