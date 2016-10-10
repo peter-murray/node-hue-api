@@ -35,7 +35,7 @@ describe("Hue API", function () {
         return scheduledEvent.create()
             .withName("createTest")
             .withCommand(validCommand)
-            .at(Date.now() + 10000);
+            .at(Date.now() + (60 * 60 * 1000) + (5 * 60 * 1000));
     }
 
 
@@ -88,6 +88,8 @@ describe("Hue API", function () {
             describe("using #promise", function () {
 
                 it("should schedule a valid event", function (finished) {
+                    var event = generateTestScheduleEvent();
+
                     hue.scheduleEvent(generateTestScheduleEvent())
                         .then(checkResults)
                         .then(removeSchedule)
@@ -229,7 +231,7 @@ describe("Hue API", function () {
                     var updates = {
                         "name"       : "New Name",
                         "description": "Does Something",
-                        "localtime"  : Date.now() + 2000,
+                        "localtime"  : Date.now() + (60 * 60 * 1000) + (5 * 60 * 1000),
                         "command"    : {
                             "address": "/api/0/lights/invalid",
                             "method" : "GET",
@@ -297,7 +299,7 @@ describe("Hue API", function () {
                     var updates = {
                         "name"       : "New Name",
                         "description": "Does Something",
-                        "localtime"  : Date.now() + 3000,
+                        "localtime"  : Date.now() + (60 * 60 * 1000) + (5 * 60 * 1000),
                         "command"    : {
                             "address": "/api/0/lights/invalid",
                             "method" : "GET",
