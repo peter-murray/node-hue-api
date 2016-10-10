@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.3.0
+- Fixing issues with scenes where the `recycle` option has become a required parameter. Fixes #97
+- Initial addition of a `sensors` and `getSensors` function for obtaining a list of all sensors paired with the bridge
+
 ## 2.2.0
 - Adding handling for all scheduled event time formats
 - Updated the results for `lights()` and `groups()` to return all information that the bridge provides, e.g. the current
