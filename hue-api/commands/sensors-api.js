@@ -17,12 +17,10 @@ var Trait = require("traits").Trait
     , tBodyArguments = require("./traits/tBodyArguments")
     , tLightStateBody = require("./traits/tLightStateBody")
     , tPostProcessing = require("./traits/tPostProcessing")
-    , ApiError = require("../errors").ApiError
     , utils = require("../utils")
     ;
 
 var apiTraits = {};
-
 
 //TODO tie this into the API definition as a post processing step, then apply it via the http.invoke()
 function buildSensorsResult(result) {
@@ -40,13 +38,15 @@ apiTraits.getAllSensors = Trait.compose(
     tApiMethod(
         "/api/<username>/sensors",
         "GET",
-        "1.0",
+        "1.3",
         "Whitelist"
     ),
     tDescription("Gets a list of all sensors that have been discovered by the bridge."),
     tPostProcessing(buildSensorsResult)
 );
 
+
+//TODO there are many more endpoints that need to be added to this: http://www.developers.meethue.com/documentation/sensors-api
 
 module.exports = {
     "getAllSensors": Trait.create(Object.prototype, apiTraits.getAllSensors)
