@@ -742,7 +742,8 @@ HueApi.prototype.createBasicScene = function (lightIds, name, cb) {
 
     options.values = {
         name: name,
-        lights: utils.createStringValueArray(lightIds)
+        lights: utils.createStringValueArray(lightIds),
+        recycle: false
     };
 
     promise = http.invoke(scenesApi.createScene, options);
@@ -758,11 +759,12 @@ HueApi.prototype.createBasicScene = function (lightIds, name, cb) {
 HueApi.prototype.createAdvancedScene = function(scene, cb) {
     var self = this
       , options = self._defaultOptions()
+      , myScene = deepExtend({recycle: false}, scene)
       , promise
       ;
 
     //TODO validate the options object
-    options.values = scene;
+    options.values = myScene;
 
     promise = http.invoke(scenesApi.createScene, options);
     return utils.promiseOrCallback(promise, cb);
