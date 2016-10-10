@@ -8,3 +8,5 @@ node_modules
 
 # Scratch Files
 scratch.js
+
+.DS_Store
