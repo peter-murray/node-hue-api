@@ -265,11 +265,17 @@ results of the name and software version will be returned from the bridge with n
 ```
 {
   "name": "Philips hue",
-  "swversion": "01005825"
+  "swversion": "01036562",
+  "apiversion": "1.15.0",
+  "mac": "xx:xx:xx:xx:xx:xx",
+  "bridgeid": "xxxxxxxxxxxxxxxx",
+  "factorynew": false,
+  "replacesbridgeid": null,
+  "modelid": "BSB002"
 }
 ```
 For this reason, if you want to validate that the user account used to connect to the bridge is correct, you will have to
-look for a field that is not present in the above result, like the ``mac``, ``ipaddress`` or ``linkbutton`` would be good
+look for a field that is not present in the above result, like the ``mac``, ``whitelist`` or ``linkbutton`` would be good
 properties to check.
 
 //TODO Need to document setting config value and timezones
