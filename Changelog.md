@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.4.0
+- Adding fix to make library work in Electron, #101
+- Updating documentation for invalid users and obtaining configuration #99
+
 ## 2.3.0
 - Fixing issues with scenes where the `recycle` option has become a required parameter. Fixes #97
 - Initial addition of a `sensors` and `getSensors` function for obtaining a list of all sensors paired with the bridge
