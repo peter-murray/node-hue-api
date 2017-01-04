@@ -212,64 +212,72 @@ This will provide results detailing the configuration of the bridge (IP Address,
 ```
 {
   "name": "Philips hue",
-    "zigbeechannel": 11,
-    "mac": "xx:xx:xx:xx:xx:xx",
-    "dhcp": false,
-    "ipaddress": "192.168.2.245",
-    "netmask": "255.255.255.0",
-    "gateway": "192.168.2.254",
-    "proxyaddress": "none",
-    "proxyport": 0,
-    "UTC": "2015-01-10T13:18:51",
-    "localtime": "2015-01-10T13:18:51",
-    "timezone": "Europe/London",
-    "whitelist": {
-      "fG2EZIaS2pZuSeKH": {
-        "last use date": "2015-01-09T22:54:21",
-        "create date": "2014-05-18T17:11:10",
-        "name": "philips.lighting.hue#iPad"
-      },
-      "0f607264fc6318a92b9e13c65db7cd3c": {
-        "last use date": "2014-12-23T17:25:16",
-        "create date": "2014-12-23T17:14:30",
-        "name": "iPad"
-      }
+  "zigbeechannel": 11,
+  "bridgeid": "xxxxxxx",
+  "mac": "00:xx:88:xx:f3:xx",
+  "dhcp": false,
+  "ipaddress": "192.168.2.245",
+  "netmask": "255.255.255.0",
+  "gateway": "192.168.2.1",
+  "proxyaddress": "none",
+  "proxyport": 0,
+  "UTC": "2017-01-04T20:01:21",
+  "localtime": "2017-01-04T20:01:21",
+  "timezone": "Europe/London",
+  "modelid": "BSB002",
+  "datastoreversion": "59",
+  "swversion": "01036659",
+  "apiversion": "1.16.0",
+  "swupdate": {
+    "updatestate": 0,
+    "checkforupdate": false,
+    "devicetypes": {
+      "bridge": false,
+      "lights": [],
+      "sensors": []
     },
-    "swversion": "01018228",
-    "apiversion": "1.5.0",
-    "swupdate": {
-      "updatestate": 0,
-      "checkforupdate": false,
-      "devicetypes": {
-        "bridge": false,
-        "lights": []
-      },
-      "url": "",
-      "text": "",
-      "notify": false
-    },
-    "linkbutton": false,
-    "portalservices": true,
-    "portalconnection": "connected",
-    "portalstate": {
-      "signedon": true,
-      "incoming": true,
-      "outgoing": true,
-      "communication": "connected"
-    }
+    "url": "",
+    "text": "",
+    "notify": false
+  },
+  "linkbutton": false,
+  "portalservices": true,
+  "portalconnection": "connected",
+  "portalstate": {
+    "signedon": true,
+    "incoming": true,
+    "outgoing": true,
+    "communication": "disconnected"
+  },
+  "factorynew": false,
+  "replacesbridgeid": "xxxxxxxxxxx",
+  "backup": {
+    "status": "idle",
+    "errorcode": 0
+  },
+  "whitelist": {
+    ...
+  }
 }
 ```
 
 If you invoke the ``config()`` or ``connect()`` functions with an invalid user account (i.e. one that is not valid) then
 results of the name and software version will be returned from the bridge with no other information;
 ```
-{
-  "name": "Philips hue",
-  "swversion": "01005825"
+
+  "apiversion": "1.16.0"
+  "bridgeid": "xxxxxxxxxxx"
+  "datastoreversion": "59"
+  "factorynew": false
+  "mac": "00:xx:88:xx:f3:xx"
+  "modelid": "BSB002"
+  "name": "Philips hue"
+  "replacesbridgeid": "xxxxxxxxxxx"
+  "swversion": "01036659"
 }
 ```
 For this reason, if you want to validate that the user account used to connect to the bridge is correct, you will have to
-look for a field that is not present in the above result, like the ``mac``, ``ipaddress`` or ``linkbutton`` would be good
+look for a field that is not present in the above result, like the ``zigbeechannel``, ``ipaddress`` or ``linkbutton`` would be good
 properties to check.
 
 //TODO Need to document setting config value and timezones
