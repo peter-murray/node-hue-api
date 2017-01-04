@@ -4,12 +4,18 @@ var url = require("url")
   , util = require("util")
   , Q = require("q")
   , axios = require("axios")
+  , httpAdapter = require("axios/lib/adapters/http")
   , errors = require("./errors.js")
   , debug = /hue-api/.test(process.env.NODE_DEBUG)
   ;
 
+var defaultOptions = {
+  adapter: httpAdapter,
+};
+
 function buildOptions(command, parameters) {
   var options = {
+      adapter: httpAdapter,
       debug: debug,
       headers: {}
     },
@@ -152,7 +158,7 @@ module.exports.invoke = function (command, parameters) {
 };
 
 module.exports.simpleGet = function (uri) {
-  return wrapAxios(axios.get(uri))
+  return wrapAxios(axios.get(uri, defaultOptions))
       .then(requireStatusCode200)
       .then(function(result) {
           return result.data;
