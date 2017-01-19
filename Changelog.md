@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.4.1
+- Fixing engine name from `nodejs` to `node`, fixes #104
+
 ## 2.4.0
 - Adding fix to make library work in Electron, #101
 - Updating documentation for invalid users and obtaining configuration #99

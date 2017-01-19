@@ -50,7 +50,7 @@
     "semver": "~5.0"
   },
   "engines": {
-    "nodejs": ">= 4.0.0"
+    "node": ">= 4.0.0"
   },
   "license": "Apache-2.0",
   "keywords": [
