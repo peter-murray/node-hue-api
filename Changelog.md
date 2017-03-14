@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.4.2
+- Fixing documentation issues around transition times #109
+- Added `transition_milliseconds` and `transitionTime_milliseconds` functions to complete the pairs between multiples of 100 and real milliseconds
+
 ## 2.4.1
 - Fixing engine name from `nodejs` to `node`, fixes #104
 

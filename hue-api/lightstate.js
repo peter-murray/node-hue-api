@@ -296,6 +296,8 @@ State.prototype.transitionTime = State.prototype.transitiontime;
 State.prototype.transition = function (milliseconds) {
     return this.transitionTime(_convertMilliSecondsToTransitionTime(milliseconds));
 };
+State.prototype.transitiontime_milliseconds = State.prototype.transition;
+State.prototype.transitionTime_milliseconds = State.prototype.transition;
 
 State.prototype.transitionSlow = function () {
     return this.transitionTime(8);
@@ -558,7 +560,7 @@ function _convertMilliSecondsToTransitionTime(value) {
 
     // The transition time is in multiples of 100ms, e.g. 100ms = 1
     if (value > 0) {
-        result = Math.floor(value / 100);
+        result = Math.round(value / 100);
     }
 
     return result;

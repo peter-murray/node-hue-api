@@ -826,7 +826,7 @@ which take values documented in the official Phillips Hue Lights API:
 | `ct(colorTemperature)` | Set the color temperature to a value between 153 and 500 |
 | `alert(value)` | Sets the alert state to value `none`, `select` or `lselect`. If no parameter is passed will default to `none`. |
 | `effect(effectName)` | Sets the effect on the light(s) where `effectName` is either `none` or `colorloop`. |
-| `transitiontime(milliseconds)` | Sets a transition time in milliseconds |
+| `transitiontime(int)` | Sets a transition time to a multiple of 100 milliseconds, e.g. 4 means 400ms |
 | `bri_inc(value)`| Increments/Decrements the brightness by the value specified. Accepts values -254 to 254. |
 | `sat_inc(value)`| Increments/Decrements the saturation by the value specified. Accepts values -254 to 254. |
 | `hue_inc(value)`| Increments/Decrements the hue by the value specified. Accepts values -65534 to 65534. |
@@ -859,8 +859,9 @@ up a desired Light State:
 | `alertShort()` |Flashes the light(s) once|
 | `longAlert()` |Flashes the light(s) 10 times|
 | `alertLong()` |Flashes the light(s) 10 times|
-| `transitionTime(milliseconds)` |Specify a specific transition time in milliseconds|
+| `transitionTime(int)` |Sets a transition time to a multiple of 100 milliseconds, e.g. 4 means 400ms |
 | `transition(milliseconds)` |Specify a specific transition time|
+| `transitiontime_milliseconds(milliseconds)` | Sets a transition time in milliseconds (will be rounded to the closest 100ms |
 | `transitionSlow()` |A slow transition of 800ms|
 | `transitionFast()` | A fast transition of 200ms|
 | `transitionInstant()` |A transition of 0ms|
