@@ -183,11 +183,11 @@ var displayResult = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
-var hostname = "192.168.2.129",
+var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
     api;
 
-api = new HueApi(hostname, username);
+api = new HueApi(host, username);
 
 // --------------------------
 // Using a promise
@@ -292,11 +292,11 @@ var displayResult = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
-var hostname = "192.168.2.129",
+var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
     api;
 
-api = new HueApi(hostname, username);
+api = new HueApi(host, username);
 
 // --------------------------
 // Using a promise
@@ -331,11 +331,11 @@ var displayResult = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
-var hostname = "192.168.2.129",
+var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
     api;
 
-api = new HueApi(hostname, username);
+api = new HueApi(host, username);
 
 // --------------------------
 // Using a promise
@@ -374,7 +374,7 @@ an existing user account on the Bridge to use to access its protected functions.
 ```js
 var HueApi = require("node-hue-api").HueApi;
 
-var hostname = "192.168.2.129",
+var host = "192.168.2.129",
     userDescription = "device description goes here";
 
 var displayUserResult = function(result) {
@@ -389,14 +389,14 @@ var hue = new HueApi();
 
 // --------------------------
 // Using a promise
-hue.registerUser(hostname, userDescription)
+hue.registerUser(host, userDescription)
     .then(displayUserResult)
     .fail(displayError)
     .done();
 
 // --------------------------
 // Using a callback (with default description and auto generated username)
-hue.createUser(hostname, function(err, user) {
+hue.createUser(host, function(err, user) {
 	if (err) throw err;
 	displayUserResult(user);
 });
@@ -434,11 +434,11 @@ var displayResult = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
-var hostname = "192.168.2.129",
+var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
     api;
 
-api = new HueApi(hostname, username);
+api = new HueApi(host, username);
 
 // --------------------------
 // Using a promise
@@ -481,11 +481,11 @@ var displayResult = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
-var hostname = "192.168.2.129",
+var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4",
     api;
 
-api = new HueApi(hostname, username);
+api = new HueApi(host, username);
 
 // --------------------------
 // Using a promise
@@ -608,9 +608,9 @@ var displayResult = function(result) {
     console.log(JSON.stringify(result, null, 2));
 };
 
-var hostname = "192.168.2.129";
+var host = "192.168.2.129";
 var username = "08a902b95915cdd9b75547cb50892dc4";
-var api = new HueApi(hostname, username);
+var api = new HueApi(host, username);
 
 // --------------------------
 // Using a promise
@@ -656,7 +656,7 @@ To delete a user or device from the Bridge, you will need an existing user accou
 ```js
 var HueApi = require("node-hue-api").HueApi;
 
-var hostname = "192.168.2.129",
+var host = "192.168.2.129",
     username = "08a902b95915cdd9b75547cb50892dc4";
 
 var displayUserResult = function(result) {
@@ -667,7 +667,7 @@ var displayError = function(err) {
     console.log(err);
 };
 
-var hue = new HueApi(hostname, username);
+var hue = new HueApi(host, username);
 
 // --------------------------
 // Using a promise
