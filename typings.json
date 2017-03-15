@@ -1,0 +1,8 @@
+{
+  "name": "node-hue-api",
+  "main": "index.d.ts",
+  "homepage": "https://github.com/peter-murray/node-hue-api",
+  "ambientDependencies": {
+    "node": "registry:dt/node#4.0.0+20160330064709"
+  }
+}
