@@ -402,7 +402,7 @@ hue.createUser(host, function(err, user) {
 });
 ```
 
-The description for the user account is optional, if you do nto provide one, then the default of "Node.js API" will be set.
+The description for the user account is optional, if you don't provide one, then the default of "Node.js API" will be set.
 
 There is a convenience method, if you have a existing user account when you register a new user, that will programmatically
 press the link button for you. See the details for the function ``pressLinkButton()`` for more details.
@@ -1150,14 +1150,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.searchForNewLights()
-	.then(displayResults)
+	.then(displayResult)
 	.done();
 
 // --------------------------
 // Using a callback
 api.searchForNewLights(function(err, result) {
 	if (err) throw err;
-	displayResults(result);
+	displayResult(result);
 });
 ```
 The result from this call should be ``true`` if a search was successfully triggered. It can take some time for the search
@@ -1179,7 +1179,7 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.newLights()
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
@@ -1213,14 +1213,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.setLightName(5, "A new Name")
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.setLightName(5, "Living Color TV", function(err, result) {
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 If the call is successful, then ``true`` will be returned by the function call, otherwise a ``ApiError`` will result.
@@ -1251,14 +1251,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.groups()
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.groups(function(err, result) {
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -1340,14 +1340,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.getGroup(0)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.getGroup(0, function(err, result) {
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -1405,14 +1405,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.createGroup("a new group", [4, 5])
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.createGroup("group name", [1, 4, 5], function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -1452,14 +1452,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.updateGroup(1, "new group name")
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.updateGroup(1, "new group name", function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -1480,14 +1480,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.updateGroup(1, [1, 2, 3])
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.updateGroup(1, [1, 2, 3], function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -1508,14 +1508,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.updateGroup(1, "group name", [4, 5])
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.updateGroup(1, "group name", [4, 5], function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -1543,14 +1543,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.deleteGroup(3)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.deleteGroup(4, function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 This function call will return a ``true`` result in the promise chain if successful, otherwise an error will be thrown.
@@ -1575,14 +1575,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.schedules()
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.schedules(function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -1627,14 +1627,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.getSchedule(scheduleId)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.getSchedule(scheduleId, function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -1698,14 +1698,14 @@ scheduledEvent = {
 // --------------------------
 // Using a promise
 api.scheduleEvent(scheduledEvent)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.createSchedule(scheduledEvent, function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -1911,23 +1911,23 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.scenes()
-    .then(displayResults)
+    .then(displayResult)
     .done();
 // Using 'getScenes' alias
 api.getScenes()
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.scenes(function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 // Using 'getScenes' alias
 api.getScenes(function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 ```
 
 The function will return an Array of scene definitions consisting of ``id``, ``name`` and ``lights``;
@@ -2019,23 +2019,23 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.scene(sceneId)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 // Using 'getScene' alias
 api.getScene(sceneId)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.scene(sceneId, function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 // Using 'getScene' alias
 api.getScene(sceneId, function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 };
 ```
 
@@ -2106,14 +2106,14 @@ scene.withName("My Scene")
 // --------------------------
 // Using a promise
 api.createAdvancedScene(scene)
-  .then(displayResults)
+  .then(displayResult)
   .done();
 
 // --------------------------
 // Using a callback
 api.createAdvancedScene(scene, function(err, result){
   if (err) throw err;
-  displayResults(result);
+  displayResult(result);
 });
 ```
 
@@ -2152,14 +2152,14 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.createBasicScene(lightIds, sceneName)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.scene(lightIds, sceneName, function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -2231,14 +2231,14 @@ sceneUpdates.withName("My Scene")
 // --------------------------
 // Using a promise
 api.modifyScene(sceneId, sceneUpdates)
-  .then(displayResults)
+  .then(displayResult)
   .done();
 
 // --------------------------
 // Using a callback
 api.modifyScene(sceneId, sceneUpdates, function(err, result){
   if (err) throw err;
-  displayResults(result);
+  displayResult(result);
 });
 ```
 
@@ -2281,14 +2281,14 @@ var host = "192.168.2.245",
 // --------------------------
 // Using a promise
 api.setSceneLightState(sceneId, lightId, state)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.setSceneLightState(sceneId, lightId, state, function(err, result){
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
@@ -2334,23 +2334,23 @@ var host = "192.168.2.129",
 // --------------------------
 // Using a promise
 api.activateScene(sceneId)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 // using the "recallScene" alias
 api.recallScene(sceneId)
-    .then(displayResults)
+    .then(displayResult)
     .done();
 
 // --------------------------
 // Using a callback
 api.activateScene(sceneId, function(err, result) {
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 // using the "recallScene" alias
 api.recallScene(sceneId, function(err, result) {
     if (err) throw err;
-    displayResults(result);
+    displayResult(result);
 });
 ```
 
