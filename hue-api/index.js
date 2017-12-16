@@ -370,6 +370,69 @@ HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
     return utils.promiseOrCallback(promise, cb);
 };
 
+/**
+ * Obtains the details of the individual sensors that are attached to the Philips Hue.
+ *
+ * @param cb An optional callback function to use if you do not want a promise returned.
+ * @return A promise that will be provided with the lights object, or {null} if a callback function was provided.
+ */
+HueApi.prototype.sensors = function (cb) {
+    var options = this._defaultOptions(),
+        promise;
+
+    promise = http.invoke(sensorsApi.getAllSensors, options);
+
+    return utils.promiseOrCallback(promise, cb);
+};
+HueApi.prototype.getSensors = HueApi.prototype.sensors;
+
+
+/**
+ * Obtains the status of the specified sensor.
+ *
+ * @param id The id of the sensor as an integer, this value will be parsed into an integer value so can be a {String} or
+ * {Number} value.
+ * @param cb An optional callback function to use if you do not want a promise returned.
+ * @return A promise that will be provided with the sensor status, or {null} if a callback function was provided.
+ */
+HueApi.prototype.sensorStatus = function (id, cb) {
+    var options = this._defaultOptions(),
+        promise;
+
+    promise = _setSensorIdOption(options, id);
+
+    if (!promise) {
+        promise = http.invoke(sensorsApi.getSensorAttributesAndState, options);
+    }
+    return utils.promiseOrCallback(promise, cb);
+};
+HueApi.prototype.getSensorStatus = HueApi.prototype.sensorStatus;
+
+/**
+ * Sets the name of a sensor on the Bridge.
+ *
+ * @param id The ID of the sensor to set the name for.
+ * @param name The name to apply to the sensor.
+ * @param cb An optional callback function to use if you do not want a promise returned.
+ * @return A promise that will be provided with the results of setting the name, or {null} if a callback function was provided.
+ */
+HueApi.prototype.setSensorName = function (id, name, cb) {
+    var options = this._defaultOptions(),
+        promise;
+
+    promise = _setSensorIdOption(options, id);
+
+    options.values = {
+        "name": name
+    };
+
+    if (!promise) {
+        promise = http.invoke(sensorsApi.renameSensor, options);
+    }
+    return utils.promiseOrCallback(promise, cb);
+};
+
+
 
 /**
  * Obtains all the groups from the Hue Bridge as an Array of {id: {*}, name: {*}} objects.
@@ -1259,6 +1322,42 @@ function _setLightIdOption(options, id) {
     }
 
     return errorPromise;
+}
+
+/**
+ * Validates and then injects the 'id' into the options for a sensor in the bridge.
+ *
+ * @param options The options to add the 'id' to.
+ * @param id The id of the sensor
+ * @return {Q.promise} A promise that will throw the error if there was one, otherwise <null>.
+ * @private
+ */
+function _setSensorIdOption(options, id) {
+    var errorPromise = null;
+
+    if (!_isSensorIdValid(id)) {
+        errorPromise = _errorPromise("The sensor id '" + id + "' is not valid for this Hue Bridge.");
+    } else {
+        options.id = id;
+    }
+
+    return errorPromise;
+}
+
+/**
+ * Validates that the sensor id is valid for this Hue Bridge.
+ *
+ * @param id The id of the sensor in the Hue Bridge.
+ * @returns {boolean} true if the id is valid for this bridge.
+ * @private
+ */
+function _isSensorIdValid(id) {
+    if (parseInt(id, 10) > 0) {
+        //TODO check that this is a valid sensor id for the system
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /**
