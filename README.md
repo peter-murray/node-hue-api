@@ -107,7 +107,7 @@ to the developer to decide on the approach to be used, i.e. fallback, parallel, 
 
 #### nupnpSearch() or locateBridges()
 This API function makes use of the official API endpoint that reveals the bridges on a network. It is a call through to
-``http://meethue.com/api/nupnp`` which may not work in all circumstances (your bridge must have signed into the methue portal),
+``http://meethue.com/api/nupnp`` which may not work in all circumstances (your bridge must have signed into the meethue portal),
  in which case you can fall back to the slower
 ``upnpSearch()`` function.
 
@@ -277,7 +277,7 @@ results of the name and software version will be returned from the bridge with n
 }
 ```
 For this reason, if you want to validate that the user account used to connect to the bridge is correct, you will have to
-look for a field that is not present in the above result, like the ``zigbeechannel``, ``ipaddress`` or ``linkbutton`` would be good
+look for a field that is not present in the above result. ``zigbeechannel``, ``ipaddress`` or ``linkbutton`` would be good
 properties to check.
 
 //TODO Need to document setting config value and timezones
@@ -368,8 +368,7 @@ This will result in data output as follows;
 ```
 
 ### Registering without an existing Device/User ID
-A user can be registered on the Bridge using ``registerUser()`` or ``createUser()`` functions. This is useful when you have not got
-an existing user account on the Bridge to use to access its protected functions.
+A user can be registered on the Bridge using ``registerUser()`` or ``createUser()`` functions. This is useful when you do not have have an existing user account on the Bridge to use to access its protected functions.
 
 ```js
 var HueApi = require("node-hue-api").HueApi;
@@ -402,7 +401,7 @@ hue.createUser(host, function(err, user) {
 });
 ```
 
-The description for the user account is optional, if you do nto provide one, then the default of "Node.js API" will be set.
+The description for the user account is optional, if you do not provide one, then the default of "Node.js API" will be set.
 
 There is a convenience method, if you have a existing user account when you register a new user, that will programmatically
 press the link button for you. See the details for the function ``pressLinkButton()`` for more details.
