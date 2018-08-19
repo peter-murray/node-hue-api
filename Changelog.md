@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.4.3
+- Adding sensor API endpoints for `setSensorName()` `sensorStatus()` and `sensors()` from PR #121
+
 ## 2.4.2
 - Fixing documentation issues around transition times #109
 - Added `transition_milliseconds` and `transitionTime_milliseconds` functions to complete the pairs between multiples of 100 and real milliseconds
