@@ -45,9 +45,36 @@ apiTraits.getAllSensors = Trait.compose(
     tPostProcessing(buildSensorsResult)
 );
 
+apiTraits.getSensorAttributesAndState = Trait.compose(
+    tApiMethod(
+        "/api/<username>/sensors/<id>",
+        "GET",
+        "1.0",
+        "Whitelist"
+    ),
+    tDescription("Gets the attributes and state of a given sensor.")
+);
+
+apiTraits.setSensorAttributes = Trait.compose(
+    tApiMethod(
+        "/api/<username>/sensors/<id>",
+        "PUT",
+        "1.0",
+        "Whitelist"
+    ),
+    tDescription("Used to rename sensor. A sensor can have its name changed when in any state, including when it is unreachable or off."),
+    tBodyArguments(
+        "application/json",
+        [
+            {name: "name", type: "string", maxLength: 32, optional: false}
+        ]
+    ),
+    tPostProcessing(utils.wasSuccessful)
+);
 
 //TODO there are many more endpoints that need to be added to this: http://www.developers.meethue.com/documentation/sensors-api
-
 module.exports = {
-    "getAllSensors": Trait.create(Object.prototype, apiTraits.getAllSensors)
+    "getAllSensors": Trait.create(Object.prototype, apiTraits.getAllSensors),
+    "getSensorAttributesAndState": Trait.create(Object.prototype, apiTraits.getSensorAttributesAndState),
+    "renameSensor": Trait.create(Object.prototype, apiTraits.setSensorAttributes)
 };
