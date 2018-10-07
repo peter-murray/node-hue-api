@@ -1536,7 +1536,7 @@ function _isLightIdValid(id) {
 function _isGroupIdValid(id) {
     if (parseInt(id, 10) >= 0) {
         //TODO check that this is a valid group id for the system
-        return id <= 16;
+        return id <= 64;
     } else {
         return false;
     }
