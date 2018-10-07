@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.4.4
+- Fixing limit check for group IDs #123
+- Updating versions of dependencies
+
 ## 2.4.3
 - Adding sensor API endpoints for `setSensorName()` `sensorStatus()` and `sensors()` from PR #121
 
