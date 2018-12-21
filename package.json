@@ -1,7 +1,7 @@
 {
   "name": "node-hue-api",
   "description": "Phillips Hue API Library for Node.js",
-  "version": "2.4.2",
+  "version": "3.0.0",
   "author": "Peter Murray <peter.murray@osirisoft.com>",
   "contributors": [
     {
@@ -38,19 +38,21 @@
     "url": "https://github.com/peter-murray/node-hue-api/issues"
   },
   "dependencies": {
-    "xml2js": "~0.4",
+    "axios": "~0.18.0",
+    "deep-extend": "~0.6.0",
     "q": "~1.4",
-    "deep-extend": "~0.4.0",
-    "axios": "~0.15.3",
-    "traits": "~0.4.0"
+    "traits": "~0.4.0",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
-    "mocha": "~3.2",
-    "chai": "~3.5",
+    "eslint": "^5.10.0",
+    "axios-debug-log": "^0.4.0",
+    "mocha": "~5.2",
+    "chai": "~4.2",
     "semver": "~5.0"
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 8.0.0"
   },
   "license": "Apache-2.0",
   "keywords": [
