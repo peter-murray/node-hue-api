@@ -1,40 +1,20 @@
-"use strict";
+'use strict';
 
-const capabilities = require("./capabilities")
-    , lights = require("./lights")
-    , groups = require("./groups")
-    , request = require("./request")
+const request = require('./http/request')
+  , Api = require('./Api')
 ;
 
-function Api(config) {
-  let self = this;
-
-  self._config = config;
-  self._request = request.create(config);
-
-
-  self.capabilities = capabilities.create(self);
-  self.lights = lights.create(self);
-  self.groups = groups.create(self);
-}
-
-module.exports = function (host, username, timeout, port) {
-  let config = {
-    protocol: "http",
+module.exports.create = function (host, username, timeout, port) {
+  const config = {
+    protocol: 'https',
     hostname: host,
     username: username,
     timeout: timeout || 10000,
-    port: port || 80
+    port: port || 443
   };
-  
-  return new Api(config)
-};
 
-
-Api.prototype._getRequest = function() {
-  return this._request
+  return request.create(config)
+    .then(request => {
+      return new Api(config, request);
+    });
 };
-//
-// Api.prototype._getUsername = function() {
-//   return this._config.username;
-// };

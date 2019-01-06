@@ -1,47 +1,46 @@
-"use strict";
+'use strict';
 
-var expect = require("chai").expect
-    , HueApi = require("..").api
-    , testValues = require("./support/testValues.js")
-    ;
+const expect = require('chai').expect
+  , HueApi = require('..').api
+  , testValues = require('./support/testValues.js')
+;
 
-describe("Hue API", function () {
+describe('Hue API', function () {
 
-    describe("#searchForLights", function () {
+  const hue = new HueApi(testValues.host, testValues.username);
 
+  describe('#searchForLights', function () {
 
-        describe("#promise", function() {
+    describe('#promise', function () {
 
-            it("should get initiate a search", function (done) {
-                var hue = new HueApi(testValues.host, testValues.username);
+      it('should get initiate a search', function (done) {
 
-                function checkResults(results) {
-                    _validateLightsResult(results, done);
-                }
+        function checkResults(results) {
+          _validateLightsResult(results, done);
+        }
 
-                hue.searchForNewLights().then(checkResults).done();
-            });
-        });
-
-
-        describe("#callback", function () {
-
-            it("should initiate a search", function (done) {
-                var hue = new HueApi(testValues.host, testValues.username);
-
-                hue.searchForNewLights(function (err, results) {
-                    if (err) {
-                        throw err;
-                    }
-
-                    _validateLightsResult(results, done);
-                });
-            });
-        });
+        hue.searchForNewLights().then(checkResults).done();
+      });
     });
+
+
+    describe('#callback', function () {
+
+      it('should initiate a search', function (done) {
+
+        hue.searchForNewLights(function (err, results) {
+          if (err) {
+            throw err;
+          }
+
+          _validateLightsResult(results, done);
+        });
+      });
+    });
+  });
 });
 
 function _validateLightsResult(result, cb) {
-    expect(result).to.be.true;
-    cb();
+  expect(result).to.be.true;
+  cb();
 }

@@ -1,15 +1,16 @@
-"use strict";
+'use strict';
 
-var util = require("util")
-    , utils = require("./utils")
-    , rgb = require("./rgb")
-    , lightStateTrait = require("./commands/traits/tLightStateBody")
-    ;
+const utils = require('./utils')
+  , rgb = require('./rgb')
+  , lightStateTrait = require('./commands/traits/tLightStateBody')
+;
 
-var stateDefinitions = lightStateTrait(true).bodyArguments.value
-    , State = function () {
-        this.reset();
-    };
+
+const State = function () {
+  this.reset();
+};
+
+const stateDefinitions = lightStateTrait(true).bodyArguments.value;
 
 /**
  * Creates a new state object to pass to a Philips Hue Light.
@@ -20,32 +21,32 @@ var stateDefinitions = lightStateTrait(true).bodyArguments.value
  * @return {State}
  */
 module.exports.create = function (values) {
-    var state = new State();
+  const state = new State();
 
-    // If values are provided then load the ones that have values to match our functions
-    if (values) {
-        Object.keys(values).forEach(function (value) {
-            var fn;
+  // If values are provided then load the ones that have values to match our functions
+  if (values) {
+    Object.keys(values).forEach(function (value) {
+      var fn;
 
-            if (values.hasOwnProperty(value)) {
-                fn = state[value];
+      if (values.hasOwnProperty(value)) {
+        fn = state[value];
 
-                if (utils.isFunction(fn)) {
-                    fn.apply(state, [values[value]]);
-                }
-            }
-        });
-    }
+        if (utils.isFunction(fn)) {
+          fn.apply(state, [values[value]]);
+        }
+      }
+    });
+  }
 
-    return state;
+  return state;
 };
 
 module.exports.isLightState = function (obj) {
-    return obj && obj instanceof State;
+  return obj && obj instanceof State;
 };
 
 State.prototype.payload = function () {
-    return JSON.parse(JSON.stringify(this._values));
+  return JSON.parse(JSON.stringify(this._values));
 };
 
 /**
@@ -53,8 +54,8 @@ State.prototype.payload = function () {
  * @returns {State}
  */
 State.prototype.reset = function () {
-    this._values = {};
-    return this;
+  this._values = {};
+  return this;
 };
 State.prototype.clear = State.prototype.reset;
 
@@ -63,9 +64,9 @@ State.prototype.clear = State.prototype.reset;
  * @returns {State}
  */
 State.prototype.copy = function () {
-    var copy = new State();
-    copy._addValues(this._values);
-    return copy;
+  var copy = new State();
+  copy._addValues(this._values);
+  return copy;
 };
 
 /**
@@ -74,12 +75,12 @@ State.prototype.copy = function () {
  * @returns {State}
  */
 State.prototype.strict = function (strict) {
-    this._strict = Boolean(strict);
-    return this;
+  this._strict = Boolean(strict);
+  return this;
 };
 
 State.prototype.isStrict = function () {
-    return this._strict;
+  return this._strict;
 };
 
 /**
@@ -88,8 +89,8 @@ State.prototype.isStrict = function () {
  * @returns {State}
  */
 State.prototype.on = function (on) {
-    this._addValues(_getOnState(on));
-    return this;
+  this._addValues(_getOnState(on));
+  return this;
 };
 
 /**
@@ -98,8 +99,8 @@ State.prototype.on = function (on) {
  * @return {State}
  */
 State.prototype.bri = function (value) {
-    this._addValues(_getBriState(value));
-    return this;
+  this._addValues(_getBriState(value));
+  return this;
 };
 
 /**
@@ -108,8 +109,8 @@ State.prototype.bri = function (value) {
  * @returns {State}
  */
 State.prototype.hue = function (hue) {
-    this._addValues(_getHueState(hue));
-    return this;
+  this._addValues(_getHueState(hue));
+  return this;
 };
 
 /**
@@ -118,8 +119,8 @@ State.prototype.hue = function (hue) {
  * @returns {State}
  */
 State.prototype.sat = function (saturation) {
-    this._addValues(_getSatState(saturation));
-    return this;
+  this._addValues(_getSatState(saturation));
+  return this;
 };
 
 /**
@@ -129,14 +130,14 @@ State.prototype.sat = function (saturation) {
  * @return {State}
  */
 State.prototype.xy = function (x, y) {
-    // Cater for the first argument being an array
-    if (Array.isArray(arguments[0])) {
-        x = arguments[0][0];
-        y = arguments[0][1];
-    }
+  // Cater for the first argument being an array
+  if (Array.isArray(arguments[0])) {
+    x = arguments[0][0];
+    y = arguments[0][1];
+  }
 
-    this._addValues(_getXYState(x, y));
-    return this;
+  this._addValues(_getXYState(x, y));
+  return this;
 };
 
 /**
@@ -145,8 +146,8 @@ State.prototype.xy = function (x, y) {
  * @returns {State}
  */
 State.prototype.ct = function (colorTemp) {
-    this._addValues(_getCtState(colorTemp));
-    return this;
+  this._addValues(_getCtState(colorTemp));
+  return this;
 };
 
 /**
@@ -155,8 +156,8 @@ State.prototype.ct = function (colorTemp) {
  * @return {State}
  */
 State.prototype.alert = function (value) {
-    this._addValues(_getAlertState(value));
-    return this;
+  this._addValues(_getAlertState(value));
+  return this;
 };
 
 /**
@@ -165,8 +166,8 @@ State.prototype.alert = function (value) {
  * @returns {State}
  */
 State.prototype.effect = function (value) {
-    this._addValues(_getEffectState(value));
-    return this;
+  this._addValues(_getEffectState(value));
+  return this;
 };
 
 /**
@@ -175,8 +176,8 @@ State.prototype.effect = function (value) {
  * @return {State}
  */
 State.prototype.transitiontime = function (value) {
-    this._addValues(_getTransitionState(value));
-    return this;
+  this._addValues(_getTransitionState(value));
+  return this;
 };
 
 /**
@@ -185,8 +186,8 @@ State.prototype.transitiontime = function (value) {
  * @returns {State}
  */
 State.prototype.bri_inc = function (value) {
-    this._addValues(_getBrightnessIncrementState(value));
-    return this;
+  this._addValues(_getBrightnessIncrementState(value));
+  return this;
 };
 
 /**
@@ -195,8 +196,8 @@ State.prototype.bri_inc = function (value) {
  * @returns {State}
  */
 State.prototype.sat_inc = function (value) {
-    this._addValues(_getSaturationIncrementState(value));
-    return this;
+  this._addValues(_getSaturationIncrementState(value));
+  return this;
 };
 
 /**
@@ -205,8 +206,8 @@ State.prototype.sat_inc = function (value) {
  * @returns {State}
  */
 State.prototype.hue_inc = function (value) {
-    this._addValues(_getHueIncrementState(value));
-    return this;
+  this._addValues(_getHueIncrementState(value));
+  return this;
 };
 
 /**
@@ -215,8 +216,8 @@ State.prototype.hue_inc = function (value) {
  * @returns {State}
  */
 State.prototype.ct_inc = function (value) {
-    this._addValues(_getCtIncrementState(value));
-    return this;
+  this._addValues(_getCtIncrementState(value));
+  return this;
 };
 
 /**
@@ -225,13 +226,13 @@ State.prototype.ct_inc = function (value) {
  * @returns {State}
  */
 State.prototype.xy_inc = function (value) {
-    this._addValues(_getXYIncrementState(value));
-    return this;
+  this._addValues(_getXYIncrementState(value));
+  return this;
 };
 
 State.prototype.scene = function (value) {
-    this._addValues(_getSceneId(value));
-    return this;
+  this._addValues(_getSceneId(value));
+  return this;
 };
 
 
@@ -241,8 +242,8 @@ State.prototype.scene = function (value) {
 State.prototype.turnOn = State.prototype.on;
 
 State.prototype.off = function () {
-    this._addValues(_getOnState(false));
-    return this;
+  this._addValues(_getOnState(false));
+  return this;
 };
 State.prototype.turnOff = State.prototype.off;
 
@@ -252,7 +253,7 @@ State.prototype.turnOff = State.prototype.off;
  * @returns {State}
  */
 State.prototype.brightness = function (percentage) {
-    return this.bri(_convertBrightPercentToHueValue(percentage));
+  return this.bri(_convertBrightPercentToHueValue(percentage));
 };
 
 State.prototype.incrementBrightness = State.prototype.bri_inc;
@@ -272,18 +273,18 @@ State.prototype.incrementHue = State.prototype.hue_inc;
 State.prototype.incrementXY = State.prototype.xy_inc;
 
 State.prototype.saturation = function (percentage) {
-    return this.sat(_convertSaturationPercentToHueValue(percentage));
+  return this.sat(_convertSaturationPercentToHueValue(percentage));
 };
 
 State.prototype.incrementSaturation = State.prototype.sat_inc;
 
 State.prototype.shortAlert = function () {
-    return this.alert("select");
+  return this.alert('select');
 };
 State.prototype.alertShort = State.prototype.shortAlert;
 
 State.prototype.longAlert = function () {
-    return this.alert("lselect");
+  return this.alert('lselect');
 };
 State.prototype.alertLong = State.prototype.longAlert;
 
@@ -294,25 +295,25 @@ State.prototype.transitionTime = State.prototype.transitiontime;
  * @returns {State}
  */
 State.prototype.transition = function (milliseconds) {
-    return this.transitionTime(_convertMilliSecondsToTransitionTime(milliseconds));
+  return this.transitionTime(_convertMilliSecondsToTransitionTime(milliseconds));
 };
 State.prototype.transitiontime_milliseconds = State.prototype.transition;
 State.prototype.transitionTime_milliseconds = State.prototype.transition;
 
 State.prototype.transitionSlow = function () {
-    return this.transitionTime(8);
+  return this.transitionTime(8);
 };
 
 State.prototype.transitionFast = function () {
-    return this.transitionTime(2);
+  return this.transitionTime(2);
 };
 
 State.prototype.transitionInstant = function () {
-    return this.transitionTime(0);
+  return this.transitionTime(0);
 };
 
 State.prototype.transitionDefault = function () {
-    return this.transitionTime(4);//TODO should load this from the definition
+  return this.transitionTime(4);//TODO should load this from the definition
 };
 
 /**
@@ -322,8 +323,8 @@ State.prototype.transitionDefault = function () {
  * @return {State}
  */
 State.prototype.white = function (colorTemp, brightPercentage) {
-    this._addValues(_getWhiteState(colorTemp, brightPercentage));
-    return this;
+  this._addValues(_getWhiteState(colorTemp, brightPercentage));
+  return this;
 };
 
 /**
@@ -334,16 +335,16 @@ State.prototype.white = function (colorTemp, brightPercentage) {
  * @return {State}
  */
 State.prototype.hsl = function (hue, saturation, luminosity) {
-    var temp = saturation * (luminosity < 50 ? luminosity : 100 - luminosity) / 100
-        , satValue = Math.round(200 * temp / (luminosity + temp)) | 0
-        , luminosityValue = Math.round(temp + luminosity)
-        ;
+  var temp = saturation * (luminosity < 50 ? luminosity : 100 - luminosity) / 100
+    , satValue = Math.round(200 * temp / (luminosity + temp)) | 0
+    , luminosityValue = Math.round(temp + luminosity)
+  ;
 
-    return this
-        .brightness(luminosityValue)
-        .hue(_convertHueToHueValue(hue))
-        .sat(_convertSaturationPercentToHueValue(satValue))
-        ;
+  return this
+    .brightness(luminosityValue)
+    .hue(_convertHueToHueValue(hue))
+    .sat(_convertSaturationPercentToHueValue(satValue))
+    ;
 };
 
 /**
@@ -354,11 +355,11 @@ State.prototype.hsl = function (hue, saturation, luminosity) {
  * @return {State}
  */
 State.prototype.hsb = function (hue, saturation, brightness) {
-    return this
-        .brightness(brightness)
-        .hue(_convertHueToHueValue(hue))
-        .sat(_convertSaturationPercentToHueValue(saturation))
-        ;
+  return this
+    .brightness(brightness)
+    .hue(_convertHueToHueValue(hue))
+    .sat(_convertSaturationPercentToHueValue(saturation))
+    ;
 };
 
 /**
@@ -371,33 +372,33 @@ State.prototype.hsb = function (hue, saturation, brightness) {
  * @return {State}
  */
 State.prototype.rgb = function (r, g, b) {
-    // The conversion to rgb is now done in the xy space, but to do so requires knowledge of the limits of the light's
-    // color gamut.
-    // To cater for this, we store the rgb value requested, and convert it to xy when the user applies it.
+  // The conversion to rgb is now done in the xy space, but to do so requires knowledge of the limits of the light's
+  // color gamut.
+  // To cater for this, we store the rgb value requested, and convert it to xy when the user applies it.
 
-    // We may have an array passed in, cater for that
-    if (Array.isArray(arguments[0])) {
-        r = arguments[0][0];
-        g = arguments[0][1];
-        b = arguments[0][2];
-    }
+  // We may have an array passed in, cater for that
+  if (Array.isArray(arguments[0])) {
+    r = arguments[0][0];
+    g = arguments[0][1];
+    b = arguments[0][2];
+  }
 
-    this._addValues({
-        rgb: [
-            _getBoundedValue(r, 0, 255),
-            _getBoundedValue(g, 0, 255),
-            _getBoundedValue(b, 0, 255)
-        ]
-    });
-    return this;
+  this._addValues({
+    rgb: [
+      _getBoundedValue(r, 0, 255),
+      _getBoundedValue(g, 0, 255),
+      _getBoundedValue(b, 0, 255)
+    ]
+  });
+  return this;
 };
 
 State.prototype.hasRGB = function () {
-    return !!this._values.rgb;
+  return !!this._values.rgb;
 };
 
 State.prototype.colorLoop = function () {
-    return this.effect("colorloop");
+  return this.effect('colorloop');
 };
 State.prototype.colourLoop = State.prototype.colorLoop;
 State.prototype.effectColorLoop = State.prototype.colorLoop;
@@ -412,32 +413,32 @@ State.prototype.effectColourLoop = State.prototype.colorLoop;
  * lamp model provided. If there is no RGB value set, then {null} will be returned.
  */
 State.prototype.applyRGB = function (modelid) {
-    var result = null;
+  var result = null;
 
-    if (this.hasRGB()) {
-        result = this.copy();
-        result.xy(rgb.convertRGBtoXY(this._values.rgb, modelid));
-    }
+  if (this.hasRGB()) {
+    result = this.copy();
+    result.xy(rgb.convertRGBtoXY(this._values.rgb, modelid));
+  }
 
-    return result;
+  return result;
 };
 
 ///////////////////////////////////////////////////////////////////////
 
 State.prototype._addValues = function () {
-    var state = this._values;
+  var state = this._values;
 
-    Array.prototype.slice.apply(arguments).forEach(function (stateValue) {
-        utils.combine(state, stateValue);
-    });
+  Array.prototype.slice.apply(arguments).forEach(function (stateValue) {
+    utils.combine(state, stateValue);
+  });
 };
 
 State.prototype._removeValues = function () {
-    var state = this._values;
+  var state = this._values;
 
-    Array.prototype.slice.apply(arguments).forEach(function (key) {
-        delete state[key];
-    });
+  Array.prototype.slice.apply(arguments).forEach(function (key) {
+    delete state[key];
+  });
 };
 
 
@@ -445,179 +446,179 @@ State.prototype._removeValues = function () {
 // State objects
 
 function _getOnState(value) {
-    if (value == null || value === undefined) {
-        value = true;
-    }
+  if (value == null) {
+    value = true;
+  }
 
-    return {
-        on: _getOnValue(value)
-    };
+  return {
+    on: _getOnValue(value)
+  };
 }
 
 function _getBriState(value) {
-    return {
-        bri: _getBrightnessValue(value)
-    };
+  return {
+    bri: _getBrightnessValue(value)
+  };
 }
 
 function _getHueState(value) {
-    return {
-        hue: _getHueValue(value)
-    };
+  return {
+    hue: _getHueValue(value)
+  };
 }
 
 function _getSatState(value) {
-    return {
-        sat: _getSaturationValue(value)
-    };
+  return {
+    sat: _getSaturationValue(value)
+  };
 }
 
 function _getXYState(x, y) {
-    return {
-        xy: _getXYValue(x, y)
-    };
+  return {
+    xy: _getXYValue(x, y)
+  };
 }
 
 function _getCtState(value) {
-    return {
-        ct: _getCtValue(value)
-    };
+  return {
+    ct: _getCtValue(value)
+  };
 }
 
 function _getAlertState(value) {
-    return {
-        alert: _getAlertValue(value)
-    };
+  return {
+    alert: _getAlertValue(value)
+  };
 }
 
 function _getEffectState(value) {
-    return {
-        effect: _getEffectValue(value)
-    };
+  return {
+    effect: _getEffectValue(value)
+  };
 }
 
 function _getTransitionState(value) {
-    return {
-        transitiontime: _getTransitionTimeValue(value)
-    };
+  return {
+    transitiontime: _getTransitionTimeValue(value)
+  };
 }
 
 function _getBrightnessIncrementState(value) {
-    return {
-        bri_inc: _getBrightnessIncrementValue(value)
-    }
+  return {
+    bri_inc: _getBrightnessIncrementValue(value)
+  };
 }
 
 function _getSaturationIncrementState(value) {
-    return {
-        sat_inc: _getSaturationIncrementValue(value)
-    }
+  return {
+    sat_inc: _getSaturationIncrementValue(value)
+  };
 }
 
 function _getHueIncrementState(value) {
-    return {
-        hue_inc: _getHueIncrementValue(value)
-    }
+  return {
+    hue_inc: _getHueIncrementValue(value)
+  };
 }
 
 function _getCtIncrementState(value) {
-    return {
-        ct_inc: _getCtIncrementValue(value)
-    }
+  return {
+    ct_inc: _getCtIncrementValue(value)
+  };
 }
 
 function _getXYIncrementState(value) {
-    return {
-        xy_inc: _getXYIncrementValue(value)
-    }
+  return {
+    xy_inc: _getXYIncrementValue(value)
+  };
 }
 
 function _getSceneId(value) {
-    var result = {};
+  var result = {};
 
-    if (value) {
-        result.scene = value;
-    }
-    return result;
+  if (value) {
+    result.scene = value;
+  }
+  return result;
 }
 
 function _getWhiteState(colorTemp, brightness) {
-    return utils.combine(
-        _getCtState(colorTemp),
-        _getBriState(_convertBrightPercentToHueValue(brightness))
-    );
+  return utils.combine(
+    _getCtState(colorTemp),
+    _getBriState(_convertBrightPercentToHueValue(brightness))
+  );
 }
 
 /////////////////////////////////
 // Value Functions
 
 function _convertHueToHueValue(hue) {
-    return _getBoundedValue(hue, 0, 360) * 182.5487
+  return _getBoundedValue(hue, 0, 360) * 182.5487;
 }
 
 function _convertMilliSecondsToTransitionTime(value) {
-    var result = 0;
+  var result = 0;
 
-    // The transition time is in multiples of 100ms, e.g. 100ms = 1
-    if (value > 0) {
-        result = Math.round(value / 100);
-    }
+  // The transition time is in multiples of 100ms, e.g. 100ms = 1
+  if (value > 0) {
+    result = Math.round(value / 100);
+  }
 
-    return result;
+  return result;
 }
 
 function _getTransitionTimeValue(value) {
-    var transition = stateDefinitions.transitiontime;
-    return valueForType(transition, _getRangeValue(transition, value));
+  var transition = stateDefinitions.transitiontime;
+  return valueForType(transition, _getRangeValue(transition, value));
 }
 
 function _getBrightnessIncrementValue(value) {
-    var bri_inc = stateDefinitions.bri_inc;
-    return valueForType(bri_inc, _getRangeValue(bri_inc, value));
+  var bri_inc = stateDefinitions.bri_inc;
+  return valueForType(bri_inc, _getRangeValue(bri_inc, value));
 }
 
 function _getSaturationIncrementValue(value) {
-    var sat_inc = stateDefinitions.sat_inc;
-    return valueForType(sat_inc, _getRangeValue(sat_inc, value));
+  var sat_inc = stateDefinitions.sat_inc;
+  return valueForType(sat_inc, _getRangeValue(sat_inc, value));
 }
 
 function _getHueIncrementValue(value) {
-    var hue_inc = stateDefinitions.hue_inc;
-    return valueForType(hue_inc, _getRangeValue(hue_inc, value));
+  var hue_inc = stateDefinitions.hue_inc;
+  return valueForType(hue_inc, _getRangeValue(hue_inc, value));
 }
 
 function _getCtIncrementValue(value) {
-    var ct_inc = stateDefinitions.ct_inc;
-    return valueForType(ct_inc, _getRangeValue(ct_inc, value));
+  var ct_inc = stateDefinitions.ct_inc;
+  return valueForType(ct_inc, _getRangeValue(ct_inc, value));
 }
 
 function _getXYIncrementValue(value) {
-    var xy_inc = stateDefinitions.xy_inc;
-    return valueForType(xy_inc, _getRangeValue(xy_inc, value));
+  var xy_inc = stateDefinitions.xy_inc;
+  return valueForType(xy_inc, _getRangeValue(xy_inc, value));
 }
 
 function convertPercentToValue(definition, percent) {
-    var range = definition.range
-        , min = range.min
-        , max = range.max
-        , normalizedValue = _getBoundedValue(percent, 0, 100)
-        ;
+  var range = definition.range
+    , min = range.min
+    , max = range.max
+    , normalizedValue = _getBoundedValue(percent, 0, 100)
+  ;
 
-    if (normalizedValue === 0) {
-        return min;
-    } else if (normalizedValue === 100) {
-        return max;
-    } else {
-        return normalizedValue * (max / 100);
-    }
+  if (normalizedValue === 0) {
+    return min;
+  } else if (normalizedValue === 100) {
+    return max;
+  } else {
+    return normalizedValue * (max / 100);
+  }
 }
 
 function _convertSaturationPercentToHueValue(value) {
-    return _getSaturationValue(convertPercentToValue(stateDefinitions.sat, value));
+  return _getSaturationValue(convertPercentToValue(stateDefinitions.sat, value));
 }
 
 function _convertBrightPercentToHueValue(value) {
-    return _getBrightnessValue(convertPercentToValue(stateDefinitions.bri, value));
+  return _getBrightnessValue(convertPercentToValue(stateDefinitions.bri, value));
 }
 
 /**
@@ -627,26 +628,26 @@ function _convertBrightPercentToHueValue(value) {
  * @return {Array} The converted xy values.
  */
 function _getXYValue(x, y) {
-    var xy = stateDefinitions.xy
-        , validateValueFn = function (value) {
-            var valueType = xy.valueType
-                , normalized = _getRangeValue(valueType, value)
-                ;
-            return valueForType(valueType, normalized);
-        }
-        ;
+  var xy = stateDefinitions.xy
+    , validateValueFn = function (value) {
+      var valueType = xy.valueType
+        , normalized = _getRangeValue(valueType, value)
+      ;
+      return valueForType(valueType, normalized);
+    }
+  ;
 
-    return valueForType(xy, [validateValueFn(x), validateValueFn(y)]);
+  return valueForType(xy, [validateValueFn(x), validateValueFn(y)]);
 }
 
 function _getSaturationValue(value) {
-    var sat = stateDefinitions.sat;
-    return valueForType(sat, _getRangeValue(sat, value));
+  var sat = stateDefinitions.sat;
+  return valueForType(sat, _getRangeValue(sat, value));
 }
 
 function _getHueValue(value) {
-    var hue = stateDefinitions.hue;
-    return valueForType(hue, _getRangeValue(hue, value));
+  var hue = stateDefinitions.hue;
+  return valueForType(hue, _getRangeValue(hue, value));
 }
 
 /**
@@ -655,8 +656,8 @@ function _getHueValue(value) {
  * @return {Number} The color temperature to use.
  */
 function _getCtValue(value) {
-    var ct = stateDefinitions.ct;
-    return valueForType(ct, _getRangeValue(ct, value));
+  var ct = stateDefinitions.ct;
+  return valueForType(ct, _getRangeValue(ct, value));
 }
 
 /**
@@ -665,47 +666,47 @@ function _getCtValue(value) {
  * @return {Number} The brightness value to use.
  */
 function _getBrightnessValue(value) {
-    var bri = stateDefinitions.bri;
-    return valueForType(bri, _getRangeValue(bri, value));
+  var bri = stateDefinitions.bri;
+  return valueForType(bri, _getRangeValue(bri, value));
 }
 
 function _getAlertValue(value) {
-    var alert = stateDefinitions.alert;
-    return valueForType(alert, _getOptionValue(alert, value));
+  var alert = stateDefinitions.alert;
+  return valueForType(alert, _getOptionValue(alert, value));
 }
 
 function _getOnValue(value) {
-    var on = stateDefinitions.on;
-    return valueForType(on, value);
+  var on = stateDefinitions.on;
+  return valueForType(on, value);
 }
 
 function _getEffectValue(value) {
-    var effect = stateDefinitions.effect;
-    return valueForType(effect, _getOptionValue(effect, value));
+  var effect = stateDefinitions.effect;
+  return valueForType(effect, _getOptionValue(effect, value));
 }
 
 function _getOptionValue(definition, value) {
-    var validValues = definition.validValues
-        , resolved
-        ;
+  var validValues = definition.validValues
+    , resolved
+  ;
 
-    validValues.forEach(function (validValue) {
-        if (!resolved && validValue === value) {
-            resolved = value;
-        }
-    });
+  validValues.forEach(function (validValue) {
+    if (!resolved && validValue === value) {
+      resolved = value;
+    }
+  });
 
-    return resolved || definition.defaultValue || validValues[0];
+  return resolved || definition.defaultValue || validValues[0];
 }
 
 function _getRangeValue(definition, value) {
-    var range = definition.range;
+  const range = definition.range;
 
-    if (value === undefined || value === null && definition.defaultValue) {
-        value = definition.defaultValue;
-    }
+  if (value === undefined || value === null && definition.defaultValue) {
+    value = definition.defaultValue;
+  }
 
-    return _getBoundedValue(value, range.min, range.max)
+  return _getBoundedValue(value, range.min, range.max);
 }
 
 /**
@@ -716,19 +717,19 @@ function _getRangeValue(definition, value) {
  * @return {*} The value that sits within the specified range
  */
 function _getBoundedValue(value, min, max) {
-    if (isNaN(value)) {
-        value = min;
-    }
+  if (isNaN(value)) {
+    value = min;
+  }
 
-    if (value < min) {
-        return min;
-    } else if (value > max) {
-        return max;
-    } else {
-        return value;
-    }
+  if (value < min) {
+    return min;
+  } else if (value > max) {
+    return max;
+  } else {
+    return value;
+  }
 }
 
 function valueForType(definition, value) {
-    return utils.valueForType(definition.type, value);
+  return utils.valueForType(definition.type, value);
 }

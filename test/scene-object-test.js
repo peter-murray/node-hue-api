@@ -12,7 +12,7 @@ describe("Scene", function () {
 
   describe("creation", function () {
 
-    it("should create an object", function () {
+    it("should createGroup an object", function () {
       expect(scene).to.exist;
       expect(scene).to.be.empty;
     });
@@ -102,7 +102,7 @@ describe("Scene", function () {
 
   describe("with chained functions", function() {
 
-    it("should create a complex scene", function() {
+    it("should createGroup a complex scene", function() {
       var name = "a new scene"
         , pictureData = "1234556677A"
         ;

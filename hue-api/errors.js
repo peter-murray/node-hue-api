@@ -1,48 +1,50 @@
-"use strict";
+'use strict';
 
-var util = require('util');
+const HueError = require('../api/hueError');
 
-/**
- * An Abstract base class for custom errors.
- * @param msg The error message
- * @param constr The constructor to call.
- * @constructor
- */
-var AbstractError = function (msg, constr) {
-    // If defined, pass the constr property to V8's captureStackTrace to clean up the output
-    Error.captureStackTrace(this, constr || this);
+class ApiError extends Error {
 
-    // If defined, store a custom error message
-    this.message = msg || "Error";
-};
-util.inherits(AbstractError, Error);
-AbstractError.prototype.name = "Abstract Error";
+  constructor(...args) {
+    super(...args);
+    Error.captureStackTrace(this, ApiError);
 
-/**
- * An Error Type for API related errors when calling the Philips Hue API.
- * @param error The error object returned from the request.
- * @constructor
- */
-var ApiError = function (error) {
-    var errorMessage,
-        type;
+    //TODO need handling of the Phillips Hue error types as leaving necessary information behind
+    // let errorMessage
+    //   , errorType;
+    //
+    // if (typeof (error) === 'string') {
+    //   errorMessage = error;
+    //   errorType = 0;
+    // } else {
+    //   //TODO add better handling for hue error types
+    //   errorMessage = error.message || error.description;
+    //   errorType = error.type;
+    // }
+    // this.type = errorType;
 
-    if (typeof(error) === 'string') {
-        errorMessage = error;
-        type = 0;
-    } else {
-        errorMessage = error.message || error.description;
-        type = error.type;
+    if (args[0] instanceof HueError) {
+      this._hueError = args[0];
+      this.message = this._hueError.description;
+    } else if (args[1] && args[1] instanceof HueError) {
+      this._hueError = args[1];
     }
+  }
 
-    ApiError.super_.call(this, errorMessage, this.constructor);
-    this.type = type;
+  getHueError() {
+    return this._hueError;
+  }
 
-    if (error.address) {
-        this.address = error.address;
-    }
-};
-util.inherits(ApiError, AbstractError);
-ApiError.prototype.name = "Api Error";
+  getHueErrorType() {
+    return this._hueError ? this._hueError.type : -1;
+  }
 
-module.exports.ApiError = ApiError;
+  getHueErrorAddress() {
+    return this._hueError ? this._hueError.address : null;
+  }
+
+  getHueErrorDescription() {
+    return this._hueError ? this._hueError.description: null;
+  }
+}
+
+module.exports = ApiError;

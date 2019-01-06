@@ -19,7 +19,7 @@ describe("ScheduleEvent", function () {
 
     describe("creation", function () {
 
-        it("should create an object", function () {
+        it("should createGroup an object", function () {
             expect(scheduledEvent).to.exist;
             expect(scheduledEvent).to.be.empty;
         });
@@ -166,7 +166,7 @@ describe("ScheduleEvent", function () {
     });
 
 
-    describe("create() from object", function () {
+    describe("createGroup() from object", function () {
 
         it("should load name and description values", function () {
             var values = {
