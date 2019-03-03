@@ -1,13 +1,21 @@
 'use strict';
 
-const CLIPSensor = require('./CLIPSensor');
+const CLIPCommon = require('./CLIPCommon');
 
-module.exports = class CLIPPresence extends CLIPSensor {
+module.exports = class CLIPPresence extends CLIPCommon {
 
   constructor(data, id) {
-    //TODO perfom validation on data values?
+    //TODO perform validation on data values?
     super('CLIPPresence', data, id);
   }
 
-  //TODO finish offf
+  get presence() {
+    return this.state.presence;
+  }
+
+  set presence(value) {
+    this._updateStateAttribute('precence', !!value);
+    return this;
+  }
+
 };

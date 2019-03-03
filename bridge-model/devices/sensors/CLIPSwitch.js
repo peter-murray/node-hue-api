@@ -5,7 +5,7 @@ const CLIPSensor = require('./CLIPSensor');
 module.exports = class CLIPSwitch extends CLIPSensor {
 
   constructor(data, id) {
-    //TODO perfom validation on data values?
+    //TODO perform validation on data values?
     super('CLIPSwitch', data, id);
   }
 

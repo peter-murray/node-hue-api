@@ -1,13 +1,21 @@
 'use strict';
 
-const CLIPSensor = require('./CLIPSensor');
+const CLIPCommon = require('./CLIPCommon');
 
-module.exports = class CLIPHumidity extends CLIPSensor {
+module.exports = class CLIPHumidity extends CLIPCommon {
 
   constructor(data, id) {
-    //TODO perfom validation on data values?
+    //TODO perform validation on data values?
     super('CLIPHumidity', data, id);
   }
 
-  //TODO finish offf
+  get humidity() {
+    return this.state.humidity;
+  }
+
+  set humidity(value) {
+    //TODO	Current humidity 0.01% steps (e.g. 2000 is 20%)The bridge does not enforce range/resolution.
+    this._updateStateAttribute('humidity', value);
+    return this;
+  }
 };

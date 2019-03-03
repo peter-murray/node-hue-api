@@ -1,13 +1,22 @@
 'use strict';
 
-const CLIPSensor = require('./CLIPSensor');
+const CLIPCommon = require('./CLIPCommon');
 
-module.exports = class CLIPGenericFlag extends CLIPSensor {
+module.exports = class CLIPGenericFlag extends CLIPCommon {
 
   constructor(data, id) {
-    //TODO perfom validation on data values?
+    //TODO perform validation on data values?
     super('CLIPGenericFlag', data, id);
   }
 
-  //TODO finish offf
+  // Boolean validation required
+
+  get flag() {
+    return this.state.flag;
+  }
+
+  set flag(value) {
+    this._updateStateAttribute(!!value);
+    return this;
+  }
 };

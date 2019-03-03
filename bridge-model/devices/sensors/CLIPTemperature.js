@@ -1,13 +1,20 @@
 'use strict';
 
-const CLIPSensor = require('./CLIPSensor');
+const CLIPCommon = require('./CLIPCommon.js');
 
-module.exports = class CLIPTemperature extends CLIPSensor {
+module.exports = class CLIPTemperature extends CLIPCommon {
 
   constructor(data, id) {
-    //TODO perfom validation on data values?
+    //TODO perform validation on data values?
     super('CLIPTemperature', data, id);
   }
 
-  //TODO finish offf
+  get temperature() {
+    return this.state.temperature;
+  }
+
+  set temperature(value) {
+    this._updateStateValue('temperature', value);
+    return this;
+  }
 };
