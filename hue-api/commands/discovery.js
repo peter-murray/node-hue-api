@@ -20,7 +20,7 @@ apiTraits.description = Trait.compose(
 
 apiTraits.upnpLookup = Trait.compose(
     tApiMethod(
-        "/api/nupnp",
+        "/",
         "GET",
         "1.0",
         "All"

@@ -44,7 +44,6 @@ describe("Hue API", function () {
 function _validateLightsResult(results, cb) {
 //    console.log(JSON.stringify(results));
 
-    expect(results).to.be.defined;
     expect(results).to.have.property("type");
     expect(results).to.have.property("name");
     expect(results).to.have.property("modelid");

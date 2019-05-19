@@ -149,7 +149,7 @@ describe("Hue API", function () {
             expect(desc.model).to.have.property("udn", testValues.model.udn);
 
             expect(desc).to.have.property("icons");
-            expect(desc.icons).to.have.length(2);
+            expect(desc.icons).to.have.length(1);
             //TODO could validate an icon...
         }
 
@@ -196,7 +196,6 @@ describe("Hue API", function () {
     describe("full state", function () {
 
         function validateFullState(state) {
-            expect(state).to.be.defined;
             expect(state).to.have.property("lights");
             expect(state).to.have.property("groups");
             expect(state).to.have.property("config");
@@ -251,44 +250,43 @@ describe("Hue API", function () {
 
         function validateTimezones(cb) {
             return function(zones) {
-                expect(zones).to.be.defined;
                 expect(zones).to.be.instanceOf(Array);
                 expect(zones).to.have.length.at.least(430);
                 cb();
             };
         }
 
-        describe("#getTimezones()", function() {
+        // describe("#getTimezones()", function() {
+        //
+        //     it("using #promise", function(done) {
+        //         hue.getTimezones()
+        //             .then(validateTimezones(done))
+        //             .done();
+        //     });
+        //
+        //     it("using #callback", function(done) {
+        //         hue.getTimezones(function(err, zones) {
+        //             expect(err).to.be.null;
+        //
+        //             validateTimezones(done)(zones);
+        //         });
+        //     });
+        // });
 
-            it("using #promise", function(done) {
-                hue.getTimezones()
-                    .then(validateTimezones(done))
-                    .done();
-            });
-
-            it("using #callback", function(done) {
-                hue.getTimezones(function(err, zones) {
-                    expect(err).to.be.null;
-
-                    validateTimezones(done)(zones);
-                });
-            });
-        });
-
-        describe("#timezones()", function() {
-            it("using #promise", function(done) {
-                hue.timezones()
-                    .then(validateTimezones(done))
-                    .done();
-            });
-
-            it("using #callback", function(done) {
-                hue.timezones(function(err, zones) {
-                    expect(err).to.be.null;
-
-                    validateTimezones(done)(zones);
-                });
-            });
-        });
+        // describe("#timezones()", function() {
+        //     it("using #promise", function(done) {
+        //         hue.timezones()
+        //             .then(validateTimezones(done))
+        //             .done();
+        //     });
+        //
+        //     it("using #callback", function(done) {
+        //         hue.timezones(function(err, zones) {
+        //             expect(err).to.be.null;
+        //
+        //             validateTimezones(done)(zones);
+        //         });
+        //     });
+        // });
     });
 });

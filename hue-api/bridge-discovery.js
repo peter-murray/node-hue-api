@@ -28,7 +28,7 @@ module.exports.networkSearch = function (timeout) {
  * @returns {Q.promise} A promise that will resolve the addresses of the bridges, or {null} if a callback was provided.
  */
 module.exports.locateBridges = function (cb) {
-    var promise = http.invoke(discovery.upnpLookup, {host: "www.meethue.com", ssl: true});
+    var promise = http.invoke(discovery.upnpLookup, {host: "discovery.meethue.com", ssl: true});
     return utils.promiseOrCallback(promise, cb);
 };
 

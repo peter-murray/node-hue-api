@@ -60,7 +60,7 @@ SSDPSearch.prototype.search = function search() {
     var ip = "239.255.255.250",
         port = 1900;
 
-    var pkt = new Buffer(_buildSearchPacket(
+    var pkt = Buffer.from(_buildSearchPacket(
         {
             "HOST": ip + ":" + port,
             "MAN": "ssdp:discover",

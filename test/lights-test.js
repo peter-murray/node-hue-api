@@ -52,8 +52,6 @@ describe("Hue API", function () {
 
 function _validateLightsResult(cb) {
     return function (results) {
-        expect(results).to.be.defined;
-
         expect(results).to.have.property("lights");
         expect(results.lights).to.have.length(testValues.lightsCount);
 
@@ -65,5 +63,18 @@ function _validateLightsResult(cb) {
 }
 
 function _validateLight(light) {
-    expect(light).to.have.keys("id", "name", "modelid", "type", "swversion", "uniqueid", "manufacturername", "state");
+    expect(light).to.have.keys(
+        "capabilities",
+        "config",
+        "id",
+        "manufacturername",
+        "modelid",
+        "name",
+        "productname",
+        "state",
+        "swupdate",
+        "swversion",
+        "type",
+        "uniqueid",
+    );
 }

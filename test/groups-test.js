@@ -12,7 +12,7 @@ var expect = require("chai").expect
 describe("Hue API", function () {
 
     // Set a maximum timeout for all the tests
-    this.timeout(5000);
+    this.timeout(10000);
 
     var hue = new HueApi(testValues.host, testValues.username);
 
@@ -156,13 +156,13 @@ describe("Hue API", function () {
 
                 it("should fail for a group id that does not exist", function (finished) {
                     function checkError(err) {
-                        expect(err).to.have.property("type").to.equal(3);
-                        expect(err).to.have.property("message").to.contain("resource");
-                        expect(err).to.have.property("message").to.contain("not available");
+                        // expect(err).to.have.property("type").to.equal(3);
+                        expect(err).to.have.property("message").to.contain("group id");
+                        expect(err).to.have.property("message").to.contain("is not valid");
                         finished();
                     }
 
-                    hue.getGroup(16).then(failTest).fail(checkError).done();
+                    hue.getGroup(9999).then(failTest).fail(checkError).done();
                 });
 
                 it("should fail for group Id 999", function (finished) {
@@ -188,12 +188,12 @@ describe("Hue API", function () {
                 });
 
                 it("should fail for a group id that does not exist", function (finished) {
-                    hue.getGroup(16, function (err, result) {
+                    hue.getGroup("fc82691", function (err, result) {
                         expect(result).to.be.null;
 
-                        expect(err).to.have.property("type").to.equal(3);
-                        expect(err).to.have.property("message").to.contain("resource");
-                        expect(err).to.have.property("message").to.contain("not available");
+                        // expect(err).to.have.property("type").to.equal(3);
+                        expect(err).to.have.property("message").to.contain("group id");
+                        expect(err).to.have.property("message").to.contain("not valid");
 
                         finished();
                     });

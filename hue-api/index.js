@@ -1000,20 +1000,20 @@ HueApi.prototype.recallScene = HueApi.prototype.activateScene;
 //};
 
 
-/**
- * Obtains all the allowed timezones from the bridge.
- *
- * @param cb An optional callback function to use if you do not want to use a promise for the results.
- * @return {*} A promise that will return the id of the scene that was created, or null if a callback was provided.
- */
-HueApi.prototype.getTimezones = function (cb) {
-    var options = this._defaultOptions()
-        , promise = http.invoke(infoApi.getAllTimezones, options)
-        ;
-
-    return utils.promiseOrCallback(promise, cb);
-};
-HueApi.prototype.timezones = HueApi.prototype.getTimezones;
+// /**
+//  * Obtains all the allowed timezones from the bridge.
+//  *
+//  * @param cb An optional callback function to use if you do not want to use a promise for the results.
+//  * @return {*} A promise that will return the id of the scene that was created, or null if a callback was provided.
+//  */
+// HueApi.prototype.getTimezones = function (cb) {
+//     var options = this._defaultOptions()
+//         , promise = http.invoke(infoApi.getAllTimezones, options)
+//         ;
+//
+//     return utils.promiseOrCallback(promise, cb);
+// };
+// HueApi.prototype.timezones = HueApi.prototype.getTimezones;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

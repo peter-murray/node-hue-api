@@ -1,8 +1,8 @@
 module.exports = {
-    host         : "192.168.2.245",
+    host         : "192.168.2.22",
     username     : "08a902b95915cdd9b75547cb50892dc4",
 
-    lightsCount  : 22,
+    lightsCount  : 40,
 
     locateTimeout: 7000,
     maxScheduleNameLength: 32,
@@ -13,9 +13,9 @@ module.exports = {
     livingColorLightId: 1,
 
     validScene: {
-        id: "f0f7c51a6-on-7",
-        name: "Peter Wakeup on ",
-        lights: ["8"]
+        id: "YyP0OXBwyN4d0Ps",
+        name: "Wake Up init",
+        lights: ["7", "8"]
     },
 
     version: {

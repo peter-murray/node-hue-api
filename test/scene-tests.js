@@ -14,9 +14,9 @@ describe("Hue API", function () {
   describe("get bridge scenes", function () {
 
     function validateScenesResult(scenes) {
+      console.log(JSON.stringify(scenes, null, 2));
       var scene;
 
-      expect(scenes).to.be.defined;
       expect(scenes).to.be.instanceOf(Array);
 
       scene = scenes[0];
@@ -150,8 +150,6 @@ describe("Hue API", function () {
 
         function validateResult(cb) {
           return function (result) {
-            expect(result).to.be.defined;
-
             expect(result).to.have.property("id");
             cb();
           };
@@ -396,7 +394,6 @@ describe("Hue API", function () {
 
           hue.modifySceneLightState(sceneId, lightId, state)
             .then(function (results) {
-              expect(results).to.be.defined;
               expect(results).to.have.property("on", true);
               expect(results).to.have.property("hue", true);
 
@@ -414,7 +411,6 @@ describe("Hue API", function () {
           hue.setSceneLightState(sceneId, 2, state, function (err, results) {
             expect(err).to.be.null;
 
-            expect(results).to.be.defined;
             expect(results).to.have.property("on", true);
             expect(results).to.have.property("hue", true);
 
