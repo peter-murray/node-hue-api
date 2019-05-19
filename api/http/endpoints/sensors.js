@@ -4,7 +4,7 @@ const ApiEndpoint = require('./endpoint')
   , Sensor = require('../../../bridge-model/devices/sensors/Sensor')
   , SensorIdPlaceholder = require('../placeholders/SensorIdPlaceholder')
   , sensorBuilder = require('../../../bridge-model/devices/sensors/index')
-  , ApiError = require('../../../hue-api/errors')
+  , ApiError = require('../../ApiError')
   , utils = require('../../../hue-api/utils')
 ;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const Device = require('../Device');
+const BridgeObject = require('../Device');
 
 
 const MODEL_TO_COLOR_GAMUT = {
@@ -80,7 +80,7 @@ const COLOR_GAMUTS = {
 };
 
 
-class Light extends Device {
+class Light extends BridgeObject {
 
   constructor(data, id) {
     super(data, id);
@@ -101,10 +101,7 @@ class Light extends Device {
   }
 
   getSupportedStates() {
-    if (this.bridgeData != null) {
-      return Object.keys(this.bridgeData.state);
-    }
-    return null;
+    return this.getRawDataValue('state');
   }
 }
 module.exports = Light;

@@ -8,7 +8,6 @@ module.exports = class Daylight extends Sensor {
     super('Daylight', data, id);
   }
 
-
   get on() {
     return this.config.on;
   }

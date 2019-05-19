@@ -1,39 +1,27 @@
 'use strict';
 
-//TODO remove this or BridgeObject
+const BridgeObject = require('../BridgeObjectWithNumberId');
 
-const BridgeObject = require('../bridgeObject');
-
-class Device extends BridgeObject {
+module.exports = class Device extends BridgeObject {
 
   constructor(data, id) {
     super(data,  id);
   }
 
-  // get name() {
-  //   return this.getRawDataValue('name');
-  // }
+  get type() {
+    return this.getRawDataValue('type');
+  }
 
-  // get type() {
-  //   return this.getRawDataValue('type');
-  // }
-  //
-  // get modelid() {
-  //   return this.getRawDataValue('modelid');
-  // }
-  //
-  // get manufacturername() {
-  //   return this.getRawDataValue('manufacturername');
-  // }
-  //
-  // get uniqueid() {
-  //   return this.getRawDataValue('uniqueid');
-  // }
+  get modelid() {
+    return this.getRawDataValue('modelid');
+  }
 
-  // get productid() {
-  //   return this.getRawDataValue('productId');
-  // }
-}
+  get manufacturername() {
+    return this.getRawDataValue('manufacturername');
+  }
 
-module.exports = Device;
+  get uniqueid() {
+    return this.getRawDataValue('uniqueid');
+  }
 
+};

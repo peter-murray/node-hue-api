@@ -1,7 +1,7 @@
 "use strict";
 
 var Trait = require("traits").Trait,
-    ApiError = require("../../errors").ApiError;
+    ApiError = require("../../../api/ApiError").ApiError;
 
 function extractParameters(str) {
     var parameters = [],

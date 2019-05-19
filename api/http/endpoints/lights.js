@@ -3,7 +3,7 @@
 const ApiEndpoint = require('./endpoint')
   , LightIdPlaceholder = require('../placeholders/LightIdPlaceholder')
   , LightStateBase = require('../../../bridge-model/lightstate/States')
-  , ApiError = require('../../../hue-api/errors')
+  , ApiError = require('../../ApiError')
   , utils = require('../../../hue-api/utils')
   , builder = require('../../../bridge-model')
 ;

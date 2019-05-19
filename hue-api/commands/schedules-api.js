@@ -16,7 +16,7 @@ var Trait = require("traits").Trait,
     tDescription = require("./traits/tDescription"),
     tScheduleBody = require("./traits/tScheduleBody"),
     tPostProcessing = require("./traits/tPostProcessing"),
-    ApiError = require("../errors").ApiError,
+    ApiError = require("../../api/ApiError").ApiError,
     utils = require("../utils"),
     apiTraits = {};
 

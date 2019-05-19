@@ -2,7 +2,7 @@
 
 const lightsApi = require('./http/endpoints/lights')
   , ApiDefinition = require('./http/ApiDefinition.js')
-  , ApiError = require('../hue-api/errors')
+  , ApiError = require('./ApiError')
 ;
 
 module.exports = class Lights extends ApiDefinition {

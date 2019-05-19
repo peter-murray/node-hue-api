@@ -1,6 +1,6 @@
 'use strict';
 
-const ApiError = require('../../hue-api/errors')
+const ApiError = require('../../api/ApiError')
   , ColorLight = require('./lights/ColorLight')
   , ExtendedColorLight = require('./lights/ExtendedColorLight')
   , ColorTemperatureLight = require('./lights/ColorTemperatureLight')

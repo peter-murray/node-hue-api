@@ -55,6 +55,33 @@ module.exports = class Groups extends ApiDefinition {
   setGroupState(id, state) {
     return this.execute(groupsApi.setGroupState, {id: id, state: state});
   }
+
+  getLuminaires() {
+    return this.getAll()
+      .then(groups => {
+        return groups.filter(group => {
+          return group.type === 'Luminaire';
+        });
+      });
+  }
+
+  getLightGroups() {
+    return this.getAll()
+      .then(groups => {
+        return groups.filter(group => {
+          return group.type === 'LightGroup';
+        });
+      });
+  }
+
+  getLightSources() {
+    return this.getAll()
+      .then(groups => {
+        return groups.filter(group => {
+          return group.type === 'Lightsource';
+        });
+      });
+  }
 };
 
 

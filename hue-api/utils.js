@@ -1,6 +1,6 @@
 'use strict';
 
-const HueError = require('../api/hueError');
+const HueError = require('../api/HueError');
 
 
 module.exports.nativePromiseOrCallback = function (promise, cb) {
@@ -25,12 +25,12 @@ module.exports.nativePromiseOrCallback = function (promise, cb) {
  * @returns {*} The promise if there is not a valid callback, or null, if the callback is used to resolve the promise.
  */
 module.exports.promiseOrCallback = function (promise, cb) {
-  var promiseResult = promise;
+  const promiseResult = promise;
 
-  if (cb && typeof cb === "function") {
+  if (cb && typeof cb === 'function') {
     module.exports.resolvePromise(promise, cb);
     // Do not return the promise, as the callbacks will have forced it to resolve
-    promiseResult = null;
+    return null;
   }
 
   return promiseResult;
@@ -55,7 +55,7 @@ module.exports.resolvePromise = function (promise, callback) {
     }
   }
 
-  promise.then(resolveValue).catch(resolveError);
+  promise.catch(resolveError).then(resolveValue);
 };
 
 /**

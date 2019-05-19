@@ -1,12 +1,8 @@
 'use strict';
 
-const BridgeObject = require('./bridgeObject');
+const BridgeObject = require('./BridgeObjectWithNumberId');
 
 module.exports = class Group extends BridgeObject {
-
-  get name() {
-    return this.getRawDataValue('name');
-  }
 
   get lights() {
     const raw = this.getRawDataValue('lights');
@@ -55,5 +51,13 @@ module.exports = class Group extends BridgeObject {
 
   get stream() {
     return this.getRawDataValue('stream');
+  }
+
+  get modelid() {
+    return this.getRawDataValue('modelid');
+  }
+
+  get uniqueid() {
+    return this.getRawDataValue('uniqueid');
   }
 };

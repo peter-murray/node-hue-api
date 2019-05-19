@@ -1,11 +1,11 @@
 'use strict';
 
-const ApiError = require('../../../hue-api/errors');
+const ApiError = require('../../../api/ApiError');
 
 module.exports.build = (data, id) => {
 
   if (! data) {
-    throw new ApiError('Sensore data must be provided');
+    throw new ApiError('Sensor data must be provided');
   }
 
   if (! data.type) {

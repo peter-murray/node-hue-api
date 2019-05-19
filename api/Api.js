@@ -5,6 +5,8 @@ const Capabilities = require('./Capabilities')
   , Groups = require('./Groups')
   , Configuration = require('./Configuration')
   , Sensors = require('./Sensors')
+  , Schedules = require('./Schedules')
+  , Scenes = require('./Scenes')
   , StateCache = require('./stateCache')
 ;
 
@@ -19,6 +21,8 @@ module.exports = class Api {
     self.lights = new Lights(self, request);
     self.groups = new Groups(self, request);
     self.sensors = new Sensors(self, request);
+    self.schedules = new Schedules(self, request);
+    self.scenes = new Scenes(self, request);
 
     // Load the initial state upon first connection
     self._lastSyncTime = -1;

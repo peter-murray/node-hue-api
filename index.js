@@ -1,22 +1,22 @@
-"use strict";
+'use strict';
 
 //
 // This wrapper is to provide some continuity in the modifications of the APIs over time
 //
 
-var bridgeDiscovery = require("./hue-api/bridge-discovery")
-  , Hue = require("./hue-api")
-  , lightState = require("./hue-api/lightstate")
-  , scheduledEvent = require("./hue-api/scheduledEvent")
-  , scene = require("./hue-api/scene")
-  , timer = require("./hue-api/timer")
-  , ApiError = require("./hue-api/errors").ApiError
+var bridgeDiscovery = require('./hue-api/bridge-discovery')
+  , Hue = require('./hue-api')
+  , lightState = require('./hue-api/lightstate')
+  , scheduledEventBuilder = require('./hue-api/scheduledEventBuilder')
+  , scene = require('./hue-api/sceneBuilder')
+  , timer = require('./hue-api/timer')
+  , ApiError = require('./api/ApiError')
 ;
 
 
 function deprecated(fn, message) {
   return function () {
-    var args = Array.prototype.slice.call(arguments);
+    const args = Array.prototype.slice.call(arguments);
     console.error(message);
     return fn.apply(this, args);
   };
@@ -33,7 +33,7 @@ module.exports = {
   },
 
   lightState: lightState,
-  scheduledEvent: scheduledEvent,
+  scheduledEventBuilder: scheduledEventBuilder, //TODO this was scheduledEvent
   scene: scene,
   timer: timer,
 
@@ -41,11 +41,11 @@ module.exports = {
   nupnpSearch: bridgeDiscovery.locateBridges,
 
   locateBridges: deprecated(bridgeDiscovery.locateBridges
-    , "'locateBridges' is deprecated, please use 'nupnpSearch' instead"),
+    , '\'locateBridges\' is deprecated, please use \'nupnpSearch\' instead'),
 
   searchForBridges: deprecated(
     bridgeDiscovery.networkSearch
-    , "'searchForBridges' is deprecated, please use 'upnpSearch' instead"
+    , '\'searchForBridges\' is deprecated, please use \'upnpSearch\' instead'
   ),
 
   ApiError: ApiError

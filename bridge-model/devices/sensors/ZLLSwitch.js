@@ -40,12 +40,12 @@ module.exports = class ZLLSwitch extends Sensor {
     return this.config.buttonevent;
   }
 
-  //TODO not sure that we vcan actually set these
-  set buttonevent(value) {
-    //TODO there is validation we could perform 1000, 1001, 1002 1003 for buttons 2000, 3000 and 4000
-    this._updateStateAttribute('buttonevent', value);
-    return this;
-  }
+  // //TODO not sure that we vcan actually set these
+  // set buttonevent(value) {
+  //   //TODO there is validation we could perform 1000, 1001, 1002 1003 for buttons 2000, 3000 and 4000
+  //   this._updateStateAttribute('buttonevent', value);
+  //   return this;
+  // }
 
   get lastupdated() {
     return this.state.lastupdated;

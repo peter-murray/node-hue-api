@@ -1,10 +1,10 @@
 'use strict';
 
 const ApiEndpoint = require('./endpoint')
-  , ApiError = require('../../../hue-api/errors')
+  , ApiError = require('../../ApiError')
   , utils = require('../../../hue-api/utils')
   , GroupIdPlaceholder = require('../placeholders/GroupIdPlaceholder')
-  , Group = require('../../../bridge-model/group')
+  , Group = require('../../../bridge-model/Group')
   , GroupState = require('../../../bridge-model/lightstate/GroupState')
 ;
 
@@ -150,8 +150,6 @@ function buildGroupBody(parameters) {
   return result;
 }
 
-
-
 function buildGroupAttributeBody(parameters) {
   const body = {}
     , groupAttributes = parameters ? parameters.groupAttributes : null;
@@ -186,7 +184,6 @@ function getRecycle(parameters) {
   }
   return true;
 }
-
 
 function buildGroup(data, requestParameters) {
   if (requestParameters) {

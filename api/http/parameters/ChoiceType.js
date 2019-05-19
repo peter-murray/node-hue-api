@@ -1,7 +1,7 @@
 'use strict';
 
 const ParameterType = require('./ParameterType')
-  , ApiError = require('../../../hue-api/errors')
+  , ApiError = require('../../ApiError')
 ;
 
 module.exports = class ChoiceType extends ParameterType {

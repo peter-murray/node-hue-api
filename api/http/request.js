@@ -3,9 +3,9 @@
 const url = require('url')
   , https = require('https')
   , sslCertificate = require('get-ssl-certificate')
-  , axiosDebug = require('axios-debug-log')
+  , axiosDebug = require('axios-debug-log') //TODO remove this
   , axios = require('axios')
-  , ApiError = require('../../hue-api/errors')
+  , ApiError = require('../ApiError')
   , util = require('../../hue-api/utils')
 ;
 

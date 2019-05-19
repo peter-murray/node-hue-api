@@ -2,7 +2,7 @@
 
 var util = require("util")
     , Trait = require("traits").Trait
-    , ApiError = require("../../errors").ApiError
+    , ApiError = require("../../../api/ApiError").ApiError
     ;
 
 module.exports = function (codeMap) {

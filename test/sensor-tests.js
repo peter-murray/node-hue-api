@@ -14,7 +14,7 @@ describe("Hue API", function () {
         .then(function(results) {
           expect(results.sensors).to.be.instanceOf(Array);
 
-          expect(results.sensors[0]).to.have.property("id", "1");
+          expect(results.sensors[0]).to.have.property("id", 1);
           expect(results.sensors[0]).to.have.property("name", "Daylight");
           expect(results.sensors[0]).to.have.property("type", "Daylight");
           expect(results.sensors[0]).to.have.property("manufacturername", "Philips");

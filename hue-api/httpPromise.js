@@ -5,7 +5,7 @@ var url = require("url")
   , Q = require("q")
   , axios = require("axios")
   , httpAdapter = require("axios/lib/adapters/http")
-  , errors = require("./errors.js")
+  , errors = require("../api/ApiError.js")
   , debug = /hue-api/.test(process.env.NODE_DEBUG)
   ;
 

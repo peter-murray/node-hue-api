@@ -1,10 +1,10 @@
 'use strict';
 
-const Device = require('../Device')
-  , ApiError = require('../../../hue-api/errors')
+const BridgeObject = require('../Device')
+  , ApiError = require('../../../api/ApiError')
 ;
 
-module.exports = class Sensor extends Device {
+module.exports = class Sensor extends BridgeObject {
 
   constructor(type, data, id) {
     super(data, id);

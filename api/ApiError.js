@@ -1,6 +1,6 @@
 'use strict';
 
-const HueError = require('../api/hueError');
+const HueError = require('./HueError');
 
 class ApiError extends Error {
 

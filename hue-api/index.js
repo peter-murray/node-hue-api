@@ -2,14 +2,10 @@
 
 const Q = require('q')
   , http = require('./httpPromise')
-  , ApiError = require('./errors')
+  , ApiError = require('../api/ApiError')
   , utils = require('./utils')
-  , sensorsApi = require('./commands/sensors-api')
   , groupsApi = require('./commands/groups-api')
-  , schedulesApi = require('./commands/schedules-api')
   , scenesApi = require('./commands/scenes-api')
-  , infoApi = require('./commands/info-api')
-  , scheduledEvent = require('./scheduledEvent')
   , bridgeDiscovery = require('./bridge-discovery')
   , lightState = require('./lightstate')
   , rgb = require('./rgb')
@@ -247,10 +243,9 @@ HueApi.prototype.getRegisteredUsers = HueApi.prototype.registeredUsers;
  * @return A promise that will be provided with the lights object, or {null} if a callback function was provided.
  */
 HueApi.prototype.sensors = function (cb) {
-  var options = this._defaultOptions(),
-    promise;
-
-  promise = http.invoke(sensorsApi.getAllSensors, options);
+  const promise = this._getNewApi().then(api => {
+    return api.sensors.getAll().then(sensors => {return {sensors: sensors};});
+  });
 
   return utils.promiseOrCallback(promise, cb);
 };
@@ -424,7 +419,11 @@ HueApi.prototype.getAllGroups = HueApi.prototype.groups;
  * @return A promise that will obtain the luminaires, or {null} if a callback was provided.
  */
 HueApi.prototype.luminaires = function (cb) {
-  return utils.nativePromiseOrCallback(this._filterGroups('Luminaire'), cb);
+  const promise = this._getNewApi().then(api => {
+    return api.groups.getLuminaires();
+  });
+
+  return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.getLuminaires = HueApi.prototype.luminaires;
 
@@ -436,7 +435,11 @@ HueApi.prototype.getLuminaires = HueApi.prototype.luminaires;
  * @return A promise that will obtain the lightsources, or {null} if a callback was provided.
  */
 HueApi.prototype.lightSources = function (cb) {
-  return utils.nativePromiseOrCallback(this._filterGroups('Lightsource'), cb);
+  const promise = this._getNewApi().then(api => {
+    return api.groups.getLightSources();
+  });
+
+  return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.getLightSources = HueApi.prototype.lightSources;
 
@@ -448,7 +451,11 @@ HueApi.prototype.getLightSources = HueApi.prototype.lightSources;
  * @return A promise that will obtain the LightGroups, or {null} if a callback was provided.
  */
 HueApi.prototype.lightGroups = function (cb) {
-  return utils.nativePromiseOrCallback(this._filterGroups('LightGroup'), cb);
+  const promise = this._getNewApi().then(api => {
+    return api.groups.getLightGroups();
+  });
+
+  return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.getLightGroups = HueApi.prototype.lightGroups;
 
@@ -467,7 +474,6 @@ HueApi.prototype.getGroup = function (id, cb) {
     });
 
   return utils.nativePromiseOrCallback(promise, cb);
-
   // //TODO find a way to make this a normal post processing action in the groups-api, the id from the call needs to be injected...
   // function processGroupResult(group) {
   //   var result = {
@@ -568,8 +574,9 @@ HueApi.prototype.deleteGroup = function (id, cb) {
  * @return A promise that will return the results or <null> if a callback was provided.
  */
 HueApi.prototype.schedules = function (cb) {
-  var options = this._defaultOptions(),
-    promise = http.invoke(schedulesApi.getAllSchedules, options);
+  const promise = this._getNewApi().then(api => {
+    return api.schedules.getAll();
+  });
 
   return utils.promiseOrCallback(promise, cb);
 };
@@ -585,18 +592,10 @@ HueApi.prototype.getSchedules = HueApi.prototype.schedules;
  * @returns A promise that will return the results or <null> if a callback was provided.
  */
 HueApi.prototype.getSchedule = function (id, cb) {
-  var options = this._defaultOptions()
-    , promise = _setScheduleIdOption(options, id)
-  ;
+  const promise = this._getNewApi().then(api => {
+    return api.schedules.get(id);
+  });
 
-  function parseResults(result) {
-    result.id = id;
-    return result;
-  }
-
-  if (!promise) {
-    promise = http.invoke(schedulesApi.getSchedule, options).then(parseResults);
-  }
   return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.schedule = HueApi.prototype.getSchedule;
@@ -611,7 +610,11 @@ HueApi.prototype.schedule = HueApi.prototype.getSchedule;
  * @return A promise that will return the id value of the schedule that was created, or <null> if a callback was provided.
  */
 HueApi.prototype.scheduleEvent = function (schedule, cb) {
-  return this._createSchedule(schedule, cb);
+  const promise = this._getNewApi().then(api => {
+    return api.schedules.createSchedule(schedule);
+  });
+
+  return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.createSchedule = HueApi.prototype.scheduleEvent;
 
@@ -624,13 +627,10 @@ HueApi.prototype.createSchedule = HueApi.prototype.scheduleEvent;
  * @return {Q.promise} A promise that will return the result of the deletion, or <null> if a callback was provided.
  */
 HueApi.prototype.deleteSchedule = function (id, cb) {
-  var options = this._defaultOptions()
-    , promise = _setScheduleIdOption(options, id)
-  ;
+  const promise = this._getNewApi().then(api => {
+    return api.schedules.deleteSchedule(id);
+  });
 
-  if (!promise) {
-    promise = http.invoke(schedulesApi.deleteSchedule, options);
-  }
   return utils.promiseOrCallback(promise, cb);
 };
 
@@ -644,18 +644,9 @@ HueApi.prototype.deleteSchedule = function (id, cb) {
  * @return {Q.promise} A promise that will return the result, or <null> if a callback was provided.
  */
 HueApi.prototype.updateSchedule = function (id, schedule, cb) {
-  var options = this._defaultOptions()
-    , promise
-  ;
-
-  promise = _setScheduleIdOption(options, id);
-  if (!promise) {
-    promise = _setScheduleOptionsForUpdate(options, schedule);
-  }
-
-  if (!promise) {
-    promise = http.invoke(schedulesApi.setScheduleAttributes, options);
-  }
+  const promise = this._getNewApi().then(api => {
+    return api.schedules.update(id, schedule);
+  });
 
   return utils.promiseOrCallback(promise, cb);
 };
@@ -669,20 +660,9 @@ HueApi.prototype.updateSchedule = function (id, schedule, cb) {
  * @return A promise that will return the results or <null> if a callback was provided.
  */
 HueApi.prototype.scenes = function (cb) {
-  var promise = this._scenes()
-    .then(function (result) {
-      var scenes = [];
-
-      Object.keys(result).forEach(function (id) {
-        var scene = result[id]
-          , enrichedScene = Object.assign({}, scene)
-        ;
-
-        enrichedScene.id = id;
-        scenes.push(enrichedScene);
-      });
-      return scenes;
-    });
+  const promise = this._getNewApi().then(api => {
+    return api.scenes.getAll();
+  });
 
   return utils.promiseOrCallback(promise, cb);
 };
@@ -696,18 +676,9 @@ HueApi.prototype.getScenes = HueApi.prototype.scenes;
  * @return A promise that will return the scene or <null> if a callback was provided.
  */
 HueApi.prototype.scene = function (sceneId, cb) {
-  var options = this._defaultOptions()
-    , promise = _setSceneIdOption(options, sceneId)
-  ;
-
-  if (!promise) {
-    // No errors in sceneId
-    promise = http.invoke(scenesApi.getScene, options)
-      .then(function (data) {
-        data.id = sceneId;
-        return data;
-      });
-  }
+  const promise = this._getNewApi().then(api => {
+    return api.scenes.get(sceneId);
+  });
 
   return utils.promiseOrCallback(promise, cb);
 };
@@ -720,14 +691,9 @@ HueApi.prototype.getScene = HueApi.prototype.scene;
  * @returns {*} A promise that will return the result from deleting the scene or null if a callback was provided.
  */
 HueApi.prototype.deleteScene = function (sceneId, cb) {
-  var options = this._defaultOptions()
-    , promise = _setSceneIdOption(options, sceneId)
-  ;
-
-  if (!promise) {
-    // No errors in sceneId
-    promise = http.invoke(scenesApi.deleteScene, options);
-  }
+  const promise = this._getNewApi().then(api => {
+    return api.scenes.deleteScene(sceneId);
+  });
 
   return utils.promiseOrCallback(promise, cb);
 };
@@ -736,120 +702,75 @@ HueApi.prototype.deleteScene = function (sceneId, cb) {
  * Creates a new Scene.
  * When the scene is created, it will store the current state of the lights and will use those "current" settings
  * when the scene is recalled/activated later.
- *
- * There are two variants to this function, one that accepts lightIds and a name and another that takes a Scene object.
- * The former is to maintain backwards compatibility with the 1.2.x version of this library.
- *
- * @param lightIds {Array} of ids for the lights to be included in the scene.
- * @param name {String} The name of the scene to be created. If one is not provided, then the id of the scene will become the name.
+ **
+ * @param scene {Scene} The scene to be created.
  *
  * @param cb An optional callback function to use if you do not want to use a promise for the results.
  * @return {*} A promise that will return the id of the scene that was created (as well as the values that make up the scene),
  * or null if a callback was provided.
  */
 HueApi.prototype.createScene = function (scene, cb) {
-  var self = this;
+  const promise = this._getNewApi().then(api => {
+    return api.scenes.createScene(scene);
+  });
 
-  if (Array.isArray(arguments[0])) {
-    return self.createBasicScene(arguments[0], arguments[1], arguments[2]);
-  } else {
-    return self.createAdvancedScene(arguments[0], arguments[1]);
-  }
-};
-
-/**
- * Provides backwards compatibility for < 1.11.x versions of the Hue Bridge Firmware.
- * @param lightIds
- * @param name
- * @param cb
- * @returns {*}
- */
-HueApi.prototype.createBasicScene = function (lightIds, name, cb) {
-  var self = this
-    , options = self._defaultOptions()
-    , promise
-  ;
-
-  options.values = {
-    name: name,
-    lights: utils.createStringValueArray(lightIds),
-    recycle: false
-  };
-
-  promise = http.invoke(scenesApi.createScene, options);
   return utils.promiseOrCallback(promise, cb);
 };
 
-/**
- * Provides scene creation for >= 1.11.x firmware versions of the Hue Bridge.
- * @param scene The Scene object containing the details of the scene to be created.
- * @param cb An optional callback function to use if you do not want to use a promise chain for the results.
- * @returns {*}
- */
-HueApi.prototype.createAdvancedScene = function (scene, cb) {
-  var self = this
-    , options = self._defaultOptions()
-    , myScene = Object.assign({recycle: false}, scene)
-    , promise
-  ;
 
-  //TODO validate the options object
-  options.values = myScene;
-
-  promise = http.invoke(scenesApi.createScene, options);
-  return utils.promiseOrCallback(promise, cb);
-};
-
-//TODO scene updates are now done as two different calls one for name and lights (and possible store current state) and a second of just setting individual light states
 /**
  * Update the lights and/or name associated with a scene (or will createGroup a new one if the
  * sceneId is not present in the bridge).
  *
  * @param sceneId {String} The id for the scene in the bridge
- * @param scene The configuration of the scene with the details to modify, which can be either a name or an array of
- * light ids.
- * @param storeLightState {Boolean} flag to save the current light state of the lights in the scene.
+ * @param scene {Scene} The update scene to use to set update the existing one with
  *
  * @param cb An optional callback function to use if you do not want to use a promise for the results.
  * @return {*} A promise that will return the id of the scene that was updated and the light ids that are now set,
  * or null if a callback was provided.
  */
-HueApi.prototype.updateScene = function (sceneId, scene, storeLightState, cb) {
-  var self = this
-    , options = self._defaultOptions()
-    , storeState = !!storeLightState
-    , promise = _setSceneIdOption(options, sceneId)
-  ;
+HueApi.prototype.updateScene = function (sceneId, scene, cb) {
+  const promise = this._getNewApi().then(api => {
+    return api.scenes.update(sceneId, scene);
+  });
 
-  if (!promise) {
-    // No errors in sceneId
-
-    //TODO validate that we have at least one parameter to modify before calling
-
-    if (utils.isFunction(storeLightState)) {
-      cb = storeLightState;
-      storeState = false;
-    }
-
-    options.values = {};
-
-    // Only set the storelightstate to true, as the bridge does not accept a false value for this in version 1.11.0
-    if (storeState) {
-      options.values.storelightstate = true;
-    }
-
-    if (scene) {
-      if (scene.lights) {
-        options.values.lights = utils.createStringValueArray(scene.lights);
-      }
-
-      if (scene.name) {
-        options.values.name = scene.name;
-      }
-    }
-    promise = http.invoke(scenesApi.modifyScene, options);
-  }
   return utils.promiseOrCallback(promise, cb);
+
+  // var self = this
+  //   , options = self._defaultOptions()
+  //   , storeState = !!storeLightState
+  //   , promise = _setSceneIdOption(options, sceneId)
+  // ;
+  //
+  // if (!promise) {
+  //   // No errors in sceneId
+  //
+  //   //TODO validate that we have at least one parameter to modify before calling
+  //
+  //   if (utils.isFunction(storeLightState)) {
+  //     cb = storeLightState;
+  //     storeState = false;
+  //   }
+  //
+  //   options.values = {};
+  //
+  //   // Only set the storelightstate to true, as the bridge does not accept a false value for this in version 1.11.0
+  //   if (storeState) {
+  //     options.values.storelightstate = true;
+  //   }
+  //
+  //   if (scene) {
+  //     if (scene.lights) {
+  //       options.values.lights = utils.createStringValueArray(scene.lights);
+  //     }
+  //
+  //     if (scene.name) {
+  //       options.values.name = scene.name;
+  //     }
+  //   }
+  //   promise = http.invoke(scenesApi.modifyScene, options);
+  // }
+  // return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.modifyScene = HueApi.prototype.updateScene;
 
@@ -950,21 +871,6 @@ HueApi.prototype.recallScene = HueApi.prototype.activateScene;
 //};
 
 
-/**
- * Obtains all the allowed timezones from the bridge.
- *
- * @param cb An optional callback function to use if you do not want to use a promise for the results.
- * @return {*} A promise that will return the id of the scene that was created, or null if a callback was provided.
- */
-HueApi.prototype.getTimezones = function (cb) {
-  var options = this._defaultOptions()
-    , promise = http.invoke(infoApi.getAllTimezones, options)
-  ;
-
-  return utils.promiseOrCallback(promise, cb);
-};
-HueApi.prototype.timezones = HueApi.prototype.getTimezones;
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // PRIVATE FUNCTIONS
@@ -991,67 +897,6 @@ HueApi.prototype._defaultOptions = function () {
   };
 };
 
-HueApi.prototype._filterGroups = function (type) {
-  const self = this;
-
-  return self.groups()
-    .then(function (groups) {
-      const results = [];
-
-      console.log(JSON.stringify(groups, null, 2))
-      console.log("Filter: " + type);
-
-      if (groups) {
-        groups.forEach(function (group) {
-          if (group.type === type) {
-            results.push(group);
-          }
-        });
-      }
-
-      return results;
-    });
-};
-
-HueApi.prototype._scenes = function () {
-  var options = this._defaultOptions();
-  return http.invoke(scenesApi.getAllScenes, options);
-};
-
-/**
- * Obtains the lights in a group and separates them into sub groups based on the model.
- * @param groupId The id of the group.
- * @returns {Object} A map of modelid to and array of lights that have that model.
- * @private
- */
-HueApi.prototype._getGroupLightsByType = function (groupId) {
-  var self = this;
-
-  return Q.all(
-    [
-      self.getGroup(groupId),
-      self.getLights()
-    ])
-    .spread(function (group, allLights) {
-      var map = {}
-        , lightMap = getLightsModelMap(allLights)
-      ;
-
-      if (group && group.lights) {
-        group.lights.forEach(function (lightId) {
-          var modelid = lightMap[lightId];
-
-          if (map[modelid]) {
-            map[modelid].push(lightId);
-          } else {
-            map[modelid] = [lightId];
-          }
-        });
-      }
-
-      return map;
-    });
-};
 
 /**
  * Generates the light state options for a group
@@ -1126,7 +971,7 @@ HueApi.prototype._getGroupLightStateOptions = function (groupId, stateValues) {
   return promise;
 };
 
-
+// TODO this is just a transition function until we deprecate the API
 function _getNewLightState(lightId, stateValues) {
   const newLightState = lightStateBuilder.create();
 
@@ -1134,7 +979,6 @@ function _getNewLightState(lightId, stateValues) {
     stateValues = stateValues.payload();
   }
 
-  //TODO need to populate the lightState
   newLightState.getAllowedStateNames().forEach(state => {
     if (stateValues.hasOwnProperty(state)) {
       newLightState[state](stateValues[state]);
@@ -1176,95 +1020,6 @@ HueApi.prototype._getLightStateOptions = function (lightId, stateValues) {
   return promise;
 };
 
-/**
- * Creates a new schedule in the Hue Bridge.
- *
- * @param schedule The schedule object to createGroup.
- * @param cb An optional callback if you do not want to use the promise for results.
- * @returns {Q.promise} A promise with the creation results, or <null> if a callback was provided.
- * @private
- */
-HueApi.prototype._createSchedule = function (schedule, cb) {
-  var options = this._defaultOptions(),
-    promise = _setScheduleOptionsForCreation(options, schedule);
-
-  if (!promise) {
-    promise = http.invoke(schedulesApi.createSchedule, options);
-  }
-  return utils.promiseOrCallback(promise, cb);
-};
-
-/**
- * Validates and then injects the username to be deleted into the options.
- *
- * @param options The options to inject the value into.
- * @param username The username to delete.
- * @returns {Q.promise} A promise containing the error(s) if there were any, otherwise <null>.
- * @private
- */
-function _setDeleteUserOptions(options, username) {
-  var errorPromise = null;
-
-  //TODO perform a lookup for the user before we attempt to delete it??
-  if (!username) {
-    errorPromise = _errorPromise('A username to delete must be specified.');
-  }
-  options.username2 = username;
-
-  return errorPromise;
-}
-
-/**
- * Validates and injects the configuration options to set for the Hue Bridge into the provided options.
- *
- * @param options The options to inject into.
- * @param values The values that we wish to modify on the bridge.
- * @private
- */
-function _setConfigurationOptions(options, values) {
-  var errorPromise = null,
-    validOptionFound = false;
-
-  // Use the API specification to check all required values have been provided.
-  Object.keys(configurationApi.modifyConfiguration.bodyArguments).forEach(function (value) {
-    var option = configurationApi.modifyConfiguration.bodyArguments[value];
-
-    // Check to see if we have at least one option being set
-    if (!validOptionFound && values[value]) {
-      validOptionFound = true;
-    }
-
-    // Check that we have all the required options being provided
-    if (!option.optional) {
-      // Check that the value has been provided
-      if (!errorPromise && !values[value]) {
-        errorPromise = _errorPromise('A required configuration option \'' + value + '\' was not provided.');
-      }
-    }
-  });
-
-  if (!errorPromise) {
-    if (!validOptionFound) {
-      errorPromise = _errorPromise('No valid options for the bridge configuration were specified.');
-    } else {
-      options.values = values;
-    }
-  }
-
-  return errorPromise;
-}
-
-function getLightsModelMap(lightsArray) {
-  var map = {};
-
-  if (Array.isArray(lightsArray)) {
-    lightsArray.forEach(function (light) {
-      map[light.id] = light.modelid;
-    });
-  }
-
-  return map;
-}
 
 /**
  * Validates and then injects the 'id' into the options for a light in the bridge.
@@ -1298,103 +1053,6 @@ function _setGroupIdOption(options, id) {
     errorPromise = _errorPromise('The group id \'' + id + '\' is not valid for this Hue Bridge.');
   } else {
     options.id = id;
-  }
-
-  return errorPromise;
-}
-
-/**
- * Validates and then injects the 'id' into the options for a group in the bridge.
- *
- * @param options The options to add the 'id' to.
- * @param id The id of the group
- * @return {Q.promise} A promise that will throw an error or null if the group id was valid.
- * @private
- */
-function _setGroupIdOptionForModification(options, id) {
-  var errorPromise = null;
-
-  if (!_isGroupIdValidForModification(id)) {
-    errorPromise = _errorPromise('The group id \'' + id + '\' cannot be modified on this Hue Bridge.');
-  } else {
-    options.id = id;
-  }
-
-  return errorPromise;
-}
-
-/**
- * Validates and then injects the 'id' into the options for a group in the bridge.
- *
- * @param options The options to add the 'id' to.
- * @param id The id of the schedule
- * @return {Q.promise} A promise that will throw an error or null if the schedule id was valid.
- * @private
- */
-function _setScheduleIdOption(options, id) {
-  var errorPromise = null;
-
-  if (!_isScheduleIdValid(id)) {
-    errorPromise = _errorPromise('The schedule id \'' + id + '\' is not valid for this Hue Bridge.');
-  } else {
-    options.id = id;
-  }
-
-  return errorPromise;
-}
-
-/**
- * Validates and then injects the schedule into the 'values' of the options.
- *
- * @param options The options to inject into.
- * @param schedule The schedule object containing the details for the schedule to createGroup.
- * @returns {Q.promise} A promise containing any errors that might have occured, or <null> if there were none.
- * @private
- */
-function _setScheduleOptionsForCreation(options, schedule) {
-  var errorPromise = null;
-
-  // Use the API specification to check all required values have been provided.
-  Object.keys(schedulesApi.createSchedule.bodyArguments).forEach(function (value) {
-    var option = schedulesApi.createSchedule.bodyArguments[value];
-    if (!option.optional) {
-      // Check that the value has been provided
-      if (!errorPromise && !schedule[value]) {
-        errorPromise = _errorPromise('A required schedule option \'' + value + '\' was not provided.');
-      }
-    }
-  });
-
-  if (!errorPromise) {
-    options.values = scheduledEvent.create(schedule);
-  }
-
-  return errorPromise;
-}
-
-/**
- * Validates and then injects the schedule into the 'values' of the options.
- *
- * @param options The options to inject into.
- * @param schedule The schedule object with the details of the updates to make.
- * @returns {Q.promise} A promise with any errors, if there were any, otherwise <null>.
- * @private
- */
-function _setScheduleOptionsForUpdate(options, schedule) {
-  var errorPromise = null,
-    validOptionFound = false;
-
-  // Use the API specification to check all the required values have been provided, or we have at least one value
-  Object.keys(schedulesApi.setScheduleAttributes.bodyArguments).forEach(function (value) {
-    if (schedule[value]) {
-      validOptionFound = true;
-    }
-  });
-
-  if (!validOptionFound) {
-    errorPromise = _errorPromise('No valid values for updating the schedule were found in the schedule details provided.');
-  } else {
-    options.values = scheduledEvent.create(schedule);
   }
 
   return errorPromise;
@@ -1460,36 +1118,6 @@ function _isGroupIdValid(id) {
   if (parseInt(id, 10) >= 0) {
     //TODO check that this is a valid group id for the system
     return id <= 16;
-  } else {
-    return false;
-  }
-}
-
-/**
- * Validates that the group id is valid for modification on this Hue Bridge.
- *
- * @param id The id of the group in the Hue Bridge.
- * @returns {boolean} true if the id is valid for this bridge.
- * @private
- */
-function _isGroupIdValidForModification(id) {
-  if (_isGroupIdValid(id)) {
-    return parseInt(id, 10) > 0;
-  }
-  return false;
-}
-
-/**
- * Validates that the schedule id is valid for this Hue Bridge.
- *
- * @param id The id of the group in the Hue Bridge.
- * @returns {boolean} true if the id is valid for this bridge.
- * @private
- */
-function _isScheduleIdValid(id) {
-  if (parseInt(id, 10) >= 0) {
-    //TODO check that this is a valid schedule id for the system
-    return id <= 100;
   } else {
     return false;
   }

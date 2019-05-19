@@ -17,7 +17,7 @@ var Trait = require("traits").Trait
     , tBodyArguments = require("./traits/tBodyArguments")
     , tLightStateBody = require("./traits/tLightStateBody")
     , tPostProcessing = require("./traits/tPostProcessing")
-    , ApiError = require("../errors").ApiError
+    , ApiError = require("../../api/ApiError").ApiError
     , utils = require("../utils")
     ;
 

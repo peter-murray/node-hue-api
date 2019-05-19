@@ -1,7 +1,7 @@
 'use strict';
 
 const Placeholder = require('./PlaceHolder')
-  , ApiError = require('../../../hue-api/errors')
+  , ApiError = require('../../ApiError')
 ;
 
 

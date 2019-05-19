@@ -1,7 +1,7 @@
 'use strict';
 
 const LIGHT_STATE_PARAMETERS = require('./stateParameters')
-  , ApiError = require('../../hue-api/errors');
+  , ApiError = require('../../api/ApiError');
 
 
 module.exports = class States {

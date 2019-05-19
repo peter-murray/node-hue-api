@@ -56,8 +56,8 @@ module.exports = class ZLLLightlevel extends Sensor {
     return this.state.daylight;
   }
 
-  set daylight(value) {
-    this._updateStateAttribute('daylight', !!value);
-    return this;
-  }
+  // set daylight(value) {
+  //   this._updateStateAttribute('daylight', !!value);
+  //   return this;
+  // }
 };
