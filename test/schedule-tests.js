@@ -5,14 +5,14 @@ const expect = require('chai').expect
   , HueApi = hue.api
   , scheduledEventBuilder = hue.scheduledEventBuilder
   , testValues = require('./support/testValues.js')
-  , AbsoluteTime = require('../bridge-model/datetime/AbsoluteTime')
+  , AbsoluteTime = require('../lib/bridge-model/datetime/AbsoluteTime')
 ;
 
 describe('Hue API', function () {
 
   const hue = new HueApi(testValues.host, testValues.username)
     , validCommand = {
-      'address': '/api/' + testValues.username + '/lights/5/state',
+      'address': `/api/${testValues.username}/lights/1/state`,
       'method': 'PUT',
       'body': {
         'on': true
@@ -22,7 +22,7 @@ describe('Hue API', function () {
 
   function generateTestScheduleEvent() {
     const time = new AbsoluteTime();
-    time.fromDate(new Date(Date.now()+ (60 * 60 * 1000) + (5 * 60 * 1000)));
+    time.fromDate(new Date(Date.now() + (1 * 60 * 1000)));
 
     return scheduledEventBuilder.create()
       .withName('createTest')

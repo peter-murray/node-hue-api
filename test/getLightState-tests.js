@@ -1,20 +1,19 @@
 'use strict';
 
-var expect = require('chai').expect
+const expect = require('chai').expect
   , HueApi = require('../').BridgeApi
   , testValues = require('./support/testValues.js')
 ;
 
 describe('Hue API', function () {
 
-  describe('#lightStatus', function () {
+  const hue = new HueApi(testValues.host, testValues.username);
 
+  describe('#lightStatus', function () {
 
     describe('#promise', function () {
 
       it('should get status of light', function (done) {
-        var hue = new HueApi(testValues.host, testValues.username);
-
         function checkResults(results) {
           _validateLightsResult(results, done);
         }
@@ -27,8 +26,6 @@ describe('Hue API', function () {
     describe('#callback', function () {
 
       it('should get status of light', function (done) {
-        var hue = new HueApi(testValues.host, testValues.username);
-
         hue.lightStatus(1, function (err, results) {
           if (err) {
             throw err;
@@ -42,11 +39,10 @@ describe('Hue API', function () {
 });
 
 function _validateLightsResult(results, cb) {
-  // expect(results).to.have.property('type');
+  expect(results).to.have.property('type');
   expect(results).to.have.property('name');
   expect(results).to.have.property('modelid');
   expect(results).to.have.property('swversion');
-  //expect(results).to.have.property("pointsymbol");
 
   expect(results).to.have.property('state');
   expect(results.state).to.have.property('on');

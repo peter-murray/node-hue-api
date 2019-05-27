@@ -1,7 +1,9 @@
 'use strict';
 
-const HueError = require('../api/HueError');
+const HueError = require('../lib/HueError');
 
+
+//TODO remove this module or refactor
 
 module.exports.nativePromiseOrCallback = function (promise, cb) {
   var promiseResult = promise;

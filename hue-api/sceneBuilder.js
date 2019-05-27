@@ -1,6 +1,6 @@
 'use strict';
 
-const Scene = require('../bridge-model/Scene');
+const Scene = require('../lib/bridge-model/Scene');
 
 
 const Builder = function() {

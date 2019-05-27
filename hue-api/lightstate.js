@@ -1,8 +1,7 @@
 'use strict';
 
 const utils = require('./utils')
-  , rgb = require('./rgb')
-  , lightStateTrait = require('./commands/traits/tLightStateBody')
+  , rgb = require('../lib/rgb')
 ;
 
 
@@ -10,7 +9,7 @@ const State = function () {
   this.reset();
 };
 
-const stateDefinitions = lightStateTrait(true).bodyArguments.value;
+// const stateDefinitions = lightStateTrait(true).bodyArguments.value;
 
 /**
  * Creates a new state object to pass to a Philips Hue Light.

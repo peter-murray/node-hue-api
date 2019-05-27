@@ -1,6 +1,6 @@
 "use strict";
 
-var deepExtend = require("deep-extend")
+// var deepExtend = require("deep-extend")
   ;
 
 var minuteValidator = limitValue(0, 59)

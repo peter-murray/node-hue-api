@@ -1,17 +1,11 @@
 'use strict';
 
-const Q = require('q')
-  , http = require('./httpPromise')
-  , ApiError = require('../api/ApiError')
+const ApiError = require('../lib/ApiError')
   , utils = require('./utils')
-  , groupsApi = require('./commands/groups-api')
-  , scenesApi = require('./commands/scenes-api')
-  , bridgeDiscovery = require('./bridge-discovery')
-  , lightState = require('./lightstate')
-  , rgb = require('./rgb')
 
-  , newApi = require('../api/index')
-  , LightState = require('../bridge-model/lightstate/LightState')
+  , newApi = require('../lib/api/index')
+  , LightState = require('../lib/bridge-model/lightstate/LightState')
+  , SceneLightState = require('../lib/bridge-model/lightstate/SceneLightState')
 ;
 
 //TODO this is a temporary hack
@@ -95,7 +89,7 @@ HueApi.prototype.version = HueApi.prototype.getVersion;
  * @return {Q.promise} A promise that will be provided with a description object, or {null} if a callback was provided.
  */
 HueApi.prototype.description = function (cb) {
-  var promise = bridgeDiscovery.description(this._config.hostname);
+  const promise = newApi.discovery.description(this._config.hostname);
   return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.getDescription = HueApi.prototype.description;
@@ -287,29 +281,13 @@ HueApi.prototype.getLights = HueApi.prototype.lights;
  */
 HueApi.prototype.lightStatus = function (id, cb) {
   const promise = this._getNewApi().then(api => {
-    return api.lights.getLightState(id);
+    return api.lights.getLightAttributesAndState(id);
   });
 
   return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.getLightStatus = HueApi.prototype.lightStatus;
 
-//TODO
-HueApi.prototype.lightStatusWithRGB = function (id, cb) {
-  var promise = this.lightStatus(id);
-
-  promise = promise.then(function (light) {
-    var state = light.state
-      , x = state.xy[0]
-      , y = state.xy[1]
-      , brightness = state.bri / 254
-    ;
-    return Object.assign({state: {rgb: rgb.convertXYtoRGB(x, y, brightness)}}, light);
-  });
-
-  return utils.promiseOrCallback(promise, cb);
-};
-HueApi.prototype.getLightStatusWithRGB = HueApi.prototype.lightStatusWithRGB;
 
 /**
  * Obtains the new lights found by the bridge, dependant upon the last search.
@@ -386,10 +364,11 @@ HueApi.prototype.setLightState = function (id, stateValues, cb) {
  * @return {Q.promise} A promise that will set the specified state on the group, or {null} if a callback was provided.
  */
 HueApi.prototype.setGroupLightState = function (id, stateValues, cb) {
-  var promise = this._getGroupLightStateOptions(id, stateValues)
-    .then(function (options) {
-      return http.invoke(groupsApi.setGroupState, options);
+  const promise = this._getNewApi()
+    .then(api => {
+      return api.groups.setGroupState(id, stateValues);
     });
+
   return utils.promiseOrCallback(promise, cb);
 };
 
@@ -484,11 +463,11 @@ HueApi.prototype.getGroup = function (id, cb) {
   //     lastAction: group.action
   //   };
 
-    // if (group.type === 'Luminaire' && group.modelid) {
-    //   result.modelid = group.modelid;
-    // }
+  // if (group.type === 'Luminaire' && group.modelid) {
+  //   result.modelid = group.modelid;
+  // }
 
-    // return result;
+  // return result;
   // }
 };
 HueApi.prototype.group = HueApi.prototype.getGroup;
@@ -735,42 +714,6 @@ HueApi.prototype.updateScene = function (sceneId, scene, cb) {
   });
 
   return utils.promiseOrCallback(promise, cb);
-
-  // var self = this
-  //   , options = self._defaultOptions()
-  //   , storeState = !!storeLightState
-  //   , promise = _setSceneIdOption(options, sceneId)
-  // ;
-  //
-  // if (!promise) {
-  //   // No errors in sceneId
-  //
-  //   //TODO validate that we have at least one parameter to modify before calling
-  //
-  //   if (utils.isFunction(storeLightState)) {
-  //     cb = storeLightState;
-  //     storeState = false;
-  //   }
-  //
-  //   options.values = {};
-  //
-  //   // Only set the storelightstate to true, as the bridge does not accept a false value for this in version 1.11.0
-  //   if (storeState) {
-  //     options.values.storelightstate = true;
-  //   }
-  //
-  //   if (scene) {
-  //     if (scene.lights) {
-  //       options.values.lights = utils.createStringValueArray(scene.lights);
-  //     }
-  //
-  //     if (scene.name) {
-  //       options.values.name = scene.name;
-  //     }
-  //   }
-  //   promise = http.invoke(scenesApi.modifyScene, options);
-  // }
-  // return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.modifyScene = HueApi.prototype.updateScene;
 
@@ -785,16 +728,11 @@ HueApi.prototype.modifyScene = HueApi.prototype.updateScene;
  * @return A promise that will return the state values on the light, or {null} if a callback was provided.
  */
 HueApi.prototype.setSceneLightState = function (sceneId, lightId, stateValues, cb) {
-  var promise;
+  const promise = this._getNewApi().then(api => {
+    const sceneLightState = new SceneLightState().populate(stateValues);
+    return api.scenes.updateLightState(sceneId, lightId, sceneLightState);
+  });
 
-  promise = this._getLightStateOptions(lightId, stateValues)
-    .then(function (options) {
-      // Need to set id and lightId correctly, the above call treats the lightId as the id
-      options.lightId = options.id;
-      options.id = sceneId;
-
-      return http.invoke(scenesApi.modifyLightState, options);
-    });
   return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.updateSceneLightState = HueApi.prototype.setSceneLightState;
@@ -876,108 +814,14 @@ HueApi.prototype.recallScene = HueApi.prototype.activateScene;
 // PRIVATE FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-HueApi.prototype._getConfig = function () {
-  return this._config;
-};
-
-/**
- * Creates a default options object for connecting with a Hue Bridge.
- *
- * @returns {{host: *, username: *, timeout: *}}
- * @private
- */
-HueApi.prototype._defaultOptions = function () {
-  var config = this._getConfig();
-
-  return {
-    host: config.hostname,
-    username: config.username,
-    timeout: config.timeout,
-    port: config.port
-  };
-};
-
-
-/**
- * Generates the light state options for a group
- * @param groupId The group to apply the state values to
- * @param stateValues The state of the lights to apply
- * @returns {Q.promise} That will resolve to a set of options for the group or an array of options to apply subsets of
- * lights in the group.
- * @private
- */
-HueApi.prototype._getGroupLightStateOptions = function (groupId, stateValues) {
-  var self = this
-    , options = self._defaultOptions()
-    , state
-    , deferred
-    , promise
-  ;
-
-  promise = _setGroupIdOption(options, groupId);
-
-  if (!promise) {
-    // No errors in the group id
-
-    if (lightState.isLightState(stateValues)) {
-      state = stateValues;
-    } else {
-      state = lightState.create(stateValues);
-    }
-
-    if (state.hasRGB()) {
-      //TODO RGB is tricky with groups, need to break the group into types and perform conversion
-      // Get all lights in the group,
-      // separate into types based on model
-      // createGroup multiple states per model
-      // return a map of sub groups to states required
-
-      deferred = Q.defer();
-      deferred.reject(new ApiError('RGB state is not supported for groups yet'));
-      promise = deferred.promise;
-
-      //// Separate the lights into models and apply the state to each type
-      //promise = self._getGroupLightsByType(groupId)
-      //    .then(function(groupLightsMap) {
-      //        var models = Object.keys(groupLightsMap)
-      //            , result = []
-      //            ;
-      //
-      //        models.forEach(function(model) {
-      //            var newState = state.copy();
-      //            newState.applyRGB(model);
-      //
-      //            result.push({
-      //                modelid: model,
-      //                lights: groupLightsMap[model],
-      //                state: newState
-      //            });
-      //        });
-      //
-      //        return result;
-      //    })
-      //    .then(function(subgroupsWithState) {
-      //       //TODO need to createGroup options
-      //    });
-    } else {
-      options.values = state.payload();
-
-      deferred = Q.defer();
-      deferred.resolve(options);
-      promise = deferred.promise;
-    }
-  }
-
-  return promise;
-};
 
 // TODO this is just a transition function until we deprecate the API
 function _getNewLightState(lightId, stateValues) {
   const newLightState = LightState.create();
 
-  if (lightState.isLightState(stateValues)) {
-    stateValues = stateValues.payload();
-  }
+  // if (lightState.isLightState(stateValues)) {
+  //   stateValues = stateValues.payload();
+  // }
 
   newLightState.getAllowedStateNames().forEach(state => {
     if (stateValues.hasOwnProperty(state)) {
@@ -986,143 +830,4 @@ function _getNewLightState(lightId, stateValues) {
   });
 
   return newLightState;
-}
-
-//TODO remvoe this function
-HueApi.prototype._getLightStateOptions = function (lightId, stateValues) {
-  let state
-    , promise
-  ;
-
-  promise = _setLightIdOption(lightId)
-    .then(options => {
-      if (lightState.isLightState(stateValues)) {
-        state = stateValues;
-      } else {
-        state = lightState.create(stateValues);
-      }
-
-      //TODO need to handle RGB values
-      // We have not errored, so check if we need to convert an rgb value
-      // if (state.hasRGB()) {
-      //   promise = self.lightStatus(lightId)
-      //     .then(function (lightDetails) {
-      //       state = state.applyRGB(lightDetails.modelid);
-      //       options.values = state.payload();
-      //
-      //       return options;
-      //     });
-      // } else {
-      options.values = state.payload();
-      return options;
-    });
-
-  return promise;
-};
-
-
-/**
- * Validates and then injects the 'id' into the options for a light in the bridge.
- *
- * @param options The options to add the 'id' to.
- * @param id The id of the light
- * @private
- */
-function _setLightIdOption(id) {
-  return new Promise((resolve, reject) => {
-    if (!_isLightIdValid(id)) {
-      reject(new ApiError('The light id \'' + id + '\' is not valid for this Hue Bridge.'));
-    } else {
-      resolve({id: id});
-    }
-  });
-}
-
-/**
- * Validates and then injects the 'id' into the options for a group in the bridge.
- *
- * @param options The options to add the 'id' to.
- * @param id The id of the group
- * @return {Q.promise} A promise that will throw an error or null if the group id was valid.
- * @private
- */
-function _setGroupIdOption(options, id) {
-  var errorPromise = null;
-
-  if (!_isGroupIdValid(id)) {
-    errorPromise = _errorPromise('The group id \'' + id + '\' is not valid for this Hue Bridge.');
-  } else {
-    options.id = id;
-  }
-
-  return errorPromise;
-}
-
-/**
- * Validates and then injects the 'id' into the options for a group in the bridge.
- *
- * @param options The options to add the 'id' to.
- * @param sceneId The id of the scene
- * @return {Q.promise} A promise that will throw an error or null if the scene id was valid.
- * @private
- */
-function _setSceneIdOption(options, sceneId) {
-  var errorPromise = null;
-
-  if (!_isSceneIdValid(sceneId)) {
-    errorPromise = _errorPromise('The scene id \'' + sceneId + '\' is not valid for this Hue Bridge.');
-  } else {
-    options.id = sceneId;
-  }
-
-  return errorPromise;
-}
-
-/**
- * Creates a promise that will generate an ApiError with the provided message.
- *
- * @param message The error message
- * @returns {Q.promise}
- * @private
- */
-function _errorPromise(message) {
-  //TODO remove this
-  return Promise.reject(new ApiError(message));
-}
-
-/**
- * Validates that the light id is valid for this Hue Bridge.
- *
- * @param id The id of the light in the Hue Bridge.
- * @returns {boolean} true if the id is valid for this bridge.
- * @private
- */
-function _isLightIdValid(id) {
-  //TODO this needs to validate against the bridge state
-  if (parseInt(id, 10) > 0) {
-    //TODO check that this is a valid light id for the system
-    return true;
-  } else {
-    return false;
-  }
-}
-
-/**
- * Validates that the group id is valid for this Hue Bridge.
- *
- * @param id The id of the group in the Hue Bridge.
- * @returns {boolean} true if the id is valid for this bridge.
- * @private
- */
-function _isGroupIdValid(id) {
-  if (parseInt(id, 10) >= 0) {
-    //TODO check that this is a valid group id for the system
-    return id <= 16;
-  } else {
-    return false;
-  }
-}
-
-function _isSceneIdValid(id) {
-  return id && (String(id).length > 0);
 }

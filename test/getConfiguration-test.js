@@ -80,14 +80,14 @@ describe('Hue API', function () {
       expect(results).to.have.property('version');
 
       expect(results.version).to.have.property('api');
-      expect(semver.gte(results.version.api, testValues.version.api)).to.be.true;
+      expect(semver.gte(results.version.api, '1.31.0')).to.be.true;
 
       expect(results.version).to.have.property('software');
-      expect(parseInt(results.version.software)).to.at.least(parseInt(testValues.version.software));
+      expect(parseInt(results.version.software)).to.at.least(1931140050);
     }
 
-    function testPromise(done) {
-      hue.version().then(function (results) {
+    function testPromise(name, done) {
+      hue[name]().then(function (results) {
         validateVersionResults(results);
         done();
       })
@@ -95,7 +95,7 @@ describe('Hue API', function () {
     }
 
     function testCallback(name, done) {
-      hue.version(function (err, results) {
+      hue[name](function (err, results) {
         expect(err).to.be.null;
 
         validateVersionResults(results);
@@ -106,24 +106,22 @@ describe('Hue API', function () {
     describe('#version', function () {
 
       it('using #promise', function (done) {
-        testPromise(done);
+        testPromise('version', done);
       });
 
       it('using #callback', function (done) {
-        testCallback(done);
+        testCallback('version', done);
       });
     });
 
     describe('#getVersion', function () {
 
-      var fnName = 'getVersion';
-
       it('using #promise', function (done) {
-        testPromise(fnName, done);
+        testPromise('getVersion', done);
       });
 
       it('using #callback', function (done) {
-        testCallback(fnName, done);
+        testCallback('getVersion', done);
       });
     });
   });
@@ -136,20 +134,17 @@ describe('Hue API', function () {
       expect(desc.version).to.have.property('major', '1');
       expect(desc.version).to.have.property('minor', '0');
 
-      expect(desc).to.have.property('url', `http://${testValues.host}:80/`);
-      expect(desc).to.have.property('name', `Philips hue (${testValues.host})`);
-      expect(desc).to.have.property('manufacturer', 'Royal Philips Electronics');
+      expect(desc).to.have.property('name').to.equal(`Philips hue (${testValues.host})`);
+      expect(desc).to.have.property('manufacturer').to.equal('Royal Philips Electronics');
 
       expect(desc).to.have.property('model');
-      expect(desc.model).to.have.property('name', testValues.model.name);
-      expect(desc.model).to.have.property('description', testValues.model.description);
-      expect(desc.model).to.have.property('number', testValues.model.number);
+      expect(desc.model).to.have.property('name').to.equal('Philips hue bridge 2015');
+      expect(desc.model).to.have.property('description').to.equal('Philips hue Personal Wireless Lighting');
+      expect(desc.model).to.have.property('number');
       expect(desc.model).to.have.property('serial');
-      expect(desc.model).to.have.property('udn', testValues.model.udn);
 
       expect(desc).to.have.property('icons');
       expect(desc.icons).to.have.length(1);
-      //TODO could validate an icon...
     }
 
     function testPromise(name, done) {
@@ -241,50 +236,6 @@ describe('Hue API', function () {
 
       it('using #callback', function (done) {
         testCallback('getFullState', done);
-      });
-    });
-  });
-
-  describe('info', function () {
-
-    function validateTimezones(cb) {
-      return function (zones) {
-        expect(zones).to.be.instanceOf(Array);
-        expect(zones).to.have.length.at.least(430);
-        cb();
-      };
-    }
-
-    describe('#getTimezones()', function () {
-
-      it('using #promise', function (done) {
-        hue.getTimezones()
-          .then(validateTimezones(done))
-          .done();
-      });
-
-      it('using #callback', function (done) {
-        hue.getTimezones(function (err, zones) {
-          expect(err).to.be.null;
-
-          validateTimezones(done)(zones);
-        });
-      });
-    });
-
-    describe('#timezones()', function () {
-      it('using #promise', function (done) {
-        hue.timezones()
-          .then(validateTimezones(done))
-          .done();
-      });
-
-      it('using #callback', function (done) {
-        hue.timezones(function (err, zones) {
-          expect(err).to.be.null;
-
-          validateTimezones(done)(zones);
-        });
       });
     });
   });
