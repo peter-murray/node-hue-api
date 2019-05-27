@@ -8,6 +8,8 @@ var url = require("url")
     , discovery = require("./commands/discovery")
     ;
 
+//TODO need to update this with the changes from master and refactor to new style coding
+
 /**
  * Will locate the Philips Hue Devices on the network. Depending upon the speed and size of the network the timeout
  * may need to be adjusted to locate the Hue Bridge.

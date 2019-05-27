@@ -42,7 +42,7 @@ describe('Hue API', function () {
 });
 
 function _validateLightsResult(results, cb) {
-  expect(results).to.have.property('type');
+  // expect(results).to.have.property('type');
   expect(results).to.have.property('name');
   expect(results).to.have.property('modelid');
   expect(results).to.have.property('swversion');

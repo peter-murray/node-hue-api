@@ -118,7 +118,7 @@ function getStateForDevice(device, desiredState) {
     throw new ApiError('No light device provided');
   }
 
-  const allowedStates = device.getSupportedStates()
+  const allowedStates = Object.keys(device.getSupportedStates())
     , state = {}
   ;
 

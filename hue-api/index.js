@@ -11,7 +11,7 @@ const Q = require('q')
   , rgb = require('./rgb')
 
   , newApi = require('../api/index')
-  , lightStateBuilder = require('../bridge-model/lightstate/LightState')
+  , LightState = require('../bridge-model/lightstate/LightState')
 ;
 
 //TODO this is a temporary hack
@@ -973,7 +973,7 @@ HueApi.prototype._getGroupLightStateOptions = function (groupId, stateValues) {
 
 // TODO this is just a transition function until we deprecate the API
 function _getNewLightState(lightId, stateValues) {
-  const newLightState = lightStateBuilder.create();
+  const newLightState = LightState.create();
 
   if (lightState.isLightState(stateValues)) {
     stateValues = stateValues.payload();

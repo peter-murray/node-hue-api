@@ -5,8 +5,15 @@ const CommonStates = require('./CommonStates.js');
 
 module.exports = class LightState extends CommonStates {
 
+  constructor() {
+    super();
+  }
 };
 
+//TODO this is a throw back to the old API
+module.exports.create = () => {
+  return new module.exports();
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //

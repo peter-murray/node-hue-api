@@ -94,7 +94,7 @@ describe('#LightState', function () {
     });
 
     it('should set (360, 100, 100)', function () {
-      test(360, 100, 100, 65535, 255, 254);
+      test(360, 100, 100, 65535, 254, 254);
     });
 
     it('should set (180, 50, 25)', function () {

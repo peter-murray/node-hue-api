@@ -9,7 +9,9 @@ const expect = require('chai').expect
 
 describe('Hue API', function () {
 
-  var hue = new HueApi(testValues.host, testValues.username);
+  const hue = new HueApi(testValues.host, testValues.username);
+
+  this.timeout(5000);
 
   describe('#config', function () {
 
@@ -84,8 +86,8 @@ describe('Hue API', function () {
       expect(parseInt(results.version.software)).to.at.least(parseInt(testValues.version.software));
     }
 
-    function testPromise(name, done) {
-      hue[name].apply(hue).then(function (results) {
+    function testPromise(done) {
+      hue.version().then(function (results) {
         validateVersionResults(results);
         done();
       })
@@ -93,24 +95,22 @@ describe('Hue API', function () {
     }
 
     function testCallback(name, done) {
-      hue[name].apply(hue, [function (err, results) {
+      hue.version(function (err, results) {
         expect(err).to.be.null;
 
         validateVersionResults(results);
         done();
-      }]);
+      });
     }
 
     describe('#version', function () {
 
-      var fnName = 'version';
-
       it('using #promise', function (done) {
-        testPromise(fnName, done);
+        testPromise(done);
       });
 
       it('using #callback', function (done) {
-        testCallback(fnName, done);
+        testCallback(done);
       });
     });
 
