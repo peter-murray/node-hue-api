@@ -29,6 +29,10 @@ function buildOptions(command, parameters) {
     urlObj.port = parameters.port;
   }
 
+  if (parameters.httpsAgent) {
+    options.httpsAgent = parameters.httpsAgent;
+  }
+
   options.timeout = parameters.timeout || 10000;
   options.method = command.method || "GET";
 

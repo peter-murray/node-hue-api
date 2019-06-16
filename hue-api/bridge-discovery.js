@@ -6,6 +6,7 @@ var url = require("url")
     , http = require("./httpPromise")
     , utils = require("./utils")
     , discovery = require("./commands/discovery")
+    , meethueAgent = require('./meethue-agent')
     ;
 
 /**
@@ -28,7 +29,7 @@ module.exports.networkSearch = function (timeout) {
  * @returns {Q.promise} A promise that will resolve the addresses of the bridges, or {null} if a callback was provided.
  */
 module.exports.locateBridges = function (cb) {
-    var promise = http.invoke(discovery.upnpLookup, {host: "discovery.meethue.com", ssl: true});
+    var promise = http.invoke(discovery.upnpLookup, {host: "discovery.meethue.com", ssl: true, httpsAgent: meethueAgent.getAgent()});
     return utils.promiseOrCallback(promise, cb);
 };
 
@@ -165,3 +166,4 @@ function _getHueBridgeHost(description) {
     }
     return null;
 }
+
