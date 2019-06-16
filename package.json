@@ -1,29 +1,12 @@
 {
   "name": "node-hue-api",
-  "description": "Phillips Hue API Library for Node.js",
+  "description": "Philips Hue API Library for Node.js",
   "version": "3.0.0",
   "author": "Peter Murray <peter.murray@osirisoft.com>",
   "contributors": [
     {
       "name": "Peter Murray",
-      "email": "peter.murray@osirisoft.com"
-    },
-    {
-      "name": "Ilari Mäkimattila",
-      "email": "ilari.makimattila@gmail.com"
-    },
-    {
-      "name": "Bryan Schlief"
-    },
-    {
-      "name": "Sebastian B (SBejga)"
-    },
-    {
-      "name:": "Jon Long",
-      "email": "jon@linesandwaves.com"
-    },
-    {
-      "name": "Knut Sveidqvist"
+      "email": "681306+peter-murray@users.noreply.github.com"
     }
   ],
   "main": "index.js",
@@ -40,8 +23,8 @@
     "url": "https://github.com/peter-murray/node-hue-api/issues"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "get-ssl-certificate": "^2.3.1"
+    "axios": "^0.18.1",
+    "get-ssl-certificate": "^2.3.2"
   },
   "devDependencies": {
     "chai": "~4.2",

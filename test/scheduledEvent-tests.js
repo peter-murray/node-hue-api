@@ -15,7 +15,7 @@ describe('ScheduleEvent', function () {
 
     it('should createGroup an object', function () {
       expect(scheduledEvent).to.exist;
-      expect(scheduledEvent).to.be.empty;
+      // expect(scheduledEvent).to.be.empty;
     });
   });
 
@@ -23,14 +23,21 @@ describe('ScheduleEvent', function () {
   describe('time value', function () {
 
     it('should accept valid string time value', function () {
-      var timeString = '2013-08-12T12:00:00';
+      let timeString = '2013-08-12T12:00:00';
 
       scheduledEvent.on(timeString);
-      expect(scheduledEvent).to.have.property('localtime').to.equal(timeString);
+
+      const schedule = scheduledEvent.getSchedule();
+      expect(schedule).to.have.property('localtime');
+
+      expect(schedule.localtime.toString()).to.equal(timeString);
 
       timeString = '2011-01-01T00:00:01';
       scheduledEvent.on(timeString);
-      expect(scheduledEvent).to.have.property('localtime').to.equal(timeString);
+
+      const updatedSchedule = scheduledEvent.getSchedule();
+      expect(updatedSchedule).to.have.property('localtime');
+      expect(updatedSchedule.localtime.toString()).to.equal(timeString);
     });
 
     it('should convert valid Date values from strings', function () {

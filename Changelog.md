@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.0-alpha
+- Complete re-write of the library to remove outdated dependencies and introduce updated JavaScript objects, available
+  via the `require('node-hue-api').v3` object.
+  
+- Provides a mostly backwards compatible interface with `2.x` code bases. 
+
 ## 2.4.2
 - Fixing documentation issues around transition times #109
 - Added `transition_milliseconds` and `transitionTime_milliseconds` functions to complete the pairs between multiples of 100 and real milliseconds

@@ -3,7 +3,7 @@
 const expect = require('chai').expect
   , hue = require('..')
   , HueApi = hue.api
-  , scheduledEventBuilder = hue.scheduledEventBuilder
+  , scheduledEventBuilder = hue.scheduledEvent
   , testValues = require('./support/testValues.js')
   , AbsoluteTime = require('../lib/bridge-model/datetime/AbsoluteTime')
 ;

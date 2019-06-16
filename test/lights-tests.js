@@ -60,7 +60,7 @@ function _validateLightsResult(cb) {
 }
 
 function _validateLight(light) {
-  console.log(JSON.stringify(light, null, 2));
+  // console.log(JSON.stringify(light, null, 2));
   expect(light).to.have.property('id');
   expect(light).to.have.property('name');
   expect(light).to.have.property('modelid');

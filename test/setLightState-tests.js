@@ -149,9 +149,9 @@ describe('Hue API', function () {
 
         expect(result).to.be.true;
 
-        expect(stateResult).to.have.property('hue', 0);
-        expect(stateResult).to.have.property('sat', 254);
-        expect(stateResult).to.have.property('bri', 254);
+        expect(stateResult.state).to.have.property('hue', 0);
+        expect(stateResult.state).to.have.property('sat', 254);
+        expect(stateResult.state).to.have.property('bri', 254);
       });
     });
 
@@ -164,7 +164,7 @@ describe('Hue API', function () {
         ;
 
         expect(result).to.be.true;
-        validateHSBState(0, 0, 254)(stateResult);
+        validateHSBState(0, 0, 254)(stateResult.state);
       });
     });
 
@@ -177,7 +177,7 @@ describe('Hue API', function () {
         ;
 
         expect(result).to.be.true;
-        validateHSBState(0, 254, 254)(stateResult);
+        validateHSBState(0, 254, 254)(stateResult.state);
       });
 
     });

@@ -4,31 +4,24 @@
 // This wrapper is to provide some continuity in the modifications of the APIs over time
 //
 
-const Hue = require('./hue-api')
-
-  , scheduledEventBuilder = require('./hue-api/scheduledEventBuilder')
-  , scene = require('./hue-api/sceneBuilder') //TODO replaced by actual Scene object
-  // , timer = require('./hue-api/timer') //TODO replaced by a lot of classes
-
-
-  , lightState = require('./lib/bridge-model/lightstate/LightState')
-  , discovery = require('./lib/api/index').discovery
+const v3 = require('./lib/v3')
   , ApiError = require('./lib/ApiError')
+  , oldApi = require('./hue-api/shim')
 ;
 
-
 module.exports = {
-  HueApi: Hue,
-  BridgeApi: Hue,
-  api: Hue,
+  v3: v3,
 
-  lightState: lightState,
-  scheduledEventBuilder: scheduledEventBuilder, //TODO this was scheduledEvent
-  scene: scene,
-  // timer: timer,
+  // This was present in the old API, may need to deprecate it
+  ApiError: ApiError,
 
-  upnpSearch: discovery.upnpSearch,
-  nupnpSearch: discovery.nupnpSearch,
-
-  ApiError: ApiError
+  // Older API for backwards compatibility, will be removed in v4.x
+  api: oldApi.api,
+  HueApi: oldApi.api,
+  BridgeApi: oldApi.api,
+  lightState: oldApi.lightState,
+  scheduledEvent: oldApi.scheduledEvent,
+  scene: oldApi.scene,
+  upnpSearch: oldApi.upnpSearch,
+  nupnpSearch: oldApi.nupnpSearch,
 };

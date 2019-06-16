@@ -1,16 +1,16 @@
 module.exports = {
-  host: '192.168.2.22',
+  host: '192.168.10.50',
   username: '08a902b95915cdd9b75547cb50892dc4',
 
-  lightsCount: 40,
+  lightsCount: 37,
 
   locateTimeout: 7000,
   maxScheduleNameLength: 32,
 
-  testLightId: 6,
-  hueLightId: 6,
-  luxLightId: 15,
-  livingColorLightId: 1,
+  testLightId: 40, //TODO
+  hueLightId: 40, //TODO
+  luxLightId: 15, //TODO
+  livingColorLightId: 40, //TODO
 
   // version: {
   //   api: '1.5.0',

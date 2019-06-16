@@ -1,19 +1,14 @@
 'use strict';
 
-const ApiError = require('../lib/ApiError')
-  , utils = require('./utils')
+const utils = require('./utils')
+  , SceneBuilder = require('./SceneBuilder')
+  , ScheduleBuilder = require('./ScheduledEventBuilder')
 
+  // New API
   , newApi = require('../lib/api/index')
   , LightState = require('../lib/bridge-model/lightstate/LightState')
   , SceneLightState = require('../lib/bridge-model/lightstate/SceneLightState')
 ;
-
-//TODO this is a temporary hack
-Promise.prototype.done = function () {
-  console.log('The promises used by this library are now native JavaScript promises, not Q promises.\nPlease remove the use of the ".done()" function in your promise chains.\n');
-};
-Promise.prototype.fail = Promise.prototype.catch;
-
 
 function HueApi(config) {
   const self = this;
@@ -348,7 +343,8 @@ HueApi.prototype.setLightName = function (id, name, cb) {
 HueApi.prototype.setLightState = function (id, stateValues, cb) {
   const self = this,
     promise = self._getNewApi().then(api => {
-      return api.lights.setLightState(id, _getNewLightState(id, stateValues));
+      const lightState = _getNewLightState(id, stateValues);
+      return api.lights.setLightState(id, lightState);
     });
 
   return utils.promiseOrCallback(promise, cb);
@@ -590,6 +586,9 @@ HueApi.prototype.schedule = HueApi.prototype.getSchedule;
  */
 HueApi.prototype.scheduleEvent = function (schedule, cb) {
   const promise = this._getNewApi().then(api => {
+
+
+
     return api.schedules.createSchedule(schedule);
   });
 
@@ -690,6 +689,11 @@ HueApi.prototype.deleteScene = function (sceneId, cb) {
  */
 HueApi.prototype.createScene = function (scene, cb) {
   const promise = this._getNewApi().then(api => {
+
+    if (scene instanceof SceneBuilder) {
+      scene = scene.getScene();
+    }
+
     return api.scenes.createScene(scene);
   });
 
@@ -710,6 +714,11 @@ HueApi.prototype.createScene = function (scene, cb) {
  */
 HueApi.prototype.updateScene = function (sceneId, scene, cb) {
   const promise = this._getNewApi().then(api => {
+
+    if (scene instanceof SceneBuilder) {
+      scene = scene.getScene();
+    }
+
     return api.scenes.update(sceneId, scene);
   });
 
@@ -729,7 +738,13 @@ HueApi.prototype.modifyScene = HueApi.prototype.updateScene;
  */
 HueApi.prototype.setSceneLightState = function (sceneId, lightId, stateValues, cb) {
   const promise = this._getNewApi().then(api => {
-    const sceneLightState = new SceneLightState().populate(stateValues);
+    const sceneLightState = new SceneLightState();
+
+    if (stateValues instanceof LightState) {
+      sceneLightState.populate(stateValues.getPayload());
+    } else {
+      sceneLightState.populate(stateValues);
+    }
     return api.scenes.updateLightState(sceneId, lightId, sceneLightState);
   });
 
@@ -772,43 +787,6 @@ HueApi.prototype.activateScene = function (sceneId, groupIdFilter, cb) {
 HueApi.prototype.recallScene = HueApi.prototype.activateScene;
 
 
-// TODO this is flawed as the name can be in multiple scenes, all of which are active...
-///**
-// * Helper function that recalls a scene for a group using setGroupLightState. The id is extracted from the name, if
-// * multiple ids is encountered which often is the case when a scene is edited via an ios/android app the last one is
-// * used. Currently this is the scene last saved this is an assumption bases on undocumented handling.
-// *
-// * @param id The id of the light which is an integer or a value that can be parsed into an integer value.
-// * @param stateValues {Object} containing the properties and values to set on the light.
-// * @param cb An optional callback function to use if you do not want to use a promise for the results.
-// * @return A promise that will set the specified state on the light, or {null} if a callback was provided.
-// */
-////TODO rename
-//HueApi.prototype.recallSceneByName = function (groupId, sceneName, cb) {
-//    var self = this
-//        , deferred = Q.defer()
-//        , scenes = {}
-//        ;
-//
-//    //TODO this will not function as expected
-//    self.scenes()
-//        .then(function (sceneArray) {
-//            sceneArray.forEach(function (scene) {
-//                scenes[scene.name] = scene.id;
-//            });
-//
-//            if (typeof scenes[sceneName] !== 'undefined') {
-//                self.setGroupLightState(groupId, {scene: scenes[sceneName]})
-//                    .then(function (result) {
-//                        deferred.resolve(result);
-//                    });
-//            }
-//        }).done();
-//
-//    return utils.promiseOrCallback(deferred.promise, cb);
-//};
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // PRIVATE FUNCTIONS
@@ -817,17 +795,11 @@ HueApi.prototype.recallScene = HueApi.prototype.activateScene;
 
 // TODO this is just a transition function until we deprecate the API
 function _getNewLightState(lightId, stateValues) {
-  const newLightState = LightState.create();
-
-  // if (lightState.isLightState(stateValues)) {
-  //   stateValues = stateValues.payload();
-  // }
-
-  newLightState.getAllowedStateNames().forEach(state => {
-    if (stateValues.hasOwnProperty(state)) {
-      newLightState[state](stateValues[state]);
-    }
-  });
-
-  return newLightState;
+  if (stateValues instanceof LightState) {
+    return stateValues;
+  } else {
+    const newLightState = new LightState();
+    newLightState.populate(stateValues);
+    return newLightState;
+  }
 }

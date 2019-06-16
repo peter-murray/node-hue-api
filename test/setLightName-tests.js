@@ -28,7 +28,7 @@ describe('Hue API', function () {
 
       it('should set name', function (done) {
 
-        hue.setLightName(1, 'Living Color Floor', function (err, results) {
+        hue.setLightName(1, 'TV Right', function (err, results) {
           if (err) {
             throw err;
           }

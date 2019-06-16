@@ -309,29 +309,30 @@ describe('Hue API', function () {
         });
       });
 
-      describe('update scene states to \'current\'', function () {
-
-        function validateResult(cb) {
-          return function (result) {
-            expect(result).to.exist;
-            expect(result).to.have.property('storelightstate', true);
-            cb();
-          };
-        }
-
-        it('using #promise', function (done) {
-          hue.updateScene(sceneId, null, true)
-            .then(validateResult(done))
-            .done();
-        });
-
-        it('using #callback', function (done) {
-          hue.updateScene(sceneId, {}, true, function (err, result) {
-            expect(err).to.be.null;
-            validateResult(done)(result);
-          });
-        });
-      });
+      //TODO this no longer functions as part of breaking changes to API
+      // describe('update scene states to \'current\'', function () {
+      //
+      //   function validateResult(cb) {
+      //     return function (result) {
+      //       expect(result).to.exist;
+      //       expect(result).to.have.property('storelightstate', true);
+      //       cb();
+      //     };
+      //   }
+      //
+      //   it('using #promise', function (done) {
+      //     hue.updateScene(sceneId, null, true)
+      //       .then(validateResult(done))
+      //       .done();
+      //   });
+      //
+      //   it('using #callback', function (done) {
+      //     hue.updateScene(sceneId, {}, true, function (err, result) {
+      //       expect(err).to.be.null;
+      //       validateResult(done)(result);
+      //     });
+      //   });
+      // });
 
       describe('update name and lights', function () {
 

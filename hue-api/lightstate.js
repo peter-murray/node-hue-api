@@ -9,8 +9,6 @@ const State = function () {
   this.reset();
 };
 
-// const stateDefinitions = lightStateTrait(true).bodyArguments.value;
-
 /**
  * Creates a new state object to pass to a Philips Hue Light.
  *

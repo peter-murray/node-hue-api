@@ -6,46 +6,7 @@ const Scene = require('../lib/bridge-model/Scene');
 const Builder = function() {
   this._scene = new Scene();
 };
-
-module.exports.create = function () {
-  var scene
-    , arg
-  ;
-
-  if (arguments.length === 0) {
-    scene = new Builder();
-  } else {
-    arg = arguments[0];
-
-    if (arg instanceof Builder) {
-      scene = arg;
-    } else {
-      scene = new Builder();
-
-      // try to populate the new scene using any values that match scene properties
-      if (arg.name) {
-        scene.withName(arg.name);
-      }
-
-      if (arg.lights) {
-        scene.withLights(arg.lights);
-      }
-
-      if (arg.transitionTime) {
-        scene.withTransitionTime(arg.transitionTime);
-      }
-
-      if (arg.data || arg.appData) {
-        scene.withAppData(arg.data || arg.appData);
-      }
-
-      if (arg.picture) {
-        scene.withPicture(arg.picture);
-      }
-    }
-  }
-  return scene;
-};
+module.exports = Builder;
 
 Builder.prototype.getScene = function() {
   return this._scene;
@@ -76,6 +37,7 @@ Builder.prototype.withTransitionTime = function (milliseconds) {
 
 Builder.prototype.withAppData = function (data) {
   let appData;
+
   if (data.version) {
     appData = data;
   } else {
