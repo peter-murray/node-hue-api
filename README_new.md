@@ -48,13 +48,19 @@ than elegant.
 
 
 
-# v3 API
-
-
 ## Contents
 - [Change Log](#change-log)
 - [Philips Hue Resources](#philips-hue-resources)
 - [Installation](#installation)
+
+- [v3 API](#v3-api)
+  - [Discovering Hue Bridges](discovering-hue-bridges)
+    - [N-UPnP Search](n-upnp-search)
+    - [UPnP Search](upnp-search)
+  - []()
+  - []()
+
+
 - [Examples](#examples)
 - [Finding the Lights Attached to the Bridge](#finding-the-lights-attached-to-the-bridge)
 - [Interacting with a Hue Light or Living Color Lamp](#interacting-with-a-hue-light-or-living-color-lamp)
@@ -98,6 +104,140 @@ $ yarn install node-hue-api
 ```
 
 
+# v3 API
+
+The V3 API is written to support JavaScript native Promises, as such you can use stand Promise chaining with `then()` 
+and `catch()` ort utilize synchronous `async` and `await` in your own code base.
+
+The examples code snippets shown below to illustrate the API will use `async` and `await` in an attempt to keep the 
+examples short and concise.
+
+Also note that there are a number of runnable code examples in the `examples/v3` directory of this repository.
+
+
+## Discovering Hue Bridges
+
+There are two ways to discover a Hue bridge on the network using N-UPnP and UPnP methods. Both of these methods are 
+useful if you do not know the IP Address of the bridge already.
+
+The official Hue documentation recommends an approach to finding bridges by using both UPnP and N-UPnP in parallel
+to find your bridges on the network. This API library provided you with both options, but leaves it
+to the developer to decide on the approach to be used, i.e. fallback, parallel, or just one type.
+
+
+### N-UPnP Search
+This API function makes use of the official API endpoint that reveals the bridges on a network. It is a call through to
+`https://discovery.meethue.com` which may not work in all circumstances (your bridge must have signed into the meethue portal),
+in which case you can fall back to the slower ``upnpSearch()`` function.
+
+_Note: This function is considerably faster to resolve the bridges < 500ms compared to 5 seconds to perform a full 
+search via UPnP on my own network._
+
+```js
+const v3 = require('../../index').v3;
+
+async function getBridge() {
+  const results = await v3.discovery.nupnpSearch();
+
+  // Results will be an array of bridges that were found
+  console.log(JSON.stringify(results, null, 2));
+}
+
+getBridge();
+```
+
+The results will be an array of discovered bridges with the following structure:
+
+```
+[
+  {
+    "name": "Philips hue (192.xxx.xxx.xxx)",
+    "manufacturer": "Royal Philips Electronics",
+    "ipaddress": "192.xxx.xxx.xxx",
+    "model": {
+      "number": "BSB002",
+      "description": "Philips hue Personal Wireless Lighting",
+      "name": "Philips hue bridge 2015",
+      "serial": "0017xxxxxxxx"
+    },
+    "version": {
+      "major": "1",
+      "minor": "0"
+    },
+    "icons": [
+      {
+        "mimetype": "image/png",
+        "height": "48",
+        "width": "48",
+        "depth": "24",
+        "url": "hue_logo_0.png"
+      }
+    ]
+  }
+]
+```
+
+Note that the data returned can vary depending upon the version of the bridge software.
+
+
+### UPnP Search
+
+This API function utilizes a network scan for the SSDP responses of devices on a network. This ius a significantly slower
+way to find the Bridge, but can be useful if you have not set it up yet and it has not registered with the meethue portal.
+
+Note that you must be on the same network as the bridge for this to work.
+
+```js
+const v3 = require('../../index').v3;
+
+async function getBridge(timeout) {
+  const results = await v3.discovery.upnpSearch(timeout);
+
+  // Results will be an array of bridges that were found
+  console.log(JSON.stringify(results, null, 2));
+}
+
+// You can pass a timeout value to set the maximum time to search for Hue Bridges, there is a default of 5 seconds if not set
+getBridge(10000); // 10 second timeout
+```
+
+
+A timeout can be provided to the function to increase/decrease the amount of time that it waits for responses from the
+search request, by default this is set to 5 seconds (the above example sets this to 10 seconds).
+
+The results from this function call will be of the form;
+
+```
+[
+  {
+    "name": "Philips hue (192.xxx.xxx.xxx)",
+    "manufacturer": "Royal Philips Electronics",
+    "ipaddress": "192.xxx.xxx.xxx",
+    "model": {
+      "number": "BSB002",
+      "description": "Philips hue Personal Wireless Lighting",
+      "name": "Philips hue bridge 2015",
+      "serial": "0017xxxxxxxx"
+    },
+    "version": {
+      "major": "1",
+      "minor": "0"
+    },
+    "icons": [
+      {
+        "mimetype": "image/png",
+        "height": "48",
+        "width": "48",
+        "depth": "24",
+        "url": "hue_logo_0.png"
+      }
+    ]
+  }
+]
+```
+
+
+
 TODO COMPLETE DOCUMENTATION UPDATES FROM HERE -------------------------------------------------------------------------
 
 
@@ -105,73 +245,14 @@ TODO COMPLETE DOCUMENTATION UPDATES FROM HERE ----------------------------------
 
 
 
-## Examples
-
-### Locating a Philips Hue Bridge
-There are two functions available to find the Phillips Hue Bridges on the network ``nupnpSearch()`` and ``upnpSearch()``.
-Both of these methods are useful if you do not know the IP Address of the bridge already.
-
-The official Hue documentation recommends an approach to finding bridges by using both UPnP and N-UPnP in parallel
-to find your bridges on the network. This API library provided you with both options, but leaves it
-to the developer to decide on the approach to be used, i.e. fallback, parallel, or just one type.
 
 
-#### nupnpSearch() or locateBridges()
-This API function makes use of the official API endpoint that reveals the bridges on a network. It is a call through to
-``http://meethue.com/api/nupnp`` which may not work in all circumstances (your bridge must have signed into the methue portal),
- in which case you can fall back to the slower
-``upnpSearch()`` function.
-
-This function is considerably faster to resolve the bridges < 500ms compared to 5 seconds to perform a full search on my
-own network.
-
-```js
-var hue = require("node-hue-api");
-
-var displayBridges = function(bridge) {
-	console.log("Hue Bridges Found: " + JSON.stringify(bridge));
-};
-
-// --------------------------
-// Using a promise
-hue.nupnpSearch().then(displayBridges).done();
-
-// --------------------------
-// Using a callback
-hue.nupnpSearch(function(err, result) {
-	if (err) throw err;
-	displayBridges(result);
-});
-```
-
-The results from this call will be of the form;
-```
-Hue Bridges Found: [{"id":"001788fffe096103","ipaddress":"192.168.2.129","name":"Philips Hue","mac":"00:00:00:00:00"}]
-```
 
 
-#### upnpSearch or searchForBridges()
-This API function utilizes a network scan for the SSDP responses of devices on a network. It is the only method that does not
-support callbacks, and is only in the API as a fallback since Phillips provided a quicker discovery method once the API was
-officially released.
 
-```js
-var hue = require("node-hue-api"),
-	timeout = 2000; // 2 seconds
 
-var displayBridges = function(bridge) {
-	console.log("Hue Bridges Found: " + JSON.stringify(bridge));
-};
 
-hue.upnpSearch(timeout).then(displayBridges).done();
-```
-A timeout can be provided to the function to increase/decrease the amount of time that it waits for responses from the
-search request, by default this is set to 5 seconds (the above example sets this to 2 seconds).
 
-The results from this function call will be of the form;
-```
-Hue Bridges Found: [{"id":"001788096103","ipaddress":"192.168.2.129"}]
-```
 
 
 ### Registering a new Device/User with the Bridge

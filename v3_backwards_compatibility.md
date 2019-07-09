@@ -23,6 +23,8 @@ needed to be updated.
 * [groups] (#groups)
   * [getGroup()] (#getGroup)
   
+* [LightState] (#LightState)
+  
 * [Scenes] (#scenes)
   * [createScene()] (#createScene)
   * [updateScene()] (#updateScene)
@@ -39,7 +41,7 @@ The old deprecated functions `searchForBridges()` and `locateBridges()` have bee
 
 ## description
 
-The functions `description()` and `getDescription()` return a different result object.
+The functions `description()` and `getDescription()` return a different object as the result.
 
 
 ## groups
@@ -49,7 +51,21 @@ All Group functions that return objects for the group will have integrer based `
 ### getGroup
 The `getGroup()` function no longer returns an object with a `lastAction` attribute.
 
-Attempting to get a group that does not exist, will still error, but the error message will be different.
+Attempting to get a group that does not exist, will still error, but the error message will be of a different form. 
+Also passing invalid group IDs, that are not integers (or can be converted to one) will fail with a new form or error.  
+
+
+## LightState
+
+There is a shim in place to allow for the use of the old style LightState functions. This shim will create a new API 
+version of a LightState object that the new API functions with.
+
+The purpose of this is to provide a drop in shim to allow older code to work without having to be modified, but you are 
+strongly encouraged to utilize the new `LightState` object available using `require('node-hue-api').v3.lightstates.LightState'`
+as this removes a number of overloaded function names that were unnecessary from the old API.
+
+There will be some new errors generated when attempting to set values that fall outside the allowed ranges of the light,
+e.g. When setting a hue to be < 0.
 
 
 ## Scenes

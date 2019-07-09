@@ -3,9 +3,9 @@
 const Hue = require('./index')
   , ScheduledEventBuilder = require('./ScheduledEventBuilder')
   , SceneBuilder = require('./SceneBuilder')
+  , LightStateShim = require('./LightStateShim')
 
   // The new APIs
-  , LightState = require('../lib/bridge-model/lightstate/LightState')
   , discovery = require('../lib/api/discovery')
 ;
 
@@ -15,7 +15,6 @@ This module provides the necessary shimming to make the original 2.x version of 
 the new v3 API, thereby preventing the user base from having to rewrite all their code on day one of the release of 3.x.
 
  */
-
 
 const UPNP_SEARCH_WARNING = 'Function is deprecated, use require(\'node-hue-api\').discovery.upnpSearch() instead'
   , NUPNP_SEARCH_WARNING = 'Function is deprecated, use require(\'node-hue-api\').discovery.nupnpSearch() instead'
@@ -45,7 +44,7 @@ function api() {
     'This will be removed in v4.x of node-hue-api.\n\n' +
     'You need to migrate your code to use the new API available via import\n' +
     '  require("node-hue-api").hue\n\n' +
-    'Please consult the documentation at https://github.com/peter-murray/node-hue-api for the documentation on the new API.' +
+    'Please consult the documentation at https://github.com/peter-murray/node-hue-api for the documentation on the new API.\n' +
     '********************************************************************************\n'
   );
   patchPromise();
@@ -69,9 +68,9 @@ module.exports = {
 
   //TODO deprecate
   lightState: {
-    create: () => {
-      return new LightState();
-    }
+    create: function (values) {
+      return new LightStateShim(values);
+    },
   },
 
   //TODO deprecate

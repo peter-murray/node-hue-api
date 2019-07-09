@@ -1,5 +1,4 @@
 module.exports = {
-  host: '192.168.10.50',
   username: '08a902b95915cdd9b75547cb50892dc4',
 
   lightsCount: 37,

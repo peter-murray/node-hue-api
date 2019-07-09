@@ -14,16 +14,16 @@ async function getApi() {
   return await v3.hue.create(host, username);
 }
 
-// Obtains a light by name from the Hue Bridge
-async function getLight(name) {
+// Load all the lights from the bridge
+async function getAllLights() {
   const api = await getApi();
 
   // Obtain the light using the name provided
-  const light = await api.lights.getLightByName(name);
+  const lights = await api.lights.getAll();
 
-  // Display the details of the light object we got back
-  console.log(light.toStringDetailed());
+  // Display the details of the lights we got back
+  console.log(JSON.stringify(lights, null, 2));
 }
 
-// Get a specific light
-getLight('Office Desk Right');
+// Obtain all the lights in the bridge
+getAllLights();

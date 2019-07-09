@@ -3,10 +3,12 @@
 const utils = require('./utils')
   , SceneBuilder = require('./SceneBuilder')
   , ScheduleBuilder = require('./ScheduledEventBuilder')
+  , LightStateShim = require('./LightStateShim')
 
   // New API
   , newApi = require('../lib/api/index')
-  , LightState = require('../lib/bridge-model/lightstate/LightState')
+  , discovery = require('../lib/api/discovery')
+  , LightState = require('./LightStateShim')
   , SceneLightState = require('../lib/bridge-model/lightstate/SceneLightState')
 ;
 
@@ -84,7 +86,7 @@ HueApi.prototype.version = HueApi.prototype.getVersion;
  * @return {Q.promise} A promise that will be provided with a description object, or {null} if a callback was provided.
  */
 HueApi.prototype.description = function (cb) {
-  const promise = newApi.discovery.description(this._config.hostname);
+  const promise = discovery.description(this._config.hostname);
   return utils.promiseOrCallback(promise, cb);
 };
 HueApi.prototype.getDescription = HueApi.prototype.description;
@@ -795,7 +797,9 @@ HueApi.prototype.recallScene = HueApi.prototype.activateScene;
 
 // TODO this is just a transition function until we deprecate the API
 function _getNewLightState(lightId, stateValues) {
-  if (stateValues instanceof LightState) {
+  if (stateValues instanceof LightStateShim) {
+    return stateValues.lightState;
+  } else if (stateValues instanceof LightState) {
     return stateValues;
   } else {
     const newLightState = new LightState();
