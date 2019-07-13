@@ -3,15 +3,15 @@
 The `lights` API provides a means of interacting with the lights in Hue Bridge.
 
 * [getAll()](#getAll)
-* [getLightById](#getlightbyid)
-* [getLightByName](#getightbyname)
+* [getLightById(id)](#getlightbyid)
+* [getLightByName(name)](#getlightbyname)
 * [searchForNew()](#searchfornew)
 * [getNew()](#getnew)
-* [getLightAttributesAndState()](getlightattributesandstate)
-* [getLightState()](#getlightstate)
-* [setLightState()](#setlightstate)
-* [rename()](#rename)
-* [deleteLight](#deletelight)
+* [getLightAttributesAndState(id)](#getlightattributesandstate)
+* [getLightState(id)](#getlightstate)
+* [setLightState(id, state)](#setlightstate)
+* [rename(id, name)](#rename)
+* [deleteLight(id)](#deletelight)
 
 
 
