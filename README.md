@@ -1,27 +1,70 @@
-# Node Hue API
+# node-hue-api
 
 [![npm](https://img.shields.io/npm/v/node-hue-api.svg)](http://npmjs.org/node-hue-api)
 
-An API library for Node.js that interacts with the Philips Hue Bridge to control Philips Hue Light Bulbs and
-Philips Living Color Lamps.
+An API library for Node.js that interacts with the Philips Hue Bridge to control Lights, schedules, sensors and the 
+various other features of the bridge.
 
-This library abstracts away the actual Philips Hue Bridge REST API and provides all of the features of the Phillips API and
-a number of useful functions to control the lights and bridge remotely.
+This library abstracts away the actual Philips Hue Bridge REST API and provides all of the features of the Philips API and
+a number of useful functions to control/configure its various features.
 
-The library supports both function ``callbacks`` and Q ``promises`` for all the functions of the API.
-So for each function in the API, if a callback is provided, then a callback will be used to return any results
-or notification of success, in a true Node.js fashion. If the callback is omitted then a promise will be returned for
-use in chaining or in most cases simpler handling of the results.
 
-When using Q ``promises``, it is necessary to call ``done()`` on any promises that are returned, otherwise errors can be
-swallowed silently.
+## History of Versions 
 
-## Table of Contents
+### 3.x
+In version `3.x` the library was rewritten to adopt up to date Javascript language features (ES6) and remove a number of
+now defunct dependencies.
+
+This has resulted in the removal of the older `callbacks` and Q `promises` from the code base and a brand new API that
+includes a number of missing pieces of the the Philips Hue Bridge which were not available under the `2.x` versions, 
+e.g. Sensors support.
+
+The rewrite of the API using up to date language constructs has resulted in some significant speed increases from a 
+code execution stand point as introducing some improved functionality around utility functions like setting RGB values 
+on lights (which are not explicitly supported in the Philips Hue REST API).
+
+#### 2.x Backwards Compatibility Shim
+There is a mostly backwards compatibility shim provided in the initial `3.x` releases so as to allow existing users of 
+the library some time to transition existing code over to the updated API.
+
+This does have some minor breaking changes for more of the edge case features, but the majority of the core library 
+functions are shimmed to use the new API code behind a backwards compatible layer that provides a shimmed layer of
+`callback`s and `Q` style promises as per the original API.
+
+You are strongly encouraged to migrate off this, as it will be completely removed in the `4.x` releases, also all new 
+features will only be added to the `v3` going forward.  
+
+
+### 2.x
+The library was originally written before Promises and Async functions were part of the Javascript standards (as well 
+as callbacks being the Node.js standard at the time). The library heavily used  ``callbacks`` and Q ``promises`` for 
+all the functions of the API up until version `3.x`.
+
+It was getting difficult to continue to support the new features of the bridge in this manner, and there was a lot of 
+unnecessary dependencies that were being dragged around, some of which were abandoned, e.g. `traits` and `q`.
+
+The API was also suffering from the ad-hoc process that features had been added over the years from the underlying Philips 
+Hue REST API (with the desire to maintain non breaking changes to existing code) that had made it bloated and less 
+than elegant.
+
+
+
+## Contents
 - [Change Log](#change-log)
-- [Work In Progress](#work-in-progress)
-- [Breaking Changes in 2.0.x](#breaking-changes-in-20x)
-- [Philips Hue Resources](#philips-hue-resources)
+
 - [Installation](#installation)
+
+- [v3 API](#v3-api)
+  - [Discovering Hue Bridges](https://github.com/peter-murray/node-hue-api/blob/master/docs/discovery.md)  
+  - [Lights](https://github.com/peter-murray/node-hue-api/blob/master/docs/lights.md)
+  - [Sensors](https://github.com/peter-murray/node-hue-api/blob/master/docs/sensors.md)
+
+- [Philips Hue Resources](#philips-hue-resources)
+- [License](#license)
+
+
+
+
 - [Examples](#examples)
 - [Finding the Lights Attached to the Bridge](#finding-the-lights-attached-to-the-bridge)
 - [Interacting with a Hue Light or Living Color Lamp](#interacting-with-a-hue-light-or-living-color-lamp)
@@ -33,134 +76,59 @@ swallowed silently.
 - [Working with Schedules](#working-with-schedules)
 - [Working with scenes](#working-with-scenes)
 - [Advanced Options](#advanced-options)
-- [License](#license)
+
+
 
 ## Change Log
 For a list of changes, please refer to the change log;
 [Changes](Changelog.md)
 
 
-## Work In Progress
-There are still some missing pieces to the library which includes;
-* Rules API
-* Improved handling of settings/commands for Schedules
-
-
-## Breaking Changes in 2.0.x
-In version `2.0.x` breaking changes were made to the API so that the library could better integrate with the `1.11`
-version of Hue Bridge's software. This involved a number of new API endpoints and changes to types of activities that
-had been wrapped by this library, which the bridge endpoints now offer.
-
-The majority of the changes in the API were with respect to the scenes, as these were stored inside the bridge, instead
-of in the lights. As such the scene APIs have been modified to expose this new functionality.
-
-### Node.js 0.10.x and Early 0.12.x Issues
-In version `2.0.x` the HTTP library was swapped out with a new one `axios`. This library requires that there is a
-`promise` present in Node.js.
-Versions 0.10.x and some early versions of 0.12.x will require a shim to work with the node-hue-api library now.
-
-If you get an error stack trace like the following, you will need the promise shim;
-
-```
-node_modules/axios/lib/axios.js:45
-var promise = Promise.resolve(config);
-^
-ReferenceError: Promise is not defined
-```
-
-The shim dependency is available at [https://github.com/stefanpenner/es6-promise] and can be installed via npm using
-``npm install es6-promise``
-
-Once you have the dependency, you will need to add the following into your code to apply the polyfill:
-
-```js
-require('es6-promise').polyfill();
-```
-
-
-## Philips Hue Resources
-
-There are a number of resources where users have detailed documentation on the Philips Hue Bridge;
- - The Official Phillips Hue Documentation <http://www.developers.meethue.com>
- - Unofficial Hue Documentation: <http://burgestrand.github.com/hue-api/>
- - Hue Hackers Mailing List: <https://groups.google.com/forum/#!forum/hue-hackers>
- - StackOverflow: <http://stackoverflow.com/questions/tagged/philips-hue>
-
 
 ## Installation
 
-NodeJS application using npm:
+NodeJS using npm:
 ```
 $ npm install node-hue-api
 ```
 
-## Examples
-
-### Locating a Philips Hue Bridge
-There are two functions available to find the Phillips Hue Bridges on the network ``nupnpSearch()`` and ``upnpSearch()``.
-Both of these methods are useful if you do not know the IP Address of the bridge already.
-
-The official Hue documentation recommends an approach to finding bridges by using both UPnP and N-UPnP in parallel
-to find your bridges on the network. This API library provided you with both options, but leaves it
-to the developer to decide on the approach to be used, i.e. fallback, parallel, or just one type.
-
-
-#### nupnpSearch() or locateBridges()
-This API function makes use of the official API endpoint that reveals the bridges on a network. It is a call through to
-``http://meethue.com/api/nupnp`` which may not work in all circumstances (your bridge must have signed into the methue portal),
- in which case you can fall back to the slower
-``upnpSearch()`` function.
-
-This function is considerably faster to resolve the bridges < 500ms compared to 5 seconds to perform a full search on my
-own network.
-
-```js
-var hue = require("node-hue-api");
-
-var displayBridges = function(bridge) {
-	console.log("Hue Bridges Found: " + JSON.stringify(bridge));
-};
-
-// --------------------------
-// Using a promise
-hue.nupnpSearch().then(displayBridges).done();
-
-// --------------------------
-// Using a callback
-hue.nupnpSearch(function(err, result) {
-	if (err) throw err;
-	displayBridges(result);
-});
+NodeJS using yarn:
 ```
-
-The results from this call will be of the form;
-```
-Hue Bridges Found: [{"id":"001788fffe096103","ipaddress":"192.168.2.129","name":"Philips Hue","mac":"00:00:00:00:00"}]
+$ yarn install node-hue-api
 ```
 
 
-#### upnpSearch or searchForBridges()
-This API function utilizes a network scan for the SSDP responses of devices on a network. It is the only method that does not
-support callbacks, and is only in the API as a fallback since Phillips provided a quicker discovery method once the API was
-officially released.
+# v3 API
 
-```js
-var hue = require("node-hue-api"),
-	timeout = 2000; // 2 seconds
+The V3 API is written to support JavaScript native Promises, as such you can use stand Promise chaining with `then()` 
+and `catch()` or utilize synchronous `async` and `await` in your own code base.
 
-var displayBridges = function(bridge) {
-	console.log("Hue Bridges Found: " + JSON.stringify(bridge));
-};
+_Note that there are a number of runnable code samples in the `examples/v3` directory of this repository._
 
-hue.upnpSearch(timeout).then(displayBridges).done();
-```
-A timeout can be provided to the function to increase/decrease the amount of time that it waits for responses from the
-search request, by default this is set to 5 seconds (the above example sets this to 2 seconds).
 
-The results from this function call will be of the form;
-```
-Hue Bridges Found: [{"id":"001788096103","ipaddress":"192.168.2.129"}]
-```
+- [discovery](https://github.com/peter-murray/node-hue-api/blob/master/docs/discovery.md)
+- [Lights](https://github.com/peter-murray/node-hue-api/blob/master/docs/lights.md)
+- [Sensors](https://github.com/peter-murray/node-hue-api/blob/master/docs/sensors.md)
+
+
+
+
+
+TODO COMPLETE DOCUMENTATION UPDATES FROM HERE -------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ### Registering a new Device/User with the Bridge
@@ -2412,8 +2380,17 @@ api = new HueApi(host, username, timeout, port);
 ```
 
 
+## Philips Hue Resources
+
+There are a number of resources where users have detailed documentation on the Philips Hue Bridge;
+ - The Official Phillips Hue Documentation <http://www.developers.meethue.com>
+ - Unofficial Hue Documentation: <http://burgestrand.github.com/hue-api/>
+ - Hue Hackers Mailing List: <https://groups.google.com/forum/#!forum/hue-hackers>
+ - StackOverflow: <http://stackoverflow.com/questions/tagged/philips-hue>
+
+
 ## License
-Copyright 2013-2015. All Rights Reserved.
+Copyright 2013-2019. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this library except in compliance with the License.
 

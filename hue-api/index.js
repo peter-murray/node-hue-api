@@ -252,7 +252,7 @@ HueApi.prototype.lights = function (cb) {
   function generateResponseData(data) {
     const result = [];
 
-    data.lights.forEach(light => {
+    data.forEach(light => {
       result.push(Object.assign({id: light.id}, light.bridgeData));
     });
 
