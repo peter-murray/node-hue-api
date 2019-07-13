@@ -242,8 +242,8 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 The `setLightState(id, state)` function can be used to set the state of a light specified byt he `id` to the specified 
 `state` provided. 
 
-You can either provide a data object with the desired properties set for the `state` or utilize the [`LightState`]() 
-object to build a desired `LightState` to set
+You can either provide a data object with the desired properties set for the `state` or utilize the [`LightState`](lightState.md) 
+object to build a desired `LightState` to set.
 
 
 Example setting a simple light state of `on` using a simple object:
@@ -258,6 +258,7 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 Example using a LightState state to set `on` and `ct` value:
 ```js
 const state = new LightState().on().ct(200);
+
 api.lights.setLightState(LIGHT_ID, state)
   .then(result => {
     console.log(`Light state change was successful? ${result}`);

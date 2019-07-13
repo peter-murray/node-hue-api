@@ -9,11 +9,11 @@ This library abstracts away the actual Philips Hue Bridge REST API and provides 
 a number of useful functions to control/configure its various features.
 
 
-## History of Versions 
+## History of Major Versions 
 
-- [2.x](2.x)
-- [3.x](3.x)
-  - [2x. Backwards Compatibility Shim](#2.x-backwards-compatibility-shim)
+- [2.x](2x)
+- [3.x](3x)
+  - [2x. Backwards Compatibility Shim](#2x-backwards-compatibility-shim)
 
 ### 2.x
 The library was originally written well before Promises and Async functions were part of the Javascript language (as well 
@@ -50,6 +50,11 @@ functions are shimmed to use the new API code behind a backwards compatible laye
 
 You are strongly encouraged to migrate off this, as it will be completely removed in the `4.x` releases, also all new 
 features will only be added to the `v3` going forward.  
+
+This shim will print out on `console.error` a number of warnings about the deprecated function calls that exist and
+provide some details on what you can do to remove them.
+
+This shim layer will be removed in the `4.x` versions of the library.
 
 
 
