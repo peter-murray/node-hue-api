@@ -11,6 +11,23 @@ a number of useful functions to control/configure its various features.
 
 ## History of Versions 
 
+- [2.x](2.x)
+- [3.x](3.x)
+  - [2x. Backwards Compatibility Shim](#2.x-backwards-compatibility-shim)
+
+### 2.x
+The library was originally written well before Promises and Async functions were part of the Javascript language (as well 
+as callbacks being the Node.js standard at the time). The `2.x` versions of the library heavily used  `callbacks` and 
+`Q promises` for all the functions of the API.
+
+It was getting difficult to continue to support the new features of the bridge in this manner, and there was a lot of 
+unnecessary dependencies that were being dragged around, some of which were abandoned, e.g. `traits` and `Q`.
+
+The API was also suffering from the ad-hoc process that features had been added over the years from the underlying Philips 
+Hue REST API (with the desire to maintain non breaking changes to existing code) that had made it bloated and less 
+than elegant.
+
+
 ### 3.x
 In version `3.x` the library was rewritten to adopt up to date Javascript language features (ES6) and remove a number of
 now defunct dependencies.
@@ -20,7 +37,7 @@ includes a number of missing pieces of the the Philips Hue Bridge which were not
 e.g. Sensors support.
 
 The rewrite of the API using up to date language constructs has resulted in some significant speed increases from a 
-code execution stand point as introducing some improved functionality around utility functions like setting RGB values 
+code execution stand point as well as introducing improved functionality around utility functions like setting RGB values 
 on lights (which are not explicitly supported in the Philips Hue REST API).
 
 #### 2.x Backwards Compatibility Shim
@@ -35,19 +52,6 @@ You are strongly encouraged to migrate off this, as it will be completely remove
 features will only be added to the `v3` going forward.  
 
 
-### 2.x
-The library was originally written before Promises and Async functions were part of the Javascript standards (as well 
-as callbacks being the Node.js standard at the time). The library heavily used  ``callbacks`` and Q ``promises`` for 
-all the functions of the API up until version `3.x`.
-
-It was getting difficult to continue to support the new features of the bridge in this manner, and there was a lot of 
-unnecessary dependencies that were being dragged around, some of which were abandoned, e.g. `traits` and `q`.
-
-The API was also suffering from the ad-hoc process that features had been added over the years from the underlying Philips 
-Hue REST API (with the desire to maintain non breaking changes to existing code) that had made it bloated and less 
-than elegant.
-
-
 
 ## Contents
 - [Change Log](#change-log)
@@ -55,9 +59,11 @@ than elegant.
 - [Installation](#installation)
 
 - [v3 API](#v3-api)
-  - [Discovering Hue Bridges](https://github.com/peter-murray/node-hue-api/blob/master/docs/discovery.md)  
-  - [Lights](https://github.com/peter-murray/node-hue-api/blob/master/docs/lights.md)
-  - [Sensors](https://github.com/peter-murray/node-hue-api/blob/master/docs/sensors.md)
+  - [Discovering Hue Bridges](docs/discovery.md)  
+  - [Lights](docs/lights.md)
+  - [Sensors](docs/sensors.md)
+
+- [Examples](#examples)
 
 - [Philips Hue Resources](#philips-hue-resources)
 - [License](#license)
@@ -98,23 +104,32 @@ $ yarn install node-hue-api
 ```
 
 
-# v3 API
+## v3 API
 
 The V3 API is written to support JavaScript native Promises, as such you can use stand Promise chaining with `then()` 
 and `catch()` or utilize synchronous `async` and `await` in your own code base.
 
-_Note that there are a number of runnable code samples in the `examples/v3` directory of this repository._
+_Note that there are a number of runnable code samples in the [examples/v3](examples/v3) directory of this repository._
 
 
-- [discovery](https://github.com/peter-murray/node-hue-api/blob/master/docs/discovery.md)
-- [Lights](https://github.com/peter-murray/node-hue-api/blob/master/docs/lights.md)
-- [Sensors](https://github.com/peter-murray/node-hue-api/blob/master/docs/sensors.md)
+- [discovery](docs/discovery.md)
+- [Lights](docs/lights.md)
+- [Sensors](docs/sensors.md)
+
 
 
 
 
 
 TODO COMPLETE DOCUMENTATION UPDATES FROM HERE -------------------------------------------------------------------------
+
+## Examples
+There are a number of examples of using the `v3` API availble in the [examples/v3](examples/v3) directory of this 
+repository.
+
+There are also references to these runnable code samples from the documentation on each of the APIs that this library 
+provides.
+
 
 
 
