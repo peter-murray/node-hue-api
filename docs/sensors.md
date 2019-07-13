@@ -18,25 +18,16 @@ The sensors API allows you to interact with the sensors features of the Hue Brid
 This function allows you to retrieve all the sensors that are stored in the Hue Bridge.
 
 ```js
-'use strict';
-
-const v3 = require('../../../index').v3;
-const USERNAME = 'my secret username';
-
-v3.discovery.nupnpSearch()
-  .then(searchResults => {
-    const host = searchResults[0].ipaddress;
-    return v3.api.create(host, USERNAME);
-  })
-  .then(api => {
-    return api.sensors.getAll();
-  })
+api.sensors.getAll()
   .then(allSensors => {
     // Display the details of the sensors we got back
     console.log(JSON.stringify(allSensors, null, 2));
   })
 ;
 ```
+
+This will return an Array of `Sensor` objects that exist in the Hue Bridge. There are many different types of `Sensors`
+that can exist in a Hue Bridge. Some of these are actual Physical Sensors and others can be Programmable `CLIP` Sensors. 
 
 
 ## get(id)
