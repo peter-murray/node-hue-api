@@ -28,7 +28,7 @@ api.lights.getAll()
 
 This function call will return an `Array` of `Light` objects. 
 
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/getAllLights.js).
+A complete code sample for this function is available [here](../examples/v3/lights/getAllLights.js).
 
 
 
@@ -45,7 +45,7 @@ api.lights.getLightById(id)
 
 This function call will return a single `Light` instance.
 
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/getLightById.js).
+A complete code sample for this function is available [here](../examples/v3/lights/getLightById.js).
 
 
 
@@ -62,7 +62,7 @@ api.lights.getLightByName(name)
 
 This function call will return a single `Light` instance.
 
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/getLightById.js).
+A complete code sample for this function is available [here](../examples/v3/lights/getLightById.js).
 
 
 
@@ -83,7 +83,7 @@ api.lights.searchForNew()
 
 The function will return a `Boolean` status as to whether or no a search was activated, or extended.
 
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/searchForNewLights.js).
+A complete code sample for this function is available [here](../examples/v3/lights/searchForNewLights.js).
 
 
 
@@ -116,7 +116,7 @@ For example if a light of id 7 is found the returned JSON payload will be:
 }
 ```
 
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/getNewLights.js).
+A complete code sample for this function is available [here](../examples/v3/lights/getNewLights.js).
 
 
 
@@ -198,7 +198,7 @@ shown below:
 }
 ```
 
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/getLightAttributesAndState.js).
+A complete code sample for this function is available [here](../examples/v3/lights/getLightAttributesAndState.js).
 
 
 
@@ -234,7 +234,7 @@ will depend upon the type of the light and its current state values.
 }
 ```
 
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/getLightState.js).
+A complete code sample for this function is available [here](../examples/v3/lights/getLightState.js).
 
 
 ## setLightState()
@@ -253,7 +253,7 @@ api.lights.setLightState(id, {on: true})
     console.log(`Light state change was successful? ${result}`);
   })
 ``` 
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/setLightStateUsingObject.js).
+A complete code sample for this function is available [here](../examples/v3/lights/setLightStateUsingObject.js).
 
 Example using a LightState state to set `on` and `ct` value:
 ```js
@@ -263,7 +263,7 @@ api.lights.setLightState(LIGHT_ID, state)
     console.log(`Light state change was successful? ${result}`);
   })
 ```
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/setLightStateUsingLightState.js).
+A complete code sample for this function is available [here](../examples/v3/lights/setLightStateUsingLightState.js).
 
 
 The result from this function call will be a `Boolean` that indicates the success status of the change.
@@ -280,7 +280,7 @@ api.lights.rename(id, 'my_new_name')
       console.log(`Successfully reanmed light? ${result}`);
   });
 ```
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/renameLight.js).
+A complete code sample for this function is available [here](../examples/v3/lights/renameLight.js).
 
 
 The function will return a `Boolean` with the auccess status of the renaming.
@@ -298,9 +298,10 @@ api.lights.deleteLight(LIGHT_ID)
     console.log(`Successfully delete light? ${result}`);
   })
 ```
-A complete code sample for this function is available [here](https://github.com/peter-murray/node-hue-api/blob/master/examples/v3/lights/deleteLight.js).
+A complete code sample for this function is available [here](../examples/v3/lights/deleteLight.js).
 
 The function will return a `Boolean` indicate a successful deletion of the light. If the light is not found, it will
 generate an error stating the resource is not available.
 
+https://github.com/peter-murray/node-hue-api/blob/v_3/examples/v3/lights/deleteLight.js
 
