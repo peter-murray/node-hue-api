@@ -73,7 +73,7 @@ const sensorConfig = {
   modelid: 'software',
   swversion: '1.0',
   uniqueid: '00:00:00:01',
-  manufacturername: 'software'
+  manufacturername: 'node-hue-api'
 };
 
 const mySensor = new CLIPGenericFlagSensor(sensorConfig);
@@ -109,7 +109,7 @@ const sensorConfig = {
   modelid: 'software',
   swversion: '1.0',
   uniqueid: '00:00:00:01',
-  manufacturername: 'software'
+  manufacturername: 'node-hue-api'
 };
 
 const mySensor = new CLIPGenericStatusSensor(sensorConfig);
@@ -140,7 +140,7 @@ const sensorConfig = {
   modelid: 'software',
   swversion: '1.0',
   uniqueid: '00:00:00:01',
-  manufacturername: 'software'
+  manufacturername: 'node-hue-api'
 };
 
 const mySensor = new CLIPHumiditySensor(sensorConfig);
@@ -175,7 +175,7 @@ const sensorConfig = {
   modelid: 'software',
   swversion: '1.0',
   uniqueid: '00:00:00:01',
-  manufacturername: 'software'
+  manufacturername: 'node-hue-api'
 };
 
 const mySensor = new CLIPLightLevel(sensorConfig);
@@ -191,18 +191,125 @@ A complete code sample for sensors is available [here](../examples/v3/sensors/cr
 
 
 ### CLIPOpenClose
+The `CLIPOpenClose` sensor is for open/close status sensors, like a door or window.
+
+The unique properties for the `OpenClose` Sensor are:
+
+* `open`: `get` and `set`, boolean indicating open state
+
+
+Creating a `CLIPOpenClose` sensor can be done as shown below:
+```js
+const CLIPOpenClose = require('node-hue-api').v3.sensors.clip.OpenClose;
+
+const sensorConfig = {
+  modelid: 'software',
+  swversion: '1.0',
+  uniqueid: '00:00:00:01',
+  manufacturername: 'node-hue-api'
+};
+
+const mySensor = new CLIPOpenClose(sensorConfig);
+
+// Set the name of the sensor
+mySensor.name = 'Lounge Door';
+// Set the open state
+mySensor.open = false;
+```
 
 A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+
 
 
 ### CLIPPresence
+The `CLIPPresense` sensor is for registering the presence of someone at the location of the sensor.
+
+The unique properties for the `Presense` Senor are:
+
+* `presence`: `get` and `set`, boolean indicating if there is a presence at the sensor
+
+
+Creating a `CLIPPresence` sensor can be done as shown below:
+```js
+const CLIPresence = require('node-hue-api').v3.sensors.clip.Presence;
+
+const sensorConfig = {
+  modelid: 'software',
+  swversion: '1.0',
+  uniqueid: '00:00:00:01',
+  manufacturername: 'node-hue-api'
+};
+
+const mySensor = new CLIPresence(sensorConfig);
+
+// Set the name of the sensor
+mySensor.name = 'Lounge Presence';
+// Set the presence state
+mySensor.presence = true;
+```
 
 A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+
+
 
 ### CLIPSwitch
+The `CLIPSwitch` sensor is for registering switch button states.
+
+The unique properties for the `Switch` Sensor are:
+
+* `buttonevent`: `get` and `set`, an integer value indicating the button event that has been triggered on the switch.
+
+In Zigbee switches the events relate to the individual buttons that are present on the switch and the state triggered on
+the last button pressed/released an whether it was a short or long press.
+
+Creating a `CLIPSwitch` sensor can be done as shown below:
+```js
+const CLIPSwitch = require('node-hue-api').v3.sensors.clip.Switch;
+
+const sensorConfig = {
+  modelid: 'software',
+  swversion: '1.0',
+  uniqueid: '00:00:00:01',
+  manufacturername: 'node-hue-api'
+};
+
+const mySensor = new CLIPSwitch(sensorConfig);
+
+// Set the name of the sensor
+mySensor.name = 'Lounge Wall Switch';
+// Set a button event code state
+mySensor.buttonevent = 2000;
+```
 
 A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
 
+
+
 ### CLIPTemperature
+The `CLIPTemperature` sensor is for measuring current ambient temperature.
+
+The unique properties for the `Temperature` Sensor are:
+
+* `temperature`: `get` and `set`, the current temperature in 0.01 degrees celsius, e.g. 3000 is 30.00 degrees
+
+
+Creating a `CLIPTemperature` sensor can be done as shown below:
+```js
+const CLIPTemperature = require('node-hue-api').v3.sensors.clip.Temperature;
+
+const sensorConfig = {
+  modelid: 'software',
+  swversion: '1.0',
+  uniqueid: '00:00:00:01',
+  manufacturername: 'node-hue-api'
+};
+
+const mySensor = new CLIPSwitch(sensorConfig);
+
+// Set the name of the sensor
+mySensor.name = 'Lounge Temperature';
+// Set a the temperature to 18.5 degrees
+mySensor.buttonevent = 1850;
+```
 
 A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).

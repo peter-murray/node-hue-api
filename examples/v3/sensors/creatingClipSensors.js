@@ -86,3 +86,85 @@ lightLevelSensor.daylight = false;
 console.log(JSON.stringify(lightLevelSensor.payload, null, 2));
 
 //**********************************************************************************************************************
+
+
+
+//**********************************************************************************************************************
+// Create a CLIP Open Close Sensor
+//
+const openCloseSensor = new clipSensors.OpenClose({
+  modelid: 'software',
+  swversion: '1.0',
+  uniqueid: '00:00:00:01',
+  manufacturername: 'node-hue-api',
+  name: 'Lounge Door'
+});
+
+openCloseSensor.open = false;
+
+// Display the payload of the sensor object that can be stored in the Hue Bridge
+console.log(JSON.stringify(openCloseSensor.payload, null, 2));
+
+//**********************************************************************************************************************
+
+
+
+//**********************************************************************************************************************
+// Create a CLIP Presence Sensor
+//
+const presenceSensor = new clipSensors.Presence({
+  modelid: 'software',
+  swversion: '1.0',
+  uniqueid: '00:00:00:01',
+  manufacturername: 'node-hue-api',
+  name: 'Lounge Presence'
+});
+
+presenceSensor.presence = true;
+
+// Display the payload of the sensor object that can be stored in the Hue Bridge
+console.log(JSON.stringify(presenceSensor.payload, null, 2));
+
+//**********************************************************************************************************************
+
+
+
+//**********************************************************************************************************************
+// Create a CLIP Switch Sensor
+//
+const switchSensor = new clipSensors.Switch({
+  modelid: 'software',
+  swversion: '1.0',
+  uniqueid: '00:00:00:01',
+  manufacturername: 'node-hue-api',
+  name: 'Lounge Wall Switch'
+});
+
+switchSensor.buttonevent = 2000;
+
+// Display the payload of the sensor object that can be stored in the Hue Bridge
+console.log(JSON.stringify(switchSensor.payload, null, 2));
+
+//**********************************************************************************************************************
+
+
+
+//**********************************************************************************************************************
+// Create a CLIP Temperature Sensor
+//
+const tempSensor = new clipSensors.Temperature({
+  modelid: 'software',
+  swversion: '1.0',
+  uniqueid: '00:00:00:01',
+  manufacturername: 'node-hue-api',
+  name: 'Lounge Temperature'
+});
+
+// Set temperature to 38.5 degrees
+tempSensor.temperature = 3850;
+
+// Display the payload of the sensor object that can be stored in the Hue Bridge
+console.log(JSON.stringify(tempSensor.payload, null, 2));
+
+//**********************************************************************************************************************
+
