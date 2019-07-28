@@ -49,12 +49,12 @@ as callbacks being the Node.js standard at the time). The `2.x` versions of the 
 It was getting difficult to continue to support the new features of the bridge in this manner, and there was a lot of 
 unnecessary dependencies that were being dragged around, some of which were abandoned, e.g. `traits` and `Q`.
 
-The API was also suffering from the ad-hoc process that features had been added over the years from the underlying Philips 
-Hue REST API (with the desire to maintain non breaking changes to existing code) that had made it bloated and less 
-than elegant.
+You can continue to use the old 2.x release versions of this library, but the final release is `2.4.6` and no new 
+features will be added to this.
 
-Please consult the [backwards compatibility changes](docs/v3_backwards_compatibility.md) for details on changes that had to be made that will change the 
-v2 API.
+There is a shim layer in the `3.x` releases that provides a drop in to match about 95% of the v2 API, see 
+[here](#2x-backwards-compatibility-shim) for more details.
+
 
 
 ### 3.x
@@ -74,17 +74,20 @@ on lights (which are not explicitly supported in the Philips Hue REST API).
 There is a mostly backwards compatibility shim provided in the `3.x` releases to allow existing (`2.x`) users of 
 the library some time to transition existing code over to the updated API.
 
-This does have some minor breaking changes for more of the edge case features, but the majority of the core library 
+This does have some minor breaking changes in some edge case features, but the majority of the core library 
 functions are shimmed to use the new API code behind a backwards compatible layer that provides a shimmed layer of
 `callback`s and `Q` style promises as per the original API.
 
-_You are strongly encouraged to migrate off this, as it will be completely removed in the `4.x` releases, also all new 
+Please consult the [backwards compatibility changes](docs/v3_backwards_compatibility.md) for details on changes that had 
+to be made that will change the v2 API.
+
+_Note: You are strongly encouraged to migrate off this, as it will be completely removed in the `4.x` releases, also all new 
 features will only be added to the `v3` going forward._  
 
-This shim will print out on `console.error` a number of warnings about the deprecated function calls that exist and
-provide some details on what you can do to remove them.
+_Note: This shim will print out on `console.error` a number of warnings about the deprecated function calls that exist and
+provide some details on what you can do to remove them._
 
-This shim layer will be removed in the `4.x` versions of the library.
+This shim layer will be removed in the `4.x` release versions of the library.
 
 
 ## Installation
@@ -110,9 +113,9 @@ _Note that there are a number of runnable code samples in the [examples/v3](exam
 - [Discovering Hue Bridges](docs/discovery.md)  
 - [Users](docs/users.md)
 - [Lights](docs/lights.md)
-- [Light Object](docs/light.md)
+  - [Light Object](docs/light.md)
 - [Sensors](docs/sensors.md)
-- [Sensor Objects](docs/sensor.md)
+  - [Sensor Objects](docs/sensor.md)
 - [Configuration](docs/configuration.md)
 
 
@@ -120,7 +123,7 @@ _Note that there are a number of runnable code samples in the [examples/v3](exam
 ## Examples
 The v3 APIs are documented using example code and links to more complex/complete examples for each API calls.
 
-Check the [v3 API links](#v3api) or the [examples directory](examples/v3) in this repository.
+Check the [v3 API links](#v3-api) or the [examples directory](examples/v3) in this repository.
 
 
 

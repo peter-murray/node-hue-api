@@ -2,7 +2,7 @@
 
 The `users` API provides a means of interacting with the Hue Bridge user accounts.
 
-* [User Names](#usernames)
+* [User Names](#user-names)
 * [createUser(appName, deviceName)](#createuser)
 * [deleteUser(username)](#deleteuser)
 * [getAll()](#getAll)
