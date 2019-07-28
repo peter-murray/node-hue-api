@@ -11,8 +11,8 @@ a number of useful functions to control/configure its various features.
 
 ## Contents
 - [Change Log](#change-log)
-  - [2.x](2x)
-  - [3.x](3x)
+  - [2.x](#2x)
+  - [3.x](#3x)
     - [2.x Backwards Compatibility Shim](#2x-backwards-compatibility-shim) 
   
 - [Installation](#installation)
