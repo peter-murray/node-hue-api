@@ -13,10 +13,9 @@ v3.discovery.nupnpSearch()
     return v3.api.create(host, USERNAME);
   })
   .then(api => {
-    return api.sensors.getAll();
+    return api.sensors.searchForNew();
   })
-  .then(allSensors => {
-    // Display the details of the sensors we got back
-    console.log(JSON.stringify(allSensors, null, 2));
+  .then(result => {
+    console.log(`Started Search for New Sensors? ${result}`);
   })
 ;

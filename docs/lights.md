@@ -16,7 +16,7 @@ The `lights` API provides a means of interacting with the lights in Hue Bridge.
 
 
 ## getAll()
-This `getAll()` fucntion allows you to get all the lights that the Hue Bridge has registered with it.
+The `getAll()` fucntion allows you to get all the lights that the Hue Bridge has registered with it.
 
 ```js
 api.lights.getAll()
@@ -33,7 +33,7 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 
 
 ## getLightById()
-This `getLightById(id)` function allows you to retrieve a specific light by it's ID value.
+The `getLightById(id)` function allows you to retrieve a specific light by it's ID value.
 
 ```js
 api.lights.getLightById(id)
@@ -50,7 +50,7 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 
 
 ## getLightByName()
-This `getLightByName(name)` function allows you to retrieve a specific light by it's associated name value.
+The `getLightByName(name)` function allows you to retrieve a specific light by it's associated name value.
 
 ```js
 api.lights.getLightByName(name)
@@ -67,7 +67,7 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 
 
 ## searchForNew()
-This `searchForNew()` function will initiate a search for new lights by the Hue Bridge. It will search for at least 40 seconds 
+The `searchForNew()` function will initiate a search for new lights by the Hue Bridge. It will search for at least 40 seconds 
 (but may run longer if lights are found). The search is asynchronous and performed on the bridge. To obtain the results
 from a previous search, use the `getNew()` API function.
 
@@ -88,7 +88,7 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 
 
 ## getNew()
-This `getNew()` function obtains the list of Lights that were discovered from the last time a search was performed (via `searchForNew()`).
+The `getNew()` function obtains the list of Lights that were discovered from the last time a search was performed (via `searchForNew()`).
 Note, the lights that are provided in this API call will be cleared when a new search is initiated on the Hue Bridge.
 
 ```js

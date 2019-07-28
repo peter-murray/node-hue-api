@@ -13,10 +13,11 @@ v3.discovery.nupnpSearch()
     return v3.api.create(host, USERNAME);
   })
   .then(api => {
-    return api.sensors.getAll();
+    // Obtain the user account identified by the specified username
+    return api.users.get(USERNAME);
   })
-  .then(allSensors => {
-    // Display the details of the sensors we got back
-    console.log(JSON.stringify(allSensors, null, 2));
+  .then(user => {
+    // Display the details of the user we got back
+    console.log(JSON.stringify(user, null, 2));
   })
 ;

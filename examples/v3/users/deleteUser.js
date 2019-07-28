@@ -7,16 +7,22 @@ const v3 = require('../../../index').v3;
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
 
+// The user to remove from the bridge
+const USER_TO_DELETE = '40000493-d94d-45f3-b122-aa865ae3a5a0';
+
 v3.discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
     return v3.api.create(host, USERNAME);
   })
   .then(api => {
-    return api.sensors.getAll();
+    return api.users.deleteUser(USER_TO_DELETE);
   })
-  .then(allSensors => {
-    // Display the details of the sensors we got back
-    console.log(JSON.stringify(allSensors, null, 2));
+  .then(deleted => {
+    // Display the details of the deletion attempt
+    console.log(JSON.stringify(deleted, null, 2));
+  })
+  .catch(err => {
+    console.error(err);
   })
 ;

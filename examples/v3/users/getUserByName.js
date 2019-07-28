@@ -13,10 +13,16 @@ v3.discovery.nupnpSearch()
     return v3.api.create(host, USERNAME);
   })
   .then(api => {
-    return api.sensors.getAll();
+    return Promise.all([
+      // Obtain the user account identified by the specified name, in this case 'Echo'
+      api.users.getByName('Echo'),
+
+      // Obtain the user account identified by the specified appName and deviceName
+      api.users.getByName('node-hue-api', 'node-hue-api-tests')
+    ]);
   })
-  .then(allSensors => {
-    // Display the details of the sensors we got back
-    console.log(JSON.stringify(allSensors, null, 2));
+  .then(users => {
+    // Display the details of the users we got back
+    console.log(JSON.stringify(users, null, 2));
   })
 ;

@@ -13,10 +13,12 @@ v3.discovery.nupnpSearch()
     return v3.api.create(host, USERNAME);
   })
   .then(api => {
-    return api.sensors.getAll();
+    return api.sensors.getNew();
   })
-  .then(allSensors => {
-    // Display the details of the sensors we got back
-    console.log(JSON.stringify(allSensors, null, 2));
+  .then(result => {
+    // Show the time of the last scan
+    console.log(`Last Scan Performed: ${result.lastscan}`);
+    // Display the new sensors
+    console.log(`Sensors found:\n${JSON.stringify(result.sensors, null, 2)}`);
   })
 ;

@@ -13,10 +13,11 @@ v3.discovery.nupnpSearch()
     return v3.api.create(host, USERNAME);
   })
   .then(api => {
-    return api.sensors.getAll();
+    // The Hue Daylight software sensor is identified as id 1
+    return api.sensors.get(1);
   })
-  .then(allSensors => {
+  .then(sensor => {
     // Display the details of the sensors we got back
-    console.log(JSON.stringify(allSensors, null, 2));
+    console.log(sensor.toStringDetailed());
   })
 ;
