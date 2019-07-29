@@ -14,9 +14,8 @@ a number of useful functions to control/configure its various features.
   - [2.x](#2x)
   - [3.x](#3x)
     - [2.x Backwards Compatibility Shim](#2x-backwards-compatibility-shim) 
-  
 - [Installation](#installation)
-
+- [v2 API](docs/v2_api.md)
 - [v3 API](#v3-api)
   - [Discovering Hue Bridges](docs/discovery.md)  
   - [Users](docs/users.md)
@@ -25,14 +24,9 @@ a number of useful functions to control/configure its various features.
   - [Sensors](docs/sensors.md)
     - [Sensor Objects](docs/sensor.md)
   - [Configuration](docs/configuration.md)
-  
-  
-
 - [Examples](#examples)
-
 - [Philips Hue Resources](#philips-hue-resources)
 - [License](#license)
-
 
 
 
@@ -69,9 +63,8 @@ The rewrite of the API using up to date language constructs has resulted in some
 code execution stand point as well as introducing improved functionality around utility functions like setting RGB values 
 on lights (which are not explicitly supported in the Philips Hue REST API).
 
-
 #### 2.x Backwards Compatibility Shim
-There is a mostly backwards compatibility shim provided in the `3.x` releases to allow existing (`2.x`) users of 
+There is a backwards compatibility shim provided in the `3.x` releases to allow existing (`2.x`) users of 
 the library some time to transition existing code over to the updated API.
 
 This does have some minor breaking changes in some edge case features, but the majority of the core library 
@@ -134,6 +127,7 @@ There are a number of resources where users have detailed documentation on the P
  - Unofficial Hue Documentation: <http://burgestrand.github.com/hue-api/>
  - Hue Hackers Mailing List: <https://groups.google.com/forum/#!forum/hue-hackers>
  - StackOverflow: <http://stackoverflow.com/questions/tagged/philips-hue>
+
 
 
 ## License

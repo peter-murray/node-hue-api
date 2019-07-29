@@ -18,20 +18,16 @@ needed to be updated.
 
 # Breaking Changes to existing endpoints
 
-* [discovery] (#discovery)
-* [description] (#description)
-* [groups] (#groups)
-  * [getGroup()] (#getGroup)
-  
-* [LightState] (#LightState)
-  
-* [Scenes] (#scenes)
-  * [createScene()] (#createScene)
-  * [updateScene()] (#updateScene)
-  
-* [Schedules] (#schedules)
-
-* [Timer] (#timer)
+* [discovery](#discovery)
+* [description](#description)
+* [groups](#groups)
+  * [getGroup()](#getGroup)
+* [LightState](#LightState)
+* [Scenes](#scenes)
+  * [createScene()](#createScene)
+  * [updateScene()](#updateScene)
+* [Schedules](#schedules)
+* [Timer](#timer)
 
 
 ## discovery
