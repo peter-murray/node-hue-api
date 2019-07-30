@@ -16,7 +16,7 @@ The `lights` API provides a means of interacting with the lights in Hue Bridge.
 
 
 ## getAll()
-The `getAll()` fucntion allows you to get all the lights that the Hue Bridge has registered with it.
+The `getAll()` function allows you to get all the lights that the Hue Bridge has registered with it.
 
 ```js
 api.lights.getAll()
@@ -26,7 +26,7 @@ api.lights.getAll()
   });
 ```
 
-This function call will return an `Array` of `Light` objects. 
+This function call will resolve to an `Array` of `Light` objects. 
 
 A complete code sample for this function is available [here](../examples/v3/lights/getAllLights.js).
 
@@ -43,7 +43,7 @@ api.lights.getLightById(id)
   });
 ```
 
-This function call will return a single `Light` instance.
+This function call will resolve to a single `Light` instance.
 
 A complete code sample for this function is available [here](../examples/v3/lights/getLightById.js).
 
@@ -60,7 +60,7 @@ api.lights.getLightByName(name)
   });
 ```
 
-This function call will return a single `Light` instance.
+This function call will resolve to a single `Light` instance.
 
 A complete code sample for this function is available [here](../examples/v3/lights/getLightById.js).
 
@@ -81,7 +81,7 @@ api.lights.searchForNew()
   });
 ``` 
 
-The function will return a `Boolean` status as to whether or no a search was activated, or extended.
+The function will resolve to a `Boolean` status as to whether or no a search was activated, or extended.
 
 A complete code sample for this function is available [here](../examples/v3/lights/searchForNewLights.js).
 
@@ -99,7 +99,7 @@ api.lights.getNew()
   });
 ```
 
-The function will return a JSON payload consisting of a `lastscan` property that will be set to the timestamp of the 
+The function will resolve to a JSON payload consisting of a `lastscan` property that will be set to the timestamp of the 
 last scan that was performed.
 
 If any lights are found they will be presented under the `id` value that has been associated with the light,, e.g. 5 and the
@@ -132,8 +132,8 @@ api.lights.getLightAttributesAndState(id)
   });
 ```
 
-This will return an `Object` that contains all the attributes and the current state of the light, an example of this is 
-shown below:
+This will resolve to an `Object` that contains all the attributes and the current state of the light, an example of this 
+is shown below:
 
 ```json
 {
@@ -213,8 +213,8 @@ api.lights.getLightState(id)
   });
 ```
 
-This will return an object with the current state values of the light identified by the `id`. The state values returned
-will depend upon the type of the light and its current state values.
+This will resolve to an `Object` with the current state values of the light identified by the `id`. The state values 
+returned will depend upon the type of the light and its current state values.
 
 ```json
 {
@@ -264,10 +264,10 @@ api.lights.setLightState(LIGHT_ID, state)
     console.log(`Light state change was successful? ${result}`);
   })
 ```
+
+The function will resolve to a `Boolean`  that indicates the success status of the change.
+
 A complete code sample for this function is available [here](../examples/v3/lights/setLightStateUsingLightState.js).
-
-
-The result from this function call will be a `Boolean` that indicates the success status of the change.
 
 
 
@@ -284,7 +284,7 @@ api.lights.rename(id, 'my_new_name')
 A complete code sample for this function is available [here](../examples/v3/lights/renameLight.js).
 
 
-The function will return a `Boolean` with the auccess status of the renaming.
+The function will resolve to a `Boolean` with the auccess status of the renaming.
 
 
 
@@ -293,7 +293,7 @@ The function will return a `Boolean` with the auccess status of the renaming.
 The `deletLight(id)` function will allow you to remove the light identified by the `id` value from the Hue Bridge.
 
 ```js
-api.lights.deleteLight(LIGHT_ID)
+api.lights.deleteLight(lightId)
   .then(result => {
     // Display the state of the light
     console.log(`Successfully delete light? ${result}`);
@@ -301,7 +301,7 @@ api.lights.deleteLight(LIGHT_ID)
 ```
 A complete code sample for this function is available [here](../examples/v3/lights/deleteLight.js).
 
-The function will return a `Boolean` indicate a successful deletion of the light. If the light is not found, it will
+The function will resolve to a `Boolean` indicate a successful deletion of the light. If the light is not found, it will
 generate an error stating the resource is not available.
 
 https://github.com/peter-murray/node-hue-api/blob/v_3/examples/v3/lights/deleteLight.js

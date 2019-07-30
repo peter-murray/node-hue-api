@@ -11,21 +11,30 @@ a number of useful functions to control/configure its various features.
 
 ## Contents
 - [Change Log](#change-log)
-  - [2.x](#2x)
-  - [3.x](#3x)
-    - [2.x Backwards Compatibility Shim](#2x-backwards-compatibility-shim) 
+    - [2.x](#2x)
+    - [3.x](#3x)
+        - [2.x Backwards Compatibility Shim](#2x-backwards-compatibility-shim) 
+
 - [Installation](#installation)
+
 - [v2 API](docs/v2_api.md)
+
 - [v3 API](#v3-api)
-  - [Discovering Hue Bridges](docs/discovery.md)  
-  - [Users](docs/users.md)
-  - [Lights](docs/lights.md)
-    - [Light Object](docs/light.md)
-  - [Sensors](docs/sensors.md)
-    - [Sensor Objects](docs/sensor.md)
-  - [Configuration](docs/configuration.md)
+    - [Discovering Hue Bridges](docs/discovery.md)  
+    - [Users](docs/users.md)
+    - [Lights](docs/lights.md)
+        - [Light Object](docs/light.md)
+        - [LightState Object](docs/lightState.md)
+    - [Sensors](docs/sensors.md)
+        - [Sensor Objects](docs/sensor.md)
+    - [Scenes](docs/scenes.md)
+        - [Scene Object](docs/scene.md)
+    - [Configuration](docs/configuration.md)
+
 - [Examples](#examples)
+
 - [Philips Hue Resources](#philips-hue-resources)
+
 - [License](#license)
 
 
@@ -106,9 +115,11 @@ _Note that there are a number of runnable code samples in the [examples/v3](exam
 - [Discovering Hue Bridges](docs/discovery.md)  
 - [Users](docs/users.md)
 - [Lights](docs/lights.md)
-  - [Light Object](docs/light.md)
+    - [Light Object](docs/light.md)
 - [Sensors](docs/sensors.md)
-  - [Sensor Objects](docs/sensor.md)
+    - [Sensor Objects](docs/sensor.md)
+- [Scenes](docs/scenes.md)
+    - [Scene Object](docs/scene.md)
 - [Configuration](docs/configuration.md)
 
 

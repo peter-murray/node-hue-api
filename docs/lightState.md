@@ -1,9 +1,37 @@
-# LightState
-The `LightState` object is a convenience object to aid in building up a valid LightState that can be applied to a Light.
+# Light States
+
+There are three variations of the `LightState` object that are used by different parts of the API:
+
+* [`LightState`](#lightstate) for interacting with `Light`s directly
+* [`SceneLightState`](#scenelightstate) for interacting with `Scene` Lights
+* [`GroupLightState`](#grouplightstate) for interacting with `Group` Lights
+
+These Light State objects all share common base properties and then have some specialized functionality as required by 
+the underlying Hue Bridge API.
+
+* [Creating a LightState](#creating-a-lightstate)
+* [Common LightState Properties](#common-lightstate-properties)
+* [LightState](#lightstate)
+* [SceneLightState](#scenelightstate)
+* [GroupLightState](#grouplightstate)
 
 
 ## Creating a LightState
-To create a LightState object you can perform the following:
+To create any one of the variations of `LightState`s you can import them using:
+
+```js
+// LightState fo r interacting with Lights
+const LightState = require('node-hue-api').v3.lightstates.LightState;
+
+// LightState for interacting with Scene Lights
+const SceneLightState = require('node-hue-api').v3.lightstates.GroupLightState;
+
+// LightState for interacting with Group Lights
+const GroupLightState = require('node-hue-api').v3.lightstates.GroupLightState;
+``` 
+
+Once you have the desired LightState implementation, you can build a light state using parameters specific to that 
+Light State, for example:
 
 ```js
 const LightState = require('node-hue-api').v3.lightstates.LightState;
@@ -16,10 +44,26 @@ myLightState
   .white(153, 100);
 ```
 
-The LightState object has a number of utility functions that will allow you to build up a state for a light. Each function
-will return the original LightState, so that these can be chained to very simply build up a complex light state.
 
-The functions available for constructing a LightState are:
+The `LightState` object is a convenience object to aid in building up a valid LightState that can be applied to a Light.
+
+
+## Common LightState Properties
+
+All implementations of Light State objects have these properties/functions.
+
+All of the Light State functions that set values on the state object will return the Light State object itself, allowing 
+for chaining of function calls to build up the light state in a more fluent manner.
+
+For example to create and then populate a `LightState` with the desired state:
+```js
+myLightState = new LightState()
+  .on(true)
+  .brightness(50)
+  .saturation(65)
+  .alertShort();
+```
+
 
 * [reset()](#reset)
 * [getPayload()](#getpaylaod)
@@ -27,6 +71,7 @@ The functions available for constructing a LightState are:
 
 * [on(value)](#on)
 * [off()](#off)
+
 * [bri(value)](#bri)
     * [brightness(value)](#brightness)
 * [hue(value)](#hue)
@@ -35,6 +80,11 @@ The functions available for constructing a LightState are:
 * [xy(x, y)](#xy)
 * [ct(value)](#ct)
 
+* [alert(value)](#alert)
+    * [alertNone()](#alertnone)
+    * [alertShort()](#alertshort)
+    * [alertLong()](#alertlong)
+    
 * [bri_inc(value)](#briinc)
 * [sat_inc(value)](#satinc)
 * [hue_inc(value)](#hueinc)
@@ -51,22 +101,15 @@ The functions available for constructing a LightState are:
     * [transitionFast(value)](#transitionfast)
     * [transitionInstant(value)](#transitioninstant)
     * [transitionDefault(value)](#transitiondefault)
-* [alert(value)](#alert)
-    * [alertNone()](#alertnone)
-    * [alertShort()](#alertshort)
-    * [alertLong()](#alertlong)
-
-* [white(temp, bri)](#white)
-* [hsb(hue, saturation, brightness)](#hsb)
-* [hsl(hue, saturation, luminosity)](#hsl)
-* [rgb(red, green, blue)](#rgb)
 
 
-## reset()
+
+
+### reset()
 The function `reset()` will clear all the existing settings on a LightState.
 
 
-## getPayload()
+### getPayload()
 The function `getPayload()` will transform the LightState settings into a payload JSON object that the Hue Bridge can set.
 
 This function can be useful to capture a snapshot of the current settings in a `LightState`.
@@ -77,7 +120,7 @@ before passing the payload to the Hue Bridge.
 _Note, this function is not chainable as it returns a JSON payload for the state._
 
 
-## populate()
+### populate()
 The function `populate(data)` will populate the state values of the `LightState` object using the `data` object it is 
 called with.
 
@@ -107,18 +150,18 @@ copiedLightState.populate(myLightState.getPayload());
 ```
 
 
-## on()
+### on()
 The `on(value)` function will set the state to the boolean value of `value`, or if `value` is not specified, will 
 implicitly set a value of `true`.
 
 * `value`: The on state of the light, `true` or not specified for on and `false` for off.
 
 
-## off()
+### off()
 The function `off()` is a convenience function that will set the Light state to the equivalent of `on(false)`.
 
 
-## bri()
+### bri()
 The function `bri(value)` will set the `bri` attribute to `value`.
 
 * `value`: the brightness value to set the light to. Brightness is a scale from `1` (the minimum the light is capable of) to `254` (the maximum).
@@ -132,13 +175,13 @@ The `brightness(value)` function will set a brightness percentage value for the 
 * `value`: A percentage value for the brightness between `0` and `100`. _Note that `0%` will correspond to a bri value of `1`, which is not off_.
 
 
-## hue()
+### hue()
 The `hue(value)` function will set a hue value for the light.
 
 * `value`: The hue value is a wrapping value between `0` and `65535`. Both `0` and `65535` are red, `25500` is green and `46920` is blue 
 
 
-## sat()
+### sat()
 The `sat(value)` function will set a saturation value for the light.
 
 * `value`: the saturation of the light. `0` is the least saturated (white) and `254` is the most saturated (colored)
@@ -150,7 +193,7 @@ The `saturation(value)` function will set a saturation as a percentage value.
 * `value`: The percentage for the saturation between `0` and `100`.
 
 
-## xy()
+### xy()
 The `xy(x, y)` function will set an x,y cooridinate in the CIE color space.
 
 * `x`: x cooordinate between `0` and `1`
@@ -162,26 +205,24 @@ If you pass in values outside the CIE color space for the target light, the clos
 chosen by the Hue Bridge.
 
 
-## ct()
+### ct()
 The `ct(value)` function will set the Mired color temperature for the light.
 
 * `value`: The Mired color temperature, between `153` (6500K) and `500` (2000K) 
 
 
-
-
-## bri_inc()
+### bri_inc()
 The `bri_inc(value)`, increments or decrements the value of the brightness. The `bri_inc` is ignored if the `bri` attribute is provided.
 
 * `value`: An increment or decrement value between `-254` and `254`. A value of `0` stops any ongoing transition.
 
-## sat_inc()
+### sat_inc()
 The `sat_inc(value)`, increments or decrements the value of the saturation. The `sat_inc` is ignored if the `sat` attribute is provided.
 
 * `value`: An increment or decrement value between `-254` and `254`. A value of `0` stops any ongoing transition.
 
 
-## hue_inc()
+### hue_inc()
 The `hue_inc(value)`, increments or decrements the value of the brightness. The `hue_inc` is ignored if the `hue` attribute is provided.
 
 * `value`: An increment or decrement value between `-65534` and `65534`.
@@ -191,13 +232,13 @@ it is out of the hue range of `0` to `65535` the result will wrap, e.g. an exist
 `1` will wrap to `0`._
 
 
-## ct_inc()
+### ct_inc()
 The `ct_inc(value)` function increments or decrements the value of the `ct`. `ct_inc` is ignored if the `ct` attribute is provided.
 
 * `value`: An increment or decrement value between `-65534` and `65534`. A value of `0` stops any ongoing transition.
 
 
-## xy_inc()
+### xy_inc()
 The `xy_inc(x_inc, y_inc)` function will increment or decrement an existing x,y cooridinate in the CIE color space. The `xy_inc` 
 attribute is ignored if an `xy` value is set.
 
@@ -210,9 +251,7 @@ If you pass in values outside the CIE color space for the target light, the clos
 chosen by the Hue Bridge.
 
 
-
-
-## effect ()
+### effect ()
 The `effect(value)` will set the effect on the light.
 
 * `value`: The effect to set which can be `colorloop` or `none`. Setting `colorloop` will cycle through all the hues 
@@ -230,7 +269,7 @@ The `effectNone()` function will set an `effect` of `none` for the light.
 
 
 
-## transitiontime()
+### transitiontime()
 The `transitiontime(value)` will set the duration of any transition from the lights current state to the new state.
 
 * `value`: An integer value as a multiple of `100ms`, e.g. `4` corresponds to `400ms` and `10` to `1 second`.
@@ -266,7 +305,7 @@ The `transitionInstant()` function will set an instance transition time of `0ms`
 The `transitionDefault()` function will set the Bridge default transition time of `400ms`.
 
 
-## alert()
+### alert()
 The `alert(value)` function will allow you to set a temporary alert state on the light.
 
 * `value`: One of `none`, `select` (one breathe cycle), `lselect` (breathe cycles for 15 seconds or until cleared using `none` alert state).
@@ -285,7 +324,23 @@ The `alertLong()` function will set the current `alert` state to `lselect`.
 
 
 
-## white()
+
+
+
+
+
+## LightState
+
+`LightState` is used for defining a Light State that can be used directly on a `Light` instance via the [`lights` api](./lights.md).
+
+In addition to the [common properties](#common-lightstate-properties) for a Light State it also has:
+
+* [white(temp, bri)](#white)
+* [hsb(hue, saturation, brightness)](#hsb)
+* [hsl(hue, saturation, luminosity)](#hsl)
+* [rgb(red, green, blue)](#rgb)
+
+### white()
 The `white(temp, bri)` function will set the state to white, using the provided `temp` and `brightness` values.
 
 * `temp` is the `ct` value also known as the Mired color temperature and can be set to a value between `153` and `500` 
@@ -294,7 +349,7 @@ The `white(temp, bri)` function will set the state to white, using the provided 
     the lowest bri value for the light. This is the same as [breightness()](#brightness)
 
 
-## hsb()
+### hsb()
 The `hsb(hue, saturation, brightness)` function will set an `hsb` value on the light.
 
 * `hue`: is the hue value expressed as a degree value between `0` and `360`.
@@ -303,7 +358,7 @@ The `hsb(hue, saturation, brightness)` function will set an `hsb` value on the l
     the lowest bri value for the light. This is the same as [breightness()](#brightness)
 
 
-## hsl()
+### hsl()
 The `hsl(hue, saturation, luminosity)` function will set an `hsl` value on the light.
 
 * `hue`: is the hue value expressed as a degree value between `0` and `360`.
@@ -313,7 +368,7 @@ The `hsl(hue, saturation, luminosity)` function will set an `hsl` value on the l
 _Note: that there is conversion in play with this value, so it is an approximation to what the light can display._
 
 
-## rgb()
+### rgb()
 The `rgb(red, green, blue)` will set an RGB value on the light.
 
 * `red`: the red value between `0` and `255`
@@ -326,3 +381,35 @@ _Note: You can pass the rgb value in as a `Array` as well, e.g. `rbg([255, 0, 0]
 _Note: That these values are converted in to a value that the light can display, as such, you might not get a perfect match
 to your expected RGB color. This is limited by what colors that the light can actually support and there is a lot of 
 mathematics going on in the background to map this to the light color space._
+
+
+
+## SceneLightState
+
+The `SceneLightState` is to be used for setting LightStates of Lights contained within a [`Scene`](./scene.md). This 
+state object only has the [common properties](#common-lightstate-properties)
+
+
+
+## GroupLightState
+
+The `GroupLightState` is to be used with the triggering of LightStates of Lights in a `Group`.
+
+In addition to the [common properties](#common-lightstate-properties) for a Light State it also has:
+
+* [scene(name)](#scene)
+
+
+### scene()
+The `scene(value)` function allows for the scene name to be set on the `Group` that you wish to trigger.
+
+* `name`: A string for the identifier of the scene to trigger for the `Group`.
+
+When using this property of a `GroupLightState` to set a state on a `Group`, you will get the intersection of the lights
+associated with the `Group` and the target `Scene`'s lights attribute.
+
+
+
+
+
+
