@@ -43,7 +43,7 @@ function api() {
     'This shim provides a limited backporting of the features available in the updated API in v3.x.\n' +
     'This will be removed in v4.x of node-hue-api.\n\n' +
     'You need to migrate your code to use the new API available via import\n' +
-    '  require("node-hue-api").hue\n\n' +
+    '  require("node-hue-api").v3\n\n' +
     'Please consult the documentation at https://github.com/peter-murray/node-hue-api for the documentation on the new API.\n' +
     '********************************************************************************\n'
   );
