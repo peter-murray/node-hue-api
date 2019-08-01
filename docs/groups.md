@@ -6,7 +6,7 @@ The `groups` API provides a means of interacting with groups in the Hue Bridge.
 * [get()](#get)
 * [getByName()](#getbyname)
 
-* [Filtered Groups by type](#filtered-groups-by-type)
+* [Get Groups by type](#get-groups-by-type)
     
 * [createGroup()](#creategroup)
 * [createRoom()](#createroom)
@@ -75,9 +75,9 @@ A complete code sample for this function is available [here](../examples/v3/grou
 
 
 
-## Filtered Groups by Type
+## Get Groups by Type
 
-You can retireve a specific `type` of `Group` from the Hue Bridge using the following functions:
+You can retrieve a specific `type` of `Group` from the Hue Bridge using the following functions:
 
 * `getLightGroups()` 
 * `getLuminaires()` 
