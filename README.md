@@ -29,6 +29,10 @@ a number of useful functions to control/configure its various features.
         - [Sensor Objects](docs/sensor.md)
     - [Scenes](docs/scenes.md)
         - [Scene Object](docs/scene.md)
+        - [SceneLightState Object](docs/lightState.md#scenelightstate)
+    - [Groups](docs/groups.md)
+        - [Group Object](docs/group.md)
+        - [GroupLightState Object](docs/lightState.md#grouplightstate)
     - [Configuration](docs/configuration.md)
 
 - [Examples](#examples)
@@ -120,14 +124,20 @@ _Note that there are a number of runnable code samples in the [examples/v3](exam
     - [Sensor Objects](docs/sensor.md)
 - [Scenes](docs/scenes.md)
     - [Scene Object](docs/scene.md)
+    - [SceneLightState Object](docs/lightState.md#scenelightstate)
+- [Groups](docs/groups.md)
+    - [Group Object](docs/group.md)
+    - [GroupLightState Object](docs/lightState.md#grouplightstate)
 - [Configuration](docs/configuration.md)
 
 
 
 ## Examples
-The v3 APIs are documented using example code and links to more complex/complete examples for each API calls.
+The v3 APIs are documented using example code and links to more complex/complete examples for each API calls, consult 
+the documentation links [above](#v3-api).
 
-Check the [v3 API links](#v3-api) or the [examples directory](examples/v3) in this repository.
+Alternatively take a look at the [examples directory](examples/v3) in this repository for complete self contained 
+runnable example code.
 
 
 
