@@ -151,5 +151,5 @@ Obtains the JSON payload that can be used to create/update the Scene on the Hue 
 The `toString()` function will obtain a simple `String` representation of the Scene.
 
 
-###toStringDetailed()
+### toStringDetailed()
 The `toStringDetailed()` function will obtain a more detailed representation of the Scene object.
