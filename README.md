@@ -145,10 +145,8 @@ runnable example code.
 
 There are a number of resources where users have detailed documentation on the Philips Hue Bridge;
  - The Official Phillips Hue Documentation <http://www.developers.meethue.com>
- - Unofficial Hue Documentation: <http://burgestrand.github.com/hue-api/>
  - Hue Hackers Mailing List: <https://groups.google.com/forum/#!forum/hue-hackers>
  - StackOverflow: <http://stackoverflow.com/questions/tagged/philips-hue>
-
 
 
 ## License
