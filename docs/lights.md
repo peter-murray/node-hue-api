@@ -265,7 +265,7 @@ api.lights.setLightState(LIGHT_ID, state)
   })
 ```
 
-The function will resolve to a `Boolean`  that indicates the success status of the change.
+The call will resolve to a `Boolean`  that indicates the success status of the change.
 
 A complete code sample for this function is available [here](../examples/v3/lights/setLightStateUsingLightState.js).
 
@@ -280,11 +280,11 @@ api.lights.rename(id, 'my_new_name')
   .then(result => {
       console.log(`Successfully reanmed light? ${result}`);
   });
-```
+````
+
+The call will resolve to a `Boolean` with the auccess status of the renaming.
+
 A complete code sample for this function is available [here](../examples/v3/lights/renameLight.js).
-
-
-The function will resolve to a `Boolean` with the auccess status of the renaming.
 
 
 
@@ -299,10 +299,9 @@ api.lights.deleteLight(lightId)
     console.log(`Successfully delete light? ${result}`);
   })
 ```
-A complete code sample for this function is available [here](../examples/v3/lights/deleteLight.js).
 
-The function will resolve to a `Boolean` indicate a successful deletion of the light. If the light is not found, it will
+The call will resolve to a `Boolean` indicate a successful deletion of the light. If the light is not found, it will
 generate an error stating the resource is not available.
 
-https://github.com/peter-murray/node-hue-api/blob/v_3/examples/v3/lights/deleteLight.js
+A complete code sample for this function is available [here](../examples/v3/lights/deleteLight.js).
 
