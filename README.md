@@ -14,11 +14,8 @@ a number of useful functions to control/configure its various features.
     - [2.x](#2x)
     - [3.x](#3x)
         - [2.x Backwards Compatibility Shim](#2x-backwards-compatibility-shim) 
-
 - [Installation](#installation)
-
 - [v2 API](docs/v2_api.md)
-
 - [v3 API](#v3-api)
     - [Discovering Hue Bridges](docs/discovery.md)  
     - [Users](docs/users.md)
@@ -34,11 +31,8 @@ a number of useful functions to control/configure its various features.
         - [Group Object](docs/group.md)
         - [GroupLightState Object](docs/lightState.md#grouplightstate)
     - [Configuration](docs/configuration.md)
-
 - [Examples](#examples)
-
 - [Philips Hue Resources](#philips-hue-resources)
-
 - [License](#license)
 
 
