@@ -209,7 +209,7 @@ A complete code sample for this function is available [here](../examples/v3/grou
 ## getGroupState()
 The `getGroupState(id)` function allows you to get the current state that has been applied to the `Group`.
 
-* `id`: THe id of the group to get the state for
+* `id`: The id of the group to get the state for
 
 ```js
 api.groups.getGroupState(id)
