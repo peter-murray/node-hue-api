@@ -18,9 +18,8 @@ The properties and functions available for a Group are:
 * [stream](#stream)
 * [modelid](#modelid)
 * [uniqueid](#uniqueid)
-
-* [toString()](#)
-* [toStringDetailed()](#)
+* [toString()](#tostring)
+* [toStringDetailed()](#tostringdetailed)
 
 
 ## name

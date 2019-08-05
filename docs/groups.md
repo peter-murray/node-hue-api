@@ -5,17 +5,12 @@ The `groups` API provides a means of interacting with groups in the Hue Bridge.
 * [getAll()](#getall)
 * [get()](#get)
 * [getByName()](#getbyname)
-
-* [Get Groups by type](#get-groups-by-type)
-    
+* [Get Groups by type](#get-groups-by-type)   
 * [createGroup()](#creategroup)
 * [createRoom()](#createroom)
 * [createZone()](#createzone)
-
 * [updateAttributes()](#updateattributes)
-
 * [deleteGroup()](#deletegroup)
-
 * [getGroupState()](#getgroupstate)
 * [setGroupState()](#setgroupstate)
 

@@ -15,8 +15,8 @@ a number of useful functions to control/configure its various features.
     - [3.x](#3x)
         - [2.x Backwards Compatibility Shim](#2x-backwards-compatibility-shim) 
 - [Installation](#installation)
-- [v2 API](docs/v2_api.md)
-- [v3 API](#v3-api)
+- [v2 API](docs/v2_api.md) - for backwards compatibility with 2.x versions of the library (deprecated)
+- [v3 API](#v3-api) - new API introduced in 3.x versions of the library
     - [Discovering Hue Bridges](docs/discovery.md)  
     - [Users](docs/users.md)
     - [Lights](docs/lights.md)
