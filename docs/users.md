@@ -35,6 +35,8 @@ user.
 
 If successful, the `username` to use for authenticating against the bridge will be returned. _Note that this is sensitive 
 data, this is effectively a password for accessing the bridge, so be sensible about where you store this._
+There is also a `clientkey` value which is a PSK identity that can be used to authenticate against the Hue Entertainment 
+API.
 
 The parameters for the function are:
 
@@ -44,8 +46,9 @@ The parameters for the function are:
 
 ```js
 api.users.createUser('node-hue-api', 'my-device-or-app')
-  .then(username => {
-    console.log(`Created User: ${username}`);
+  .then(usernameAndKey => {
+    console.log(`Created User: ${usernameAndKey.username}`);
+    console.log(`PSK for Entertainment API : ${usernameAndKey.clientkey}`);
   })
   .catch(err => {
     if (err.getHueErrorType() === 101) {

@@ -17,9 +17,9 @@ v3.discovery.nupnpSearch()
   .then(api => {
     return api.users.createUser(APPLICATION_NAME, DEVICE_NAME);
   })
-  .then(createUser => {
-    // Display the details of the sensors we got back
-    console.log(JSON.stringify(createUser, null, 2));
+  .then(createdUser => {
+    // Display the details of user we just created (username and clientkey)
+    console.log(JSON.stringify(createdUser, null, 2));
   })
   .catch(err => {
     if (err.getHueErrorType() === 101) {
