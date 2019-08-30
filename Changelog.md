@@ -1,11 +1,10 @@
 # Change Log
 
-## 2.4.4
-- Fixing limit check for group IDs #123
-- Updating versions of dependencies
-
-## 2.4.3
-- Adding sensor API endpoints for `setSensorName()` `sensorStatus()` and `sensors()` from PR #121
+## 3.0.0-alpha
+- Complete re-write of the library to remove outdated dependencies and introduce updated JavaScript objects, available
+  via the `require('node-hue-api').v3` object.
+  
+- Provides a mostly backwards compatible interface with `2.x` code bases. 
 
 ## 2.4.2
 - Fixing documentation issues around transition times #109

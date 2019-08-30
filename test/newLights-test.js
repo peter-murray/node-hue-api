@@ -1,51 +1,50 @@
-"use strict";
+'use strict';
 
-var expect = require("chai").expect
-    , HueApi = require("../").HueApi
-    , testValues = require("./support/testValues.js")
-    ;
+const expect = require('chai').expect
+  , HueApi = require('../').HueApi
+  , testValues = require('./support/testValues.js')
+;
 
-describe("Hue API", function () {
+describe('Hue API', function () {
 
-    describe("#newLights", function () {
+  describe('#newLights', function () {
 
+    describe('#promise', function () {
 
-        describe("#promise", function() {
+      it('should get new lights', function (done) {
+        var hue = new HueApi(testValues.host, testValues.username);
 
-            it("should get new lights", function (done) {
-                var hue = new HueApi(testValues.host, testValues.username);
+        function checkResults(results) {
+          _validateLightsResult(results, done);
+        }
 
-                function checkResults(results) {
-                    _validateLightsResult(results, done);
-                }
-
-                hue.newLights().then(checkResults).done();
-            });
-        });
-
-
-        describe("#callback", function () {
-
-            it("should get new lights", function (done) {
-                var hue = new HueApi(testValues.host, testValues.username);
-
-                hue.newLights(function (err, results) {
-                    if (err) {
-                        throw err;
-                    }
-
-                    _validateLightsResult(results, done);
-                });
-            });
-        });
+        hue.newLights().then(checkResults);
+      });
     });
+
+
+    describe('#callback', function () {
+
+      it('should get new lights', function (done) {
+        var hue = new HueApi(testValues.host, testValues.username);
+
+        hue.newLights(function (err, results) {
+          if (err) {
+            throw err;
+          }
+
+          _validateLightsResult(results, done);
+        });
+      });
+    });
+  });
 });
 
 function _validateLightsResult(results, cb) {
 //    console.log(JSON.stringify(results));
-    expect(results).to.exist;
-    expect(results).to.have.property("lastscan");
-    // none, active, or timestamp
+  expect(results).to.exist;
+  expect(results).to.have.property('lastscan');
+  // none, active, or timestamp
 
-    cb();
+  cb();
 }
