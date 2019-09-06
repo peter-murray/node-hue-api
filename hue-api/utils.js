@@ -117,7 +117,6 @@ module.exports.wasSuccessful = function (result) {
 module.exports.parseErrors = function (results) {
   let errors = [];
 
-
   if (Array.isArray(results)) {
     results.forEach(result => {
       if (!result.success) {
@@ -126,7 +125,14 @@ module.exports.parseErrors = function (results) {
     });
   } else {
     if (results.error) {
-      errors.push(new HueError(results.error));
+      // Due to the handling of remote and local errors, we need to differentiate description and message in the errors,
+      // as the remote API uses both, whilst local uses only description. -- TODO need to review this
+      if (results.error.description && ! results.error.message) {
+        const payload = Object.assign({message: results.error.description}, results.error);
+        errors.push(new HueError(payload));
+      } else {
+        errors.push(new HueError(results.error));
+      }
     }
   }
   return errors.length > 0 ? errors : null;

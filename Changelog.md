@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.0
+- Added support for the Hue Remote API and the necessary Authentication support for dealing with OAuth Tokens.
+
+## 3.0.0
+- Official release of the v3 API
+
 ## 3.0.0-alpha
 - Complete re-write of the library to remove outdated dependencies and introduce updated JavaScript objects, available
   via the `require('node-hue-api').v3` object.
