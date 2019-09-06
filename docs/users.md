@@ -80,7 +80,7 @@ The result will always be an `Array` or user objects that are in the Bridge Whit
 with the properties returned in the bridge configuration which as of bridge API version `1.20` is:
 
 * `username`: The username that is used to authenticate the user account against the Bridge
-* `name`: The name that was used to create the user account, either a human readable `String` or of tyhe format `<application_name>#<device_name>`
+* `name`: The name that was used to create the user account, either a human readable `String` or of the format `<application_name>#<device_name>`
 * `create date`: The date of the creation of the user
 * `last use date`: The date that the user account was last used 
  
@@ -104,7 +104,7 @@ The `get(username)` function will return the details for the user account stored
 If the username is found in the bridge, the result will be an object that has the following properties:
 
 * `username`: The username that is used to authenticate the user account against the Bridge
-* `name`: The name that was used to create the user account, either a human readable `String` or of tyhe format `<application_name>#<device_name>`
+* `name`: The name that was used to create the user account, either a human readable `String` or of the format `<application_name>#<device_name>`
 * `create date`: The date of the creation of the user
 * `last use date`: The date that the user account was last used
 
@@ -129,7 +129,7 @@ The result will always be an `Array` or user objects that are in the Bridge Whit
 with the properties returned in the bridge configuration which as of bridge API version `1.20` is:
 
 * `username`: The username that is used to authenticate the user account against the Bridge
-* `name`: The name that was used to create the user account, either a human readable `String` or of tyhe format `<application_name>#<device_name>`
+* `name`: The name that was used to create the user account, either a human readable `String` or of the format `<application_name>#<device_name>`
 * `create date`: The date of the creation of the user
 * `last use date`: The date that the user account was last used 
 

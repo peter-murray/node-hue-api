@@ -3,10 +3,12 @@
 [![npm](https://img.shields.io/npm/v/node-hue-api.svg)](http://npmjs.org/node-hue-api)
 
 An API library for Node.js that interacts with the Philips Hue Bridge to control Lights, schedules, sensors and the 
-various other features of the bridge.
+various other features of the Hue Bridge.
 
-This library abstracts away the actual Philips Hue Bridge REST API and provides all of the features of the Philips API and
-a number of useful functions to control/configure its various features.
+This library abstracts away the actual Philips Hue Bridge REST API and provides all of the features of the Philips API 
+and a number of useful functions to control/configure its various features.
+
+The library fully supports `local network` and `remote internet` access to the Hue Bridge.
 
 
 ## Contents
@@ -17,7 +19,8 @@ a number of useful functions to control/configure its various features.
 - [Installation](#installation)
 - [v2 API](docs/v2_api.md) - for backwards compatibility with 2.x versions of the library (deprecated)
 - [v3 API](#v3-api) - new API introduced in 3.x versions of the library
-    - [Discovering Hue Bridges](docs/discovery.md)  
+    - [Discovering Local Hue Bridges](docs/discovery.md)
+    - [Remote API Support](docs/remoteApi.md)
     - [Users](docs/users.md)
     - [Lights](docs/lights.md)
         - [Light Object](docs/light.md)
@@ -31,9 +34,11 @@ a number of useful functions to control/configure its various features.
         - [Group Object](docs/group.md)
         - [GroupLightState Object](docs/lightState.md#grouplightstate)
     - [Configuration](docs/configuration.md)
+    - [Remote](docs/remote.md)
 - [Examples](#examples)
     - [Discover and connect to the Hue Bridge for the first time](#discover-and-connect-to-the-hue-bridge-for-the-first-time)
     - [Set a LightState on a Light](#set-a-light-state-on-a-light)
+    - [Using Hue Remote API](#useing-hue)
 - [Philips Hue Resources](#philips-hue-resources)
 - [License](#license)
 
@@ -112,7 +117,8 @@ and `catch()` or utilize synchronous `async` and `await` in your own code base.
 
 _Note that there are a number of runnable code samples in the [examples/v3](examples/v3) directory of this repository._
 
-- [Discovering Hue Bridges](docs/discovery.md)  
+- [Discovering Local Hue Bridges](docs/discovery.md)  
+- [Remote API Support](docs/remoteApi.md)
 - [Users](docs/users.md)
 - [Lights](docs/lights.md)
     - [Light Object](docs/light.md)
@@ -125,6 +131,7 @@ _Note that there are a number of runnable code samples in the [examples/v3](exam
     - [Group Object](docs/group.md)
     - [GroupLightState Object](docs/lightState.md#grouplightstate)
 - [Configuration](docs/configuration.md)
+- [Remote](docs/remote.md)
 
 
 
@@ -247,6 +254,15 @@ v3.discovery.nupnpSearch()
 For more details on interacting with lights, see the [lights API](./docs/lights.md) and [LightState](./docs/lightState.md) 
 documentation and examples referenced within.
 
+
+### Using Hue Remote API
+This library has support for interacting with the `Hue Remote API` as well as local network connections.
+
+It is rather involved to set up a remote connection, but not too onerous if you desire such a thing.
+The complete documentation for doing this is detailed in the [Remote API](docs/remoteApi.md) and associated links.
+
+* [Example for connecting remotely for the first time](./examples/v3/remote/accessFromScratch.js)
+* [Example for connecting using existing OAuth tokens](./examples/v3/remote/accessWithTokens.js) 
 
 
 ## Philips Hue Resources
