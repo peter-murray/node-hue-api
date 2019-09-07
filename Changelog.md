@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.1.1
+- Fixing issue with accept headers typo in endpoints
+- Adding debug support for diagnosing issues with local certificate validation on the bridge connection
+
 ## 3.1.0
 - Added support for the Hue Remote API and the necessary Authentication support for dealing with OAuth Tokens.
 
