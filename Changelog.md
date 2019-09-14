@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.1.2
+- Fixing error in Remote API binding, Issue #131, not passing a Remote Bridge Id
+
 ## 3.1.1
 - Fixing issue with accept headers typo in endpoints
 - Adding debug support for diagnosing issues with local certificate validation on the bridge connection
