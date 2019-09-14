@@ -64,14 +64,17 @@ time of writing.*
 
 
 ## connectWithCode
-The `connectWithCode(code, useername, timeout, deviceType)` function will perform the second step in the OAuth 
-authentication process following a user granting your application access to their Hue Bridge.  
+The `connectWithCode(code, useername, timeout, deviceType, remoteBirdgeId)` function will perform the second step in the 
+OAuth authentication process following a user granting your application access to their Hue Bridge.  
 
 * `code`: The `authentication` code that you get from the Callback URL for your `Hue Remote Api Application`.
 * `username`: An optional `username` that has been previously created/whitelisted in the remote API.
 * `timeout`: An optional timeout in milliseconds for API requests.
 * `deviceType`: An optional `deviceType` identifier for the user that will be created _IF_ no `username` value is passed 
     in.
+* `remoteBridgeId`: An optional `id` value for the remote bridge being connected to, _IF_ no value is passed will 
+    default to an id of `0` which is correct for the majority of users, as you would need to have multiple hue bridges 
+    assigned to an account before you need to specify this value. 
 
 This function call will exchange the provided authorization code for new OAuth Access and Refresh tokens. These will be 
 stored within the library as par of the call and can be retrieved later using the [`remote.getRemoteAccessCredentials()`](remote.md#getremoteaccesscredentials)
