@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.1.3
+- Fixing error with setting `transitiontime` in light state, Issue #133
+
 ## 3.1.2
 - Fixing error in Remote API binding, Issue #131, not passing a Remote Bridge Id
 
