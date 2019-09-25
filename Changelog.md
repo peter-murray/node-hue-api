@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.1.4
+- Fixing issues with ListType and using Objects for LightState, Issue #134 
+
 ## 3.1.3
 - Fixing error with setting `transitiontime` in light state, Issue #133
 
