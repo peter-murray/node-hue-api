@@ -137,7 +137,7 @@ api.sensors.createSensor(sensor)
 The returned `Object` will contain the new `Sensor` id under the `id` attribute, for example:
 ```js
 {
-  id: 1
+  "id": 1
 }
 ```
 
@@ -145,15 +145,14 @@ A complete code sample is available [here](../examples/v3/sensors/createNewSenso
 
 
 ## deleteSensor()
-The `deleteSensor(id)` function allows you to delete a sensor witht he specified `id`.
+The `deleteSensor(id)` function allows you to delete a sensor with the specified `id`.
+
+* `id`: The id of the `Sensor` or the `Sensor` itself to be deleted from the Bridge.
 
 ```js
 api.sensors.deleteSensor(sensorIdToRemove)
   .then(result => {
-    // Show the time of the last scan
-    console.log(`Last Scan Performed: ${result.lastscan}`);
-    // Display the new sensors
-    console.log(`Sensors found:\n${JSON.stringify(result.sensors, null, 2)}`);
+    console.log(`Sensor deleted? ${result}`);
   })
   .catch(err => {
     if (err.getHueErrorType() === 3) {
@@ -165,7 +164,7 @@ api.sensors.deleteSensor(sensorIdToRemove)
 ;
 ```
 
-The function call will return a `Boolean` witht he success status of the deletion of the specified sensor. If the Sensor 
+The function call will return a `Boolean` with the success status of the deletion of the specified sensor. If the Sensor 
 is not found in the bridge, an `ApiError` will be thrown.
 
 A complete code sample is available [here](../examples/v3/sensors/deleteSensor.js).
