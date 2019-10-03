@@ -85,7 +85,7 @@ mySensor.name = 'My awesome clip generic flag sensor';
 mySensor.flag = true;
 ```
 
-A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+A complete code sample for sensors is available [here](../examples/v3/sensors/creatingClipSensors.js).
  
 
 
@@ -120,7 +120,7 @@ mySensor.name = 'My awesome clip generic status sensor';
 mySensor.status = 1000;
 ```
 
-A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+A complete code sample for sensors is available [here](../examples/v3/sensors/creatingClipSensors.js).
 
 
 
@@ -151,7 +151,7 @@ mySensor.name = 'Lounge Humidity';
 mySensor.humidity = 1000; // 10%
 ```
 
-A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+A complete code sample for sensors is available [here](../examples/v3/sensors/creatingClipSensors.js).
 
 
 
@@ -186,7 +186,7 @@ mySensor.name = 'Lounge LightLevel';
 mySensor.lightlevel = 1000;
 ```
 
-A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+A complete code sample for sensors is available [here](../examples/v3/sensors/creatingClipSensors.js).
 
 
 
@@ -217,7 +217,7 @@ mySensor.name = 'Lounge Door';
 mySensor.open = false;
 ```
 
-A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+A complete code sample for sensors is available [here](../examples/v3/sensors/creatingClipSensors.js).
 
 
 
@@ -248,7 +248,7 @@ mySensor.name = 'Lounge Presence';
 mySensor.presence = true;
 ```
 
-A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+A complete code sample for sensors is available [here](../examples/v3/sensors/creatingClipSensors.js).
 
 
 
@@ -281,7 +281,7 @@ mySensor.name = 'Lounge Wall Switch';
 mySensor.buttonevent = 2000;
 ```
 
-A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+A complete code sample for sensors is available [here](../examples/v3/sensors/creatingClipSensors.js).
 
 
 
@@ -312,4 +312,4 @@ mySensor.name = 'Lounge Temperature';
 mySensor.buttonevent = 1850;
 ```
 
-A complete code sample for sensors is available [here](../examples/v3/sensors/creatingCLIPSensors.js).
+A complete code sample for sensors is available [here](../examples/v3/sensors/creatingClipSensors.js).

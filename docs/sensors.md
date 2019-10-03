@@ -127,6 +127,21 @@ The `createSensor(sensor)` function allows you to create software backed `CLIP` 
 For details on creating the various types of sensors that the Hue Bridge supports, consult the [sensor](sensor.md) 
 documentation or the [example code](../examples/v3/sensors/creatingClipSensors.js)
 
+```js
+api.sensors.createSensor(sensor)
+  .then(result => {
+    console.log(`Created sensor with id: ${result.id}`)
+  })
+```
+
+The returned `Object` will contain the new `Sensor` id under the `id` attribute, for example:
+```js
+{
+  id: 1
+}
+```
+
+A complete code sample is available [here](../examples/v3/sensors/createNewSensor.js).
 
 
 ## deleteSensor()
@@ -158,9 +173,43 @@ A complete code sample is available [here](../examples/v3/sensors/deleteSensor.j
 
 
 ## updateSensorConfig()
-TODO
+The `updateSensorConfig(sensor)` function will update the `Sensor`s `config` attributes on the Hue Bridge.
+
+* `sensor`: The `Sensor` from the bridge with the `config` attributes updated to the desired state.
+
+```js
+api.sensors.updateSensorConfig(sensor)
+  .then(result => {
+    console.log(`Updated sensor config? ${result}`);
+  })
+```
+
+_Note: The config attributes differ depending upon the type of Sensor that you are dealing with. To identify what 
+`config` attributes are available you can get the Sensor from the Hue Bridge and use the `.toStringDetailed()` function
+on it to show the `config` attributes for that `Sensor`._
+
+The function will resolve to a `Boolean` indicating the successful updating of the config values.
+
 
 
 ## updateSensorState()
-TODO
+The `updateSensorState(sensor)` function allows you to update a `CLIPSensor`s state using the current state of the provided
+sensor object.
 
+* `sensor`: The `Sensor` object with the updated state values to be stored. You can get the Sensor by retrieving it 
+from the Hue Bridge via a [`get(id)`](#get) or [`getAll()`](#getall) call.
+
+```js
+api.sensors.updateSensorState(mySensor)
+  .then(result => {
+    console.log(`Sensor Updated? ${result}`);
+  });
+```
+
+The function will resolve to a `Boolean` indicating the success status of the update.
+
+_Note: This will only work for CLIP `Sensor` types as other sensor types are usually hardware devices. Each type of 
+sensor has different state attributes that can be modified. Consult the [`Sensor` documentation](./sensor.md) for the 
+state attributes for the sensor type that you are interacting with._
+
+A complete code sample is available [here](../examples/v3/sensors/updateSensorState.js).
