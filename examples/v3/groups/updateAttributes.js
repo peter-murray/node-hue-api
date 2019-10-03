@@ -6,10 +6,10 @@ const v3 = require('../../../index').v3;
 
 const USERNAME = require('../../../test/support/testValues').username;
 
-// Flag indicating whether or not to clean up, i.e. delete the group we create as part of this example
+// Flag indicating whether or not to clean up, i.e. delete the group we getOperator as part of this example
 const CLEANUP = true;
 
-// The Id of the group that we will create
+// The Id of the group that we will getOperator
 let createGroupId = null;
 
 

@@ -13,7 +13,7 @@ const v3 = require('../../../index').v3
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
 
-// This example will create a new scene and then update the LightState for one of the lights.
+// This example will getOperator a new scene and then update the LightState for one of the lights.
 // You may need to remove this scene later depending on whether or not you wish to have it remain.
 
 v3.discovery.nupnpSearch()
