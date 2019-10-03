@@ -16,7 +16,7 @@ fluent interface for building up the various `RuleCondition`s for `Rule`s.
     * [when()](#when)
         * [Group Attribute Selector](#group-attribute-selector)
         * [Group Attribute Operator](#group-attribute-operator)
-    * [getRuleCondition()](#getrulecondition)
+    * [getRuleCondition()](#getrulecondition-1)
     * [Examples](#groupcondition-examples)
 
 
