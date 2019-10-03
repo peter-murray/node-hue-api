@@ -135,6 +135,11 @@ The `AddAction(action)` function will add a new `RuleAction` to the existing act
 Consult the [RuleAction](./ruleAction.md) documentation on creating a `RuleAction` instance.
 
 ## removeActionAt(idx)
+The `removeActionAt(idx)` function will remove the `RuleAction` at the specified `idx` index value from the 
+`RuleActions`  on the `Rule`.
+
+* `idx`: The index of the `RuleAction` in the Rule to remove.
+
 
 ## clearActions()
 The `clearActions()` function will reset all the actions on the Rule to an empty `Array`. You will need to add at least 
