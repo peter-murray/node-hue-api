@@ -12,7 +12,6 @@ fluent interface for building up the various `RuleCondition`s for `Rule`s.
         * [Sensor Attribute Operator](#sensor-attribute-operator)
     * [getRuleCondition()](#getrulecondition)
     * [Examples](#sensorcondition-examples)
-   
 * [GroupCondition Builder](#groupcondition-builder)
     * [when()](#when)
         * [Group Attribute Selector](#group-attribute-selector)
