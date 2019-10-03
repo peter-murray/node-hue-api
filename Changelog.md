@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.2.0
+- Adding support for Rules API, see [rules documentation](./docs/rules.md) for details
+
 ## 3.1.3
 - Fixing error with setting `transitiontime` in light state, Issue #133
 

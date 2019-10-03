@@ -97,7 +97,7 @@ Gets the owner of the Scene.
 * `get`
 
 ### recycle
-Get/Set the `recyle` attribute of the Scene. This is used to flag scenes that can be automatically deleted byt the bridge.
+Get/Set the `recyle` attribute of the Scene. This is used to flag scenes that can be automatically deleted by the bridge.
 If the `recycle` state is set to `false` the Hue bridge will keep the scene until an application removes it.
 * `get`
 * `set`

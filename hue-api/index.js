@@ -55,7 +55,6 @@ module.exports = function (host, username, timeout, port) {
 
 /**
  * Gets the version data for the Philips Hue Bridge.
- * Gets the version data for the Philips Hue Bridge.
  *
  * @param cb An optional callback function if you don't want to be informed via a promise.
  */

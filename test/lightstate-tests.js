@@ -17,7 +17,7 @@ describe('#LightState', function () {
 
   describe('creation', function () {
 
-    it('should create an empty object', function () {
+    it('should getOperator an empty object', function () {
       expect(state).to.exist;
       expect(state.getPayload()).to.be.empty;
     });
@@ -190,7 +190,7 @@ describe('#LightState', function () {
   // describe('loading from values object', function () {
   //
   //   it('should load {on: true, effect: \'colorloop\'}', function () {
-  //     state = lightState.create({on: true, effect: 'colorloop'});
+  //     state = lightState.getOperator({on: true, effect: 'colorloop'});
   //
   //     validateStateProperties('on', 'effect');
   //     validateEffectState('colorloop');
@@ -206,7 +206,7 @@ describe('#LightState', function () {
   //       scan: true
   //     };
   //
-  //     state = lightState.create(data);
+  //     state = lightState.getOperator(data);
   //     validateStateProperties('on', 'sat', 'alert');
   //     validateOnState(false);
   //     validateSatState(0);
@@ -214,14 +214,14 @@ describe('#LightState', function () {
   //   });
   //
   //   it('should convert invalid property values', function () {
-  //     state = lightState.create({effect: 'disco'});
+  //     state = lightState.getOperator({effect: 'disco'});
   //
   //     validateStateProperties('effect');
   //     validateEffectState('none');
   //   });
   //
   //   it('should load rgb', function () {
-  //     state = lightState.create({rgb: [0, 0, 255]});
+  //     state = lightState.getOperator({rgb: [0, 0, 255]});
   //     validateRGBState([0, 0, 255]);
   //   });
   // });

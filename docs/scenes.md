@@ -3,7 +3,7 @@
 The `scenes` API provides a means of interacting with the scenes in Hue Bridge.
 
 The Scenes API interacts with specific [`Scene`](./scene.md) objects stored in the Hue Bridge. These are not to be 
-confused with the preset scenes that are presetn in the Android and iOS Hue applications.
+confused with the preset scenes that are present in the Android and iOS Hue applications.
 
 There are a number of limitations on Scenes in the Hue Bridge.
 * The bridge can support up to 200 Scenes
@@ -35,7 +35,7 @@ api.scenes.getAll()
 
 This function call will resolve to an `Array` of `Scene` objects. 
 
-A complete code sample for this function is available [here](../examples/v3/lights/getAllScenes.js).
+A complete code sample for this function is available [here](../examples/v3/scenes/getAllScenes.js).
 
 
 
@@ -57,7 +57,7 @@ This function call will resolve to a `Scene` object for the specifed scene `id`.
 
 If the Scene cannot be found an `ApiError` will be returned with a `getHueErrorType()` value of `3`.
 
-A complete code sample for this function is available [here](../examples/v3/lights/getScene.js).
+A complete code sample for this function is available [here](../examples/v3/scenes/getScene.js).
 
 
 
@@ -105,7 +105,7 @@ The function will resolve with a `Object` with a value of `id` that is the newly
 _Note: Whilst the Hue API itself will allow a scene to be updated via creation call, this library will prevent such a 
 thing, by removing any `id` value from the `Scene` object to prevent overwriting an existing `Scene`.
 
-A complete code sample for this function is available [here](../examples/v3/lights/createScene.js).
+A complete code sample for this function is available [here](../examples/v3/scenes/createScene.js).
 
 
 
@@ -137,7 +137,7 @@ For example, the result from the above example would resolve to:
 }
 ``` 
 
-A complete code sample for this function is available [here](../examples/v3/lights/updateScene.js).
+A complete code sample for this function is available [here](../examples/v3/scenes/updateScene.js).
 
 
 
