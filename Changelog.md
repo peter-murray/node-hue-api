@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.2.1
+- Fixing error in code for getting lights by a name #138
+
 ## 3.2.0
 - Adding support for Rules API, see [rules documentation](./docs/rules.md) for details
 
