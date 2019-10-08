@@ -152,7 +152,7 @@ in a `Scene`.
 
 _Note: The `SceneLightState` is a simplified `LightState` object and can be imported using:_
 ```js
-const SceneLightState = require('node-hue-api').v3.lightstates.SceneLightState;
+const SceneLightState = require('node-hue-api').v3.lightStates.SceneLightState;
 ```
 
 ```js

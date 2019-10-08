@@ -57,7 +57,7 @@ There is a shim in place to allow for the use of the old style LightState functi
 version of a LightState object that the new API functions with.
 
 The purpose of this is to provide a drop in shim to allow older code to work without having to be modified, but you are 
-strongly encouraged to utilize the new `LightState` object available using `require('node-hue-api').v3.lightstates.LightState'`
+strongly encouraged to utilize the new `LightState` object available using `require('node-hue-api').v3.lightStates.LightState'`
 as this removes a number of overloaded function names that were unnecessary from the old API.
 
 There will be some new errors generated when attempting to set values that fall outside the allowed ranges of the light,
