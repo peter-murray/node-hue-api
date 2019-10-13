@@ -38,7 +38,7 @@ async function discoverAndCreateUser() {
     console.log('*******************************************************************************\n');
 
     // Create a new API instance that is authenticated with the new user we created
-    const authenticatedApi = await hueApi.create(ipAddress, username);
+    const authenticatedApi = await hueApi.create(ipAddress, user.username);
 
     // Do something with the authenticated user/api
     const bridgeConfig = await authenticatedApi.configuration.get();
