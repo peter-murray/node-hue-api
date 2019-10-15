@@ -33,16 +33,10 @@ type of `101`.
 Once the user presses the Link Button on the bridge, you have roughly 30 seconds to execute this call to create a new 
 user.
 
-If successful, the `username` to use for authenticating against the bridge will be returned. _Note that this is sensitive 
-data, this is effectively a password for accessing the bridge, so be sensible about where you store this._
-There is also a `clientkey` value which is a PSK identity that can be used to authenticate against the Hue Entertainment 
-API.
-
 The parameters for the function are:
 
 * `appName`: The application name for the user that is being created, e.g. `node-hue-api`. This has to be a string between 0 and 20 characters
 * `devciceName`:  The device name for the user that is being created, e.g. `mac-mini`, This has to be a string between 0 and 19 characters
-
 
 ```js
 api.users.createUser('node-hue-api', 'my-device-or-app')
@@ -60,6 +54,13 @@ api.users.createUser('node-hue-api', 'my-device-or-app')
   })
 ;
 ```
+
+If successful, this function will resolve to an `Object` for the created user with the following properties:
+
+* `username`: The `username` to use for authenticating against the bridge
+* `clientkey`: PSK Identity that can be used with the Streaming Entertainment API
+ 
+_Note that this is sensitive data, this is effectively a password for accessing the bridge, so be sensible about where you store this._
 
 A complete code sample for creating a user is available [here](../examples/v3/users/createUser.js).
 
