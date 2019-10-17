@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.3.0
+- Adding convenience function for activating Scenes on the [Scenes API](./docs/scenes.md#activatescene)
+
 ## 3.2.1
 - Fixing error in code for getting lights by a name #138
 
