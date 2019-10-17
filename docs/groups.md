@@ -13,6 +13,7 @@ The `groups` API provides a means of interacting with groups in the Hue Bridge.
 * [deleteGroup()](#deletegroup)
 * [getGroupState()](#getgroupstate)
 * [setGroupState()](#setgroupstate)
+  * [Activating a Scene](#activating-a-scene)
 
 
 
@@ -253,3 +254,34 @@ api.groups.setGroupState(groupId, groupState)
 The call will resolve to a `Boolean` indicating success state of setting the desired group light state.
 
 A complete code sample for this function is available [here](../examples/v3/groups/setGroupLightState.js).
+
+
+### Activating a Scene
+The `setGroupState(id, state)` function (as detailed above) is the function that needs to be used to activate/recall an
+existing `Scene` that is stored in the Hue Bridge / Lights.
+
+The lights that are affected by the Scene activation is the intersection of the members of the `Group` and the lights 
+that were `Scene` associated with it.
+
+This means you can potentially target a single room/zone when recalling a Scene that might straddle multiple rooms or zones 
+by limiting the target `Group` when recalling the Scene.
+
+So to ensure that you target all the lights that you associated with a `Scene`, when activating it, you would need to 
+utilize the special `All Lights Group` which has an id of `0`.
+
+Example for recalling a Scene using the `All Lights Group`, that is all lights saved in the scene will be activated:
+```js
+const GroupLightState = require('node-hue-api').v3.lightStates.GroupLightState;
+const mySceneLightState = new GroupLightState().scene('my-scene-id');
+
+api.groups.setGroupState(0, mySceneLightState)
+  .then(result => {
+    console.log(`Activated Scene? ${result}`);
+  })
+;
+```
+
+_Note: There is a convenience function on the Scenes API [activateScene(id)](./scenes.md#activatescene) that is a 
+wrapper around the `setGroupState()` API call targeting the `All Lights Group`._
+
+

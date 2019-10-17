@@ -20,6 +20,7 @@ Bridge will be 102.
 * [update()](#update)
 * [updateLightState()](#updatelightstate)
 * [delete()](#delete)
+* [activateScene](#activatescene)
 
 
 ## getAll()
@@ -83,7 +84,7 @@ A complete code sample for this function is available [here](../examples/v3/scen
 
 
 
-##createScene()
+## createScene()
 The `createScene(scene)` function allows for the creation of new `Scene`s in the Hue Bridge.
 
 * `scene`: A `Scene` object that has been configured with the desired settings for rhe scene being created.
@@ -199,3 +200,24 @@ api.scenes.delete('abc170f')
 The call will resolve to a `Boolean` indicating the success status of the deletion.
 
 A complete code sample for this function is available [here](../examples/v3/scenes/deleteScene.js).
+
+
+## activateScene()
+The `activateScene(id)` function allows you to activate an existing stored `Scene`.
+
+* `id`: The id of the `Scene` to be activated.
+
+```js
+api.scenes.activateScene('GfOL56sqKPGmPer')
+  .then(activated => {
+    console.log(`The Scene was successfully activated? ${activated}`);
+  })
+;
+```
+
+The function call will resolve to a `Boolean` indicating the success state for the activation of the `Scene`.
+
+_Note: Scene activation is really a feature of the [Groups API](./groups.md), not the underlying Scenes API that the 
+bridge provides. This function is provided as a convenience function._
+
+See the [Groups API](./groups.md#activating-a-scene) for more details on activating a `Scene`.
