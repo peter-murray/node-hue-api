@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.3.1
+- Added support of `On/Off` types in lights returned from bridge.
+
 ## 3.3.0
 - Adding convenience function for activating Scenes on the [Scenes API](./docs/scenes.md#activatescene)
 
