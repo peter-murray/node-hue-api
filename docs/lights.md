@@ -239,7 +239,7 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 
 ## setLightState()
 
-The `setLightState(id, state)` function can be used to set the state of a light specified byt he `id` to the specified 
+The `setLightState(id, state)` function can be used to set the state of a light specified by the `id` to the specified 
 `state` provided. 
 
 You can either provide a data object with the desired properties set for the `state` or utilize the [`LightState`](lightState.md) 
