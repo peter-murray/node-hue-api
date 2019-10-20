@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.3.2
+- Fixes issue with 'Dimmable pluginpin unit' lights not bein match to a Dimmable light, Issue #141
+
 ## 3.3.1
 - Added support of `On/Off` types in lights returned from bridge.
 
