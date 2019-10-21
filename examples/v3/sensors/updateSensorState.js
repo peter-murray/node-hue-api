@@ -22,7 +22,7 @@ const SENSOR_ID = 1000;
 v3.discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
-    return v3.api.create(host, USERNAME);
+    return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
     // Build a new sensor object to save to the bridge

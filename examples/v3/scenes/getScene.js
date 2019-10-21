@@ -13,7 +13,7 @@ const SCENE_ID = 'GfOL56sqKPGmPer';
 v3.discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
-    return v3.api.create(host, USERNAME);
+    return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
     return api.scenes.get(SCENE_ID);

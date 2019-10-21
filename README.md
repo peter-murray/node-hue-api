@@ -186,7 +186,7 @@ async function discoverAndCreateUser() {
   const ipAddress = await discoverBridge();
 
   // Create an unauthenticated instance of the Hue API so that we can create a new user
-  const unauthenticatedApi = await hueApi.create(ipAddress);
+  const unauthenticatedApi = await hueApi.createLocal(ipAddress).connect();
   
   let createdUser;
   try {
@@ -200,7 +200,7 @@ async function discoverAndCreateUser() {
     console.log('*******************************************************************************\n');
 
     // Create a new API instance that is authenticated with the new user we created
-    const authenticatedApi = await hueApi.create(ipAddress, createdUser.username);
+    const authenticatedApi = await hueApi.createLocal(ipAddress).connect(createdUser.username);
 
     // Do something with the authenticated user/api
     const bridgeConfig = await authenticatedApi.configuration.get();
@@ -242,7 +242,7 @@ const USERNAME = 'your username to authenticating with the bridge'
 v3.discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
-    return v3.api.create(host, USERNAME);
+    return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
     // Using a LightState object to build the desired state

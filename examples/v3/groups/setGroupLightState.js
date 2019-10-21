@@ -15,7 +15,7 @@ const GROUP_ID = 0;
 v3.discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
-    return v3.api.create(host, USERNAME);
+    return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
     // Build a desired light state for the group

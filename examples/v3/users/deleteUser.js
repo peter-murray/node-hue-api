@@ -13,7 +13,7 @@ const USER_TO_DELETE = '40000493-d94d-45f3-b122-aa865ae3a5a0';
 v3.discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
-    return v3.api.create(host, USERNAME);
+    return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
     return api.users.deleteUser(USER_TO_DELETE);
