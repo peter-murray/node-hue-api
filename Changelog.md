@@ -1,5 +1,10 @@
 # Change Log
 
+## 3.4.0
+- Adding an ability to get an insecure connection to the Hue Bridge as there are some usecases where this library is
+    being used against software emulated bridges and not real Hue Bridge hardware, Issue #142
+- Deprecated the use of `create()` in favour of more explicit `createRemote()`, `createLocal()` and `createInsecureLocal()`
+
 ## 3.3.2
 - Fixes issue with 'Dimmable pluginpin unit' lights not being matched to a Dimmable light, Issue #141
 
