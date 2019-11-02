@@ -12,7 +12,7 @@ const APPLICATION_NAME = 'node-hue-api'
 v3.discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
-    return v3.api.create(host);
+    return v3.api.createLocal(host);
   })
   .then(api => {
     return api.users.createUser(APPLICATION_NAME, DEVICE_NAME);
