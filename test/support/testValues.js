@@ -1,25 +1,47 @@
+'use strict';
+
+const path = require('path')
+  , fs = require('fs')
+  , os = require('os')
+;
+
+const TEST_DATA = loadData();
+
 module.exports = {
-  username: 'RurGmzGgcV3ZNbxoyNM1rd5IdjfSPdpG8pKGBWn1',
-  clientkey: '19853448ECF87F98428159C5FA2859F3',
+  username: getTestDataValue('username'),
+  clientkey: getTestDataValue('clientkey'),
 
-  lightsCount: 37,
-
-  locateTimeout: 7000,
-  maxScheduleNameLength: 32,
-
-  testLightId: 40, //TODO
-  hueLightId: 40, //TODO
-  luxLightId: 15, //TODO
-  livingColorLightId: 40, //TODO
+  testLightId: getTestDataValue('lightid'),
+};
 
 
-  //////////////////////////////////////////////////////////////////////////////////////////
+function loadData() {
+  const platform = os.platform();
 
-  groups: {
+  let testDataFile;
+  if (platform === 'win32') {
+    testDataFile = path.join(process.env.LOCALAPPDATA, '.node-hue-api');
+  }
 
-    existingGroup: {
-      id: 1,
-      name: 'VRC 1'
+  //TODO add support for MacOS
+
+  let data = null;
+  if (fs.existsSync(testDataFile)) {
+    try {
+      data = JSON.parse(fs.readFileSync(testDataFile));
+    } catch(err) {
+      console.error(`Failed to parse data file ${testDataFile}: ${err.message}`);
+      data = null;
     }
   }
-};
+
+  return data;
+}
+
+
+function getTestDataValue(key) {
+  if (TEST_DATA) {
+    return TEST_DATA[key];
+  }
+  return null;
+}
