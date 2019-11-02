@@ -10,6 +10,7 @@ fluent interface for building up the various `RuleActions`s for `Rule`s.
     * [LightStateAction](#lightstateaction)
     * [GroupStateAction](#groupstateaction)
     * [SensorStateAction](#sensorstateaction)
+    * [SceneAction](#sceneaction)
 
 
 
@@ -92,7 +93,7 @@ It contains all the properties and functions for [`RuleAction`](#ruleaction) abo
 
 
 #### Instantiation
-To get an instance of a `SensotStateAction` use the function `v3.rules.actions.sensor(id)`
+To get an instance of a `SensorStateAction` use the function `v3.rules.actions.sensor(id)`
 
 * `id`: The id for the sensor or a `Sensor` instance obtained from the bridge
 
@@ -100,10 +101,33 @@ The function will return an instance of a `SensorStateAction`.
 
 
 #### withState(state)
-The `withState(state)` function allows you to specify the state that will be applied to the `Group`.
+The `withState(state)` function allows you to specify the state that will be applied to the `Sensor`.
 
 * `state`: A JSON payload of attributes that will be modified on the `Sensor`, e.g: `{flag: true}`
 
 The function will return the instance of the `SensorStateAction` so you can chain calls.
+
+---
+
+### SceneAction
+A `SceneAction` is a `RuleAction` that will help to constructo a `RuleAction` for saving a `Scene`'s state when triggered
+
+It contains all the properties and functions for [`RuleAction`](#ruleaction) above.
+
+#### Instantiation
+To get an instance of a `SensotStateAction` use the function `v3.rules.actions.scene(id)`
+
+* `id`: The id for the sensor or a `Scene` instance obtained from the bridge
+
+The function will return an instance of a `SceneAction`.
+
+
+#### withState(state)
+The `withState(state)` function allows you to specify the state that will be applied to the `Scene`.
+
+* `state`: A JSON payload of attributes that will be modified on the `Sensor`, e.g: `{storelightstate: true}`
+
+The function will return the instance of the `SceneAction` so you can chain calls.
+
 
 ---
