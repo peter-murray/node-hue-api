@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.4.1
+- Fixing issue with the lookup for the Hue motion sensor, issue #146
+
 ## 3.4.0
 - Adding an ability to get an insecure connection to the Hue Bridge as there are some usecases where this library is
     being used against software emulated bridges and not real Hue Bridge hardware, Issue #142
