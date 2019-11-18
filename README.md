@@ -37,12 +37,14 @@ The library fully supports `local network` and `remote internet` access to the H
         - [Rule Object](docs/rule.md)
         - [RuleCondition Object](docs/ruleCondition.md)
         - [RuleAction Object](docs/ruleAction.md)
+    - [ResourceLinks](/docs/resourcelinks.md)
+        - [ResourceLink Object](docs/resourceLink.md)
     - [Configuration](docs/configuration.md)
     - [Remote](docs/remote.md)
 - [Examples](#examples)
     - [Discover and connect to the Hue Bridge for the first time](#discover-and-connect-to-the-hue-bridge-for-the-first-time)
     - [Set a LightState on a Light](#set-a-light-state-on-a-light)
-    - [Using Hue Remote API](#useing-hue)
+    - [Using Hue Remote API](#using-hue-remote-api)
 - [Philips Hue Resources](#philips-hue-resources)
 - [License](#license)
 
@@ -138,6 +140,8 @@ _Note that there are a number of runnable code samples in the [examples/v3](exam
     - [Rule Object](docs/rule.md)
     - [RuleCondition Object](docs/ruleCondition.md)
     - [RuleAction Object](docs/ruleAction.md)
+- [ResourceLinks](/docs/resourcelinks.md)
+    - [ResourceLink Object](docs/resourceLink.md)
 - [Configuration](docs/configuration.md)
 - [Remote](docs/remote.md)
 
@@ -150,6 +154,7 @@ the documentation links [above](#v3-api).
 Alternatively take a look at the [examples directory](examples/v3) in this repository for complete self contained 
 runnable example code.
 
+---
 
 ### Discover and connect to the Hue Bridge for the first time
 
@@ -225,6 +230,7 @@ For more details on discovery of Hue Bridges, check out the [discovery API](./do
 along with the [users API](./docs/users.md). 
 
 
+---
 
 ### Set a Light State on a Light
 Once you have created your user account and know the IP Address of the Hue Bridge you can interact with things on it. 

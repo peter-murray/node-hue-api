@@ -9,7 +9,7 @@ const utils = require('./utils')
   , newApi = require('../lib/api/index')
   , discovery = require('../lib/api/discovery')
   , LightState = require('./LightStateShim')
-  , SceneLightState = require('../lib/bridge-model/lightstate/SceneLightState')
+  , SceneLightState = require('../lib/model/lightstate/SceneLightState')
 ;
 
 function HueApi(config) {

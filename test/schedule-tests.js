@@ -5,7 +5,7 @@ const expect = require('chai').expect
   , HueApi = hue.api
   , scheduledEventBuilder = hue.scheduledEvent
   , testValues = require('./support/testValues.js')
-  , AbsoluteTime = require('../lib/bridge-model/datetime/AbsoluteTime')
+  , AbsoluteTime = require('../lib/model/datetime/AbsoluteTime')
 ;
 
 describe('Hue API', function () {

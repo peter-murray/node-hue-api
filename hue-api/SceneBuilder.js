@@ -1,23 +1,23 @@
 'use strict';
 
-const Scene = require('../lib/bridge-model/Scene');
+const Scene = require('../lib/model/scenes/Scene');
 
 
-const Builder = function() {
+const SceneBuilder = function() {
   this._scene = new Scene();
 };
-module.exports = Builder;
+module.exports = SceneBuilder;
 
-Builder.prototype.getScene = function() {
+SceneBuilder.prototype.getScene = function() {
   return this._scene;
 };
 
-Builder.prototype.withName = function (name) {
+SceneBuilder.prototype.withName = function (name) {
   this._scene.name = name;
   return this;
 };
 
-Builder.prototype.withLights = function (lightIds) {
+SceneBuilder.prototype.withLights = function (lightIds) {
   let ids;
 
   if (Array.isArray(lightIds)) {
@@ -30,12 +30,12 @@ Builder.prototype.withLights = function (lightIds) {
   return this;
 };
 
-Builder.prototype.withTransitionTime = function (milliseconds) {
+SceneBuilder.prototype.withTransitionTime = function (milliseconds) {
   this._scene.transitiontime = milliseconds;
   return this;
 };
 
-Builder.prototype.withAppData = function (data) {
+SceneBuilder.prototype.withAppData = function (data) {
   let appData;
 
   if (data.version) {
@@ -50,12 +50,12 @@ Builder.prototype.withAppData = function (data) {
   return this;
 };
 
-Builder.prototype.withPicture = function (picture) {
+SceneBuilder.prototype.withPicture = function (picture) {
   this._scene.picture = picture;
   return this;
 };
 
-Builder.prototype.withRecycle = function (recycle) {
+SceneBuilder.prototype.withRecycle = function (recycle) {
   this._scene.recycle = recycle;
   return this;
 };

@@ -1,5 +1,55 @@
 # Change Log
 
+## 4.0.0
+- `v3.api` removed the `create` function as it was deprecated, use `createRemote()` fro the remote API, `createLocal()` 
+    for the local API or `createInsecureLocal()` for non-hue bridges that do not support https connections
+    
+- `v3.Scene` has been removed, use the following functions to create a new Scene instance: 
+    * `v3.model.createLightScene()`
+    * `v3.model.createGroupScene()`
+    This change has also allowed for the separation of the attributes and getter/setters locked down properly based on
+    the type of Scene, i.e. Cannot change the lights in a GroupScene (as they are controlled by the Group).
+    
+- `v3.sensors` has been removed, use `v3.model.createCLIPxxx()` functions instead
+
+- `v3.rules` has been removed to `v3.model`
+    * To create a `Rule` use `v3.model.createRule()`
+    * To create a `RuleCondition` use `v3.model.ruleConditions.[group|sensor]`
+    * To create a `RuleAction` use `v3.model.ruleActions.[light|group|sensor|scene]`
+    
+- `v3.model` added to support exposing the underlying model objects that represent bridge objects. This module will allow
+    you to create all of the necessary objects, e.g. `createGroupScene()`
+    
+- All creation function calls to the bridge will now return the created model object. This change makes it consistent as 
+    some calls would return the object, others would return the id but no other data.
+    
+    This changes return object from the promise on the following calls:
+    * `api.rules.createRule()`
+    * `api.scenes.createScene()`
+    * `api.sensors.createSensor()`
+    
+- Added support for `ResourceLinks` in the API
+
+- Type system from the `LightState` definitions is now used in all Bridge Object Models to define the attributes/properties 
+    obtained from the Bridge.
+    
+    This provides a consistent validation mechanism to all bridge related attributes data. As part of this being used in 
+    the models, some validation is performed at the time of setting a value instead of waiting on when sending it to the 
+    hue bridge (some things still have to wait be sent to the bridge) so the validation is closer to the point of call.
+
+- Added ability to serialize a model object into JSON and then restore it to a corresponding object from the JSON 
+    payload. This was requested to aid in server/client side code situations, as the creation of the model objects are 
+    not directly exposed in the library by design. Related to issue #132
+
+- Adding more in-depth tests to greatly increase coverage around types and models
+
+- Creating Sensors (CLIP variety) has changed as the classes for the sensor objects are no longer directly accessible. 
+    All `CLIPxxx` sensors need to be built from the `v3.model.createCLIP[xxx]Sensor()` function for the desired type, 
+    e.g. `v3.model.createCLIPGenericStatusSensor()` for a `CLIPGenericStatus` sensor. 
+    
+    The function call to instantiate the sensors also no longer take an object to set various attributes of the sensor,
+    you need to call the approriate setter on the class now to se the attribute, e.g. `sensor.manufacturername = 'node-hue-api-sensor';`
+
 ## 3.4.1
 - Fixing issue with the lookup for the Hue motion sensor, issue #146
 

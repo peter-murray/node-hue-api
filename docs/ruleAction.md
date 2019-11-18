@@ -15,8 +15,8 @@ fluent interface for building up the various `RuleActions`s for `Rule`s.
 
 
 ## Instantiating a RuleAction
-A `RuleAction` can be built using the `v3.rules.actions` Object, currently this allows for the creation of actions via 
-the functions:
+A `RuleAction` can be built using the `v3.model.ruleActions` Object, currently this allows for the creation of actions 
+via the functions:
 
 * `light`: Creates a [`LightStateAction`](#lightstateaction) that will set a `LightState` on a specific `Light`
 * `group`:  Creates a [`GroupStateAction`](#groupstateaction) that will set a state `GroupLightState` on a `Group`

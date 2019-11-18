@@ -67,22 +67,21 @@ The `createRule(rule)` function will create a new `Rule` in the Hue Bridge.
 // You need to have created the myRule instance using code before invoking this
 api.rules.createRule(myRule)
   .then(result => {
-    console.log(`Created Rule: ${result.id}`);
+    // Will get an instance of a Rule object 
+    console.log(`Created Rule: ${result.toStringDetailed()}`);
   })
   .catch(err => {
     console.error(`Rule was not valid: ${err.message}`);
   });
 ```
 
-The function will return an Object with an `id` property for the new Rule is the Rule was valid, otherwise will throw 
-an `ApiError`.
+The function will return the created `Rule` object, otherwise will throw an `ApiError`.
 
 _Note: It is not possible to completely validate all the possible combinations of attributes in a `Rule` as to whether or not 
 it is valid before trying to create it in the Hue Bridge.
 The library will perform a number of checks around eliminating common and obvious issues when building a `Rule`, but 
 the ultimate check is made by the bridge, but I have seen some very generic error messages in testing when there are 
 issues in the Rule definition._ 
-
 
 A complete code sample for this function is available [here](../examples/v3/rules/createRule.js).
 

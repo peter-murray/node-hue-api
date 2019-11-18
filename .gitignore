@@ -10,3 +10,6 @@ node_modules
 scratch.js
 
 .DS_Store
+
+# TypeScript Definition Files
+*.d.ts

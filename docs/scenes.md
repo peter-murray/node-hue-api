@@ -24,7 +24,7 @@ Bridge will be 102.
 
 
 ## getAll()
-The `getAll()` function allows you to get all the lights that the Hue Bridge has registered with it.
+The `getAll()` function allows you to get all the scenes that the Hue Bridge has registered with it.
 
 ```js
 api.scenes.getAll()
@@ -90,18 +90,18 @@ The `createScene(scene)` function allows for the creation of new `Scene`s in the
 * `scene`: A `Scene` object that has been configured with the desired settings for rhe scene being created.
 
 ```js
-const scene = new Scene();
+const scene = v3.model.createLightScene();
 scene.name = 'My Scene';
 scene.lights = [1, 2, 3];
 
 api.scenes.createScene(scene)
-  .then(result => {
-    console.log(`Successfully created scene with id: ${result.id}`);
+  .then(scene => {
+    console.log(`Successfully created scene\n${scene.toStringDetailed()}`);
   })
 ;
 ```
 
-The function will resolve with a `Object` with a value of `id` that is the newly created scene's id.
+The function will resolve with a corresponding `GroupScene` or `LightScene` object, depending upon what was passed in.
 
 _Note: Whilst the Hue API itself will allow a scene to be updated via creation call, this library will prevent such a 
 thing, by removing any `id` value from the `Scene` object to prevent overwriting an existing `Scene`.

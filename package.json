@@ -11,9 +11,11 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test-bridge-model": "mocha --recursive \"lib/bridge-model/**/*.test.js\"",
+    "test-model": "mocha --recursive \"lib/model/**/*.test.js\"",
     "test-api": "mocha --recursive \"lib/api/**/*.test.js\"",
-    "test-old-api": "mocha --recursive \"test/**/*-tests.js\""
+    "test-types": "mocha --recursive \"lib/types/*.test.js\"",
+    "test-old-api": "mocha --recursive \"test/**/*-tests.js\"",
+    "generate-typescript-definitions": "npx typescript index.js --allowJs --declaration --emitDeclarationOnly"
   },
   "repository": {
     "type": "git",
@@ -29,8 +31,7 @@
   "devDependencies": {
     "chai": "~4.2",
     "eslint": "^5.16.0",
-    "mocha": "~6.1.4",
-    "semver": "~6.0"
+    "mocha": "~6.2.2"
   },
   "engines": {
     "node": ">= 10.0.0"

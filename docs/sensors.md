@@ -129,17 +129,13 @@ documentation or the [example code](../examples/v3/sensors/creatingClipSensors.j
 
 ```js
 api.sensors.createSensor(sensor)
-  .then(result => {
-    console.log(`Created sensor with id: ${result.id}`)
+  .then(sensor => {
+    console.log(`Created sensor\n${sensor.toStringDetailed()}`)
   })
 ```
 
-The returned `Object` will contain the new `Sensor` id under the `id` attribute, for example:
-```js
-{
-  "id": 1
-}
-```
+The promise will resolve to an instance of a `Sensor` that will be an instance of the type of sensor data that you 
+passed in. e.g. a `CLIPOpenClose` sensor.
 
 A complete code sample is available [here](../examples/v3/sensors/createNewSensor.js).
 
@@ -205,7 +201,15 @@ api.sensors.updateSensorState(mySensor)
   });
 ```
 
-The function will resolve to a `Boolean` indicating the success status of the update.
+The function will resolve to a `Object` with the keys being the state values that were attempted to be updated and the 
+value set to a `Boolean` indicating if the bridge updated the value.
+
+For example for an OpenClose `Sensor` it would return the following object (as it only has a state of `open`):
+```json
+{
+  "open": true
+}
+```
 
 _Note: This will only work for CLIP `Sensor` types as other sensor types are usually hardware devices. Each type of 
 sensor has different state attributes that can be modified. Consult the [`Sensor` documentation](./sensor.md) for the 

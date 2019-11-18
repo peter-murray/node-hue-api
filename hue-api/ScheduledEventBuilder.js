@@ -3,8 +3,8 @@
 //TODO this is a bit of a mess now and has invalid references, probably document to use new objects...
 
 const ApiError = require('../lib/ApiError')
-  , Schedule = require('../lib/bridge-model/Schedule')
-  , dateTime = require('../lib/bridge-model/datetime/index')
+  , Schedule = require('../lib/model/Schedule')
+  , dateTime = require('../lib/model/datetime/index')
   ;
 
 

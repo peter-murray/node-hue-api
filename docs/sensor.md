@@ -8,7 +8,7 @@ Some of these Sensors are Hardware sensors whilst others are Software constructs
 The sensors that can be built and controlled via software are the `CLIP` variety.
 
 The API provides access to the Sensor objects via the [`v3.api.sensors` API](sensors.md), but you can also create new 
-CLIP Sensor objects using the various CLIP sensor classes from the `v3.sensors.clip` objects.
+CLIP Sensor objects using the various CLIP sensor classes by using the `v3.model.createCLIP[xxx]Sensor()` functions.
 
 
 - [CLIP Sensors](#clipsensors) 
@@ -19,7 +19,7 @@ CLIP Sensor objects using the various CLIP sensor classes from the `v3.sensors.c
   - [CLIP OpenClose](#clipopenclose) 
   - [CLIP Presence](#clippresence) 
   - [CLIP Switch](#clipswitch) 
-  - [CLIP Temperatue](#cliptemperature) 
+  - [CLIP Temperature](#cliptemperature) 
   
 
 
@@ -67,16 +67,13 @@ The unique properties for the GenericFlag Sensor are:
 
 Creating a `CLIPGenericFlag` sensor can be done as shown below:
 ```js
-const CLIPGenericFlag = require('node-hue-api').v3.sensors.clip.GenericFlag;
+const model = require('node-hue-api').v3.model;
 
-const sensorConfig = {
-  modelid: 'software',
-  swversion: '1.0',
-  uniqueid: '00:00:00:01',
-  manufacturername: 'node-hue-api'
-};
-
-const mySensor = new CLIPGenericFlagSensor(sensorConfig);
+const mySensor = model.createCLIPGenericFlagSensor();
+mySensor.modelid = 'software';
+mySensor.swversion = '1.0';
+mySensor.uniqueid = '00:00:00:01';
+mySensor.manufacturername = 'node-hue-api';
 
 // Set the name of the sensor
 mySensor.name = 'My awesome clip generic flag sensor';
@@ -103,16 +100,13 @@ The unique properties for the `GenericFlag` Sensor are:
 
 Creating a `CLIPGenericStatus` sensor can be done as shown below:
 ```js
-const CLIPGenericStatus = require('node-hue-api').v3.sensors.clip.GenericStatus;
+const model = require('node-hue-api').v3.model;
 
-const sensorConfig = {
-  modelid: 'software',
-  swversion: '1.0',
-  uniqueid: '00:00:00:01',
-  manufacturername: 'node-hue-api'
-};
-
-const mySensor = new CLIPGenericStatusSensor(sensorConfig);
+const mySensor = model.createCLIPGenericStatusSensor();
+mySensor.modelid = 'software';
+mySensor.swversion = '1.0';
+mySensor.uniqueid = '00:00:00:01';
+mySensor.manufacturername = 'node-hue-api';
 
 // Set the name of the sensor
 mySensor.name = 'My awesome clip generic status sensor';
@@ -134,16 +128,13 @@ The unique properties for the `Humidity` Sensor are:
 
 Creating a `CLIPHumidity` sensor can be done as shown below:
 ```js
-const CLIPHumiditySensor = require('node-hue-api').v3.sensors.clip.Humidity;
+const model = require('node-hue-api').v3.model;
 
-const sensorConfig = {
-  modelid: 'software',
-  swversion: '1.0',
-  uniqueid: '00:00:00:01',
-  manufacturername: 'node-hue-api'
-};
-
-const mySensor = new CLIPHumiditySensor(sensorConfig);
+const mySensor = model.createCLIPHumiditySensor();
+mySensor.modelid = 'software';
+mySensor.swversion = '1.0';
+mySensor.uniqueid = '00:00:00:01';
+mySensor.manufacturername = 'node-hue-api';
 
 // Set the name of the sensor
 mySensor.name = 'Lounge Humidity';
@@ -169,16 +160,13 @@ The unique properties for the `Lighlevel` Sensor are:
 
 Creating a `CLIPLightLevel` sensor can be done as shown below:
 ```js
-const CLIPLightLevel = require('node-hue-api').v3.sensors.clip.LightLevel;
+const model = require('node-hue-api').v3.model;
 
-const sensorConfig = {
-  modelid: 'software',
-  swversion: '1.0',
-  uniqueid: '00:00:00:01',
-  manufacturername: 'node-hue-api'
-};
-
-const mySensor = new CLIPLightLevel(sensorConfig);
+const mySensor = model.createCLIPLightlevelSensor();
+mySensor.modelid = 'software';
+mySensor.swversion = '1.0';
+mySensor.uniqueid = '00:00:00:01';
+mySensor.manufacturername = 'node-hue-api';
 
 // Set the name of the sensor
 mySensor.name = 'Lounge LightLevel';
@@ -200,16 +188,13 @@ The unique properties for the `OpenClose` Sensor are:
 
 Creating a `CLIPOpenClose` sensor can be done as shown below:
 ```js
-const CLIPOpenClose = require('node-hue-api').v3.sensors.clip.OpenClose;
+const model = require('node-hue-api').v3.model;
 
-const sensorConfig = {
-  modelid: 'software',
-  swversion: '1.0',
-  uniqueid: '00:00:00:01',
-  manufacturername: 'node-hue-api'
-};
-
-const mySensor = new CLIPOpenClose(sensorConfig);
+const mySensor = model.createCLIPOpenCloseSensor();
+mySensor.modelid = 'software';
+mySensor.swversion = '1.0';
+mySensor.uniqueid = '00:00:00:01';
+mySensor.manufacturername = 'node-hue-api';
 
 // Set the name of the sensor
 mySensor.name = 'Lounge Door';
@@ -231,16 +216,13 @@ The unique properties for the `Presense` Senor are:
 
 Creating a `CLIPPresence` sensor can be done as shown below:
 ```js
-const CLIPresence = require('node-hue-api').v3.sensors.clip.Presence;
+const model = require('node-hue-api').v3.model;
 
-const sensorConfig = {
-  modelid: 'software',
-  swversion: '1.0',
-  uniqueid: '00:00:00:01',
-  manufacturername: 'node-hue-api'
-};
-
-const mySensor = new CLIPresence(sensorConfig);
+const mySensor = model.createCLIPPresenceSensor();
+mySensor.modelid = 'software';
+mySensor.swversion = '1.0';
+mySensor.uniqueid = '00:00:00:01';
+mySensor.manufacturername = 'node-hue-api';
 
 // Set the name of the sensor
 mySensor.name = 'Lounge Presence';
@@ -264,16 +246,13 @@ the last button pressed/released an whether it was a short or long press.
 
 Creating a `CLIPSwitch` sensor can be done as shown below:
 ```js
-const CLIPSwitch = require('node-hue-api').v3.sensors.clip.Switch;
+const model = require('node-hue-api').v3.model;
 
-const sensorConfig = {
-  modelid: 'software',
-  swversion: '1.0',
-  uniqueid: '00:00:00:01',
-  manufacturername: 'node-hue-api'
-};
-
-const mySensor = new CLIPSwitch(sensorConfig);
+const mySensor = model.createCLIPSwitchSensor();
+mySensor.modelid = 'software';
+mySensor.swversion = '1.0';
+mySensor.uniqueid = '00:00:00:01';
+mySensor.manufacturername = 'node-hue-api';
 
 // Set the name of the sensor
 mySensor.name = 'Lounge Wall Switch';
@@ -295,16 +274,13 @@ The unique properties for the `Temperature` Sensor are:
 
 Creating a `CLIPTemperature` sensor can be done as shown below:
 ```js
-const CLIPTemperature = require('node-hue-api').v3.sensors.clip.Temperature;
+const model = require('node-hue-api').v3.model;
 
-const sensorConfig = {
-  modelid: 'software',
-  swversion: '1.0',
-  uniqueid: '00:00:00:01',
-  manufacturername: 'node-hue-api'
-};
-
-const mySensor = new CLIPSwitch(sensorConfig);
+const mySensor = model.createCLIPTemperatureSensor();
+mySensor.modelid = 'software';
+mySensor.swversion = '1.0';
+mySensor.uniqueid = '00:00:00:01';
+mySensor.manufacturername = 'node-hue-api';
 
 // Set the name of the sensor
 mySensor.name = 'Lounge Temperature';

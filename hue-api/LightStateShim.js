@@ -1,6 +1,6 @@
 'use strict';
 
-const LightState = require('../lib/bridge-model/lightstate/LightState')
+const LightState = require('../lib/model/lightstate/LightState')
 ;
 
 module.exports = class LightStateShim {

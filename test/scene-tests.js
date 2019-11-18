@@ -3,7 +3,7 @@
 const expect = require('chai').expect
   , HueApi = require('..').HueApi
   , hueScene = require('..').scene
-  , Scene = require('../lib/bridge-model/Scene')
+  , Scene = require('../lib/model/scenes/Scene')
   , lightState = require('..').lightState
   , testValues = require('./support/testValues.js')
   ;

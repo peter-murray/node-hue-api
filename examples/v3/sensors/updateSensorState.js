@@ -9,9 +9,6 @@ const CLIPOpenCloseSensor = v3.sensors.clip.OpenClose;
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
 
-// Replace with the desired sensor ID that you want to rename
-const SENSOR_ID = 1000;
-
 //
 // This code will create a CLIP Sensor that we can interact with, setting it's state attributes and will then clean up
 // after itself and remove the Sensor it created.
@@ -60,7 +57,7 @@ v3.discovery.nupnpSearch()
         return api.sensors.updateSensorState(sensor);
       })
       .then(result => {
-        console.log(`Updated the Sensor, ${sensorId}, state successfully? ${result}`);
+        console.log(`Updated the Sensor, ${sensorId}, state values updated: ${JSON.stringify(result)}`);
 
         // Get the updated sensor object from the Bridge again, it should have a lastupdated attribute for the change now
         return api.sensors.get(sensorId);
