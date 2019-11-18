@@ -14,8 +14,9 @@
     "test-model": "mocha --recursive \"lib/model/**/*.test.js\"",
     "test-api": "mocha --recursive \"lib/api/**/*.test.js\"",
     "test-types": "mocha --recursive \"lib/types/*.test.js\"",
-    "test-old-api": "mocha --recursive \"test/**/*-tests.js\"",
-    "generate-typescript-definitions": "npx typescript index.js --allowJs --declaration --emitDeclarationOnly"
+    "clean-ts-definitions": "npx rimraf **/*.d.ts",
+    "generate-ts-definitions": "npm run clean-ts-definitions && npx typescript index.js --allowJs --declaration --emitDeclarationOnly",
+    "prepublishOnly": "npm run generate-ts-definitions"
   },
   "repository": {
     "type": "git",

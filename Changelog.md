@@ -1,6 +1,8 @@
 # Change Log
 
 ## 4.0.0
+- Deprecated v2 API and shim and modules removed from library
+
 - `v3.api` removed the `create` function as it was deprecated, use `createRemote()` fro the remote API, `createLocal()` 
     for the local API or `createInsecureLocal()` for non-hue bridges that do not support https connections
     
@@ -49,6 +51,8 @@
     
     The function call to instantiate the sensors also no longer take an object to set various attributes of the sensor,
     you need to call the approriate setter on the class now to se the attribute, e.g. `sensor.manufacturername = 'node-hue-api-sensor';`
+    
+- TypeScript definitions added to the library
 
 ## 3.4.1
 - Fixing issue with the lookup for the Hue motion sensor, issue #146

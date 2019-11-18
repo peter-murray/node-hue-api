@@ -12,12 +12,8 @@ The library fully supports `local network` and `remote internet` access to the H
 
 
 ## Contents
-- [Change Log](#change-log)
-    - [2.x](#2x)
-    - [3.x](#3x)
-        - [2.x Backwards Compatibility Shim](#2x-backwards-compatibility-shim) 
+- [Change Log](#change-log) 
 - [Installation](#installation)
-- [v2 API](docs/v2_api.md) - for backwards compatibility with 2.x versions of the library (deprecated)
 - [v3 API](#v3-api) - new API introduced in 3.x versions of the library
     - [Discovering Local Hue Bridges](docs/discovery.md)
     - [Remote API Support](docs/remoteApi.md)
@@ -54,63 +50,14 @@ The library fully supports `local network` and `remote internet` access to the H
 For a list of changes, please refer to the change log;
 [Changes](Changelog.md)
 
-
-### 2.x
-The library was originally written well before Promises and Async functions were part of the Javascript language (as well 
-as callbacks being the Node.js standard at the time). The `2.x` versions of the library heavily used  `callbacks` and 
-`Q promises` for all the functions of the API.
-
-It was getting difficult to continue to support the new features of the bridge in this manner, and there was a lot of 
-unnecessary dependencies that were being dragged around, some of which were abandoned, e.g. `traits` and `Q`.
-
-You can continue to use the old 2.x release versions of this library, but the final release is `2.4.6` and no new 
-features will be added to this.
-
-There is a shim layer in the `3.x` releases that provides a drop in to match about 95% of the v2 API, see 
-[here](#2x-backwards-compatibility-shim) for more details.
-
-
-
-### 3.x
-In version `3.x` the library was rewritten to adopt up to date Javascript language features (ES6) and remove a number of
-now defunct dependencies.
-
-This has resulted in the removal of the older `callbacks` and Q `promises` from the code base and a brand new API that
-includes a number of missing pieces of the the Philips Hue Bridge which were not available under the `2.x` versions, 
-e.g. Sensors support.
-
-The rewrite of the API using up to date language constructs has resulted in some significant speed increases from a 
-code execution stand point as well as introducing improved functionality around utility functions like setting RGB values 
-on lights (which are not explicitly supported in the Philips Hue REST API).
-
-#### 2.x Backwards Compatibility Shim
-There is a backwards compatibility shim provided in the `3.x` releases to allow existing (`2.x`) users of 
-the library some time to transition existing code over to the updated API.
-
-This does have some minor breaking changes in some edge case features, but the majority of the core library 
-functions are shimmed to use the new API code behind a backwards compatible layer that provides a shimmed layer of
-`callback`s and `Q` style promises as per the original API.
-
-Please consult the [backwards compatibility changes](docs/v3_backwards_compatibility.md) for details on changes that had 
-to be made that will change the v2 API.
-
-_Note: You are strongly encouraged to migrate off this, as it will be completely removed in the `4.x` releases, also all new 
-features will only be added to the `v3` going forward._  
-
-_Note: This shim will print out on `console.error` a number of warnings about the deprecated function calls that exist and
-provide some details on what you can do to remove them._
-
-This shim layer will be removed in the `4.x` release versions of the library.
-
-
 ## Installation
 
-NodeJS using npm:
+Node.js using npm:
 ```
 $ npm install node-hue-api
 ```
 
-NodeJS using yarn:
+Node.js using yarn:
 ```
 $ yarn install node-hue-api
 ```
