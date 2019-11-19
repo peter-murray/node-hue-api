@@ -20,7 +20,7 @@ jobs:
     - name: npm test
       run: |
         npm ci
-        npm test-types --if-present
-        npm test-model --if-present
+        npm run test-types --if-present
+        npm run test-model --if-present
       env:
         CI: true
