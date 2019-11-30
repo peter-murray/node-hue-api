@@ -19,7 +19,7 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.resourceLinks.get(RESOURCE_LINK_ID);
+    return api.resourceLinks.getResourceLink(RESOURCE_LINK_ID);
   })
   .then(resourceLink => {
     console.log(`${resourceLink.toStringDetailed()}`);

@@ -1,6 +1,6 @@
 # Rules API
 
-The `rules` API provides a measn of interacting with Rules in the Hue Bridge.
+The `rules` API provides a manes of interacting with Rules in the Hue Bridge.
 
 Rules are complex event triggers that consist of a one or more conditions that must be satisfied, which when they are
 will trigger one or more actions for devices connected to the bridge.
@@ -15,7 +15,8 @@ The Rules API interacts with specific [`Rule`](./rule.md) objects from the Bridg
 
 
 * [getAll()](#getall)
-* [(get(id)](#get)
+* [getRule(id)](#getrule)
+* [getRuleByName(name)](#getrulebyname)
 * [createRule(rule)](#createrule)
 * [deleteRule(id)](#deleterule)
 * [updateRule(rule)](#updaterule)
@@ -39,14 +40,14 @@ This function call will resolve to an `Array` of `Rule` objects.
 A complete code sample for this function is available [here](../examples/v3/rules/getAllRules.js).
 
 
-## get()
-The `get(id)` function will obtain the specified Rule with the given `id`.
+## getRule()
+The `getRule(id)` function will obtain the specified Rule with the given `id`.
 
-* `id`: The id fo the rule to get from the Hue Bridge.
+* `id`: The id for the rule, or a `Rule` instance to get from the Hue Bridge.
 
 ```js
-api.rules.get(1)
-  .then(allRules => {
+api.rules.getRule(1)
+  .then(rule => {
     // Display the Rule
     console.log(rule.toStringDetailed());
   });
@@ -55,6 +56,26 @@ api.rules.get(1)
 This function will return a `Rule` object for the specified `id`.
 
 A complete code sample for this function is available [here](../examples/v3/rules/getRule.js).
+
+
+## getRuleByName()
+The `getRuleByName(name)` function will obtain all the `Rule`s from the bridge that have the specified `name`.
+
+* `name`: The name of the `Rule`s to get from the Hue Bridge.
+
+```js
+api.rules.getRuleByName('Opened door')
+  .then(allRules => {
+    // Display the Rules
+    allRules.forEach(rule => {
+      console.log(rule.toStringDetailed());
+    });
+  });
+```
+
+This function will return an `Array` of `Rule` objects for all of the `Rule`s that matched the specided `name`.
+
+A complete code sample for this function is available [here](../examples/v3/rules/getRuleByName.js).
 
 
 

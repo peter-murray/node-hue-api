@@ -16,7 +16,7 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.groups.get(GROUP_ID);
+    return api.groups.getGroup(GROUP_ID);
   })
   .then(group => {
     // Display the details for the group

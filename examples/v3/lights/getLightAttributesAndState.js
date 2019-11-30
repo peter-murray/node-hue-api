@@ -7,7 +7,7 @@ const v3 = require('../../../index').v3;
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username
   // The name of the light we wish to retrieve by name
-  , LIGHT_ID = 1
+  , LIGHT_ID = 10
 ;
 
 v3.discovery.nupnpSearch()

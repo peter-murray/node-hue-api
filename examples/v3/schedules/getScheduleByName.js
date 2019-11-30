@@ -7,9 +7,8 @@ const v3 = require('../../../index').v3;
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
 
-// Replace with the desired sensor ID that you want to rename
-const SENSOR_ID = 1000;
-
+// The Schedule name to retrieve from the bridge
+const SCHEDULE_NAME = 'Wake up';
 
 v3.discovery.nupnpSearch()
   .then(searchResults => {
@@ -17,17 +16,16 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    // The Hue Daylight software sensor is identified as id 1
-    return api.sensors.updateName(SENSOR_ID, 'updated-sensor-name');
+    return api.schedules.getByName(SCHEDULE_NAME);
   })
-  .then(result => {
-    console.log(`Updated sensor name? ${result}`);
+  .then(schedules => {
+    // Display the details of the schedules we got back
+    console.log(`Schedules from the Bridge that match the name: "${SCHEDULE_NAME}"\n`);
+    schedules.forEach(schedule => {
+      console.log(schedule.toStringDetailed());
+    });
   })
   .catch(err => {
-    if (err.getHueErrorType() === 3) {
-      console.error(`Failed to locate a sensor with id ${SENSOR_ID}`)
-    } else {
-      console.error(`Unexpected Error: ${err.message}`);
-    }
+    console.error(`Unexpected error: ${err.message}`);
   })
 ;

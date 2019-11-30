@@ -6,8 +6,8 @@ const v3 = require('../../../index').v3;
 
 const USERNAME = require('../../../test/support/testValues').username;
 
-// Set this to the desired Rule ID to retrieve from the bridge
-const RULE_ID = 1;
+// Set this to the desired Rule name to retrieve from the bridge
+const RULE_NAME = 'Tap 2.1 Default';
 
 v3.discovery.nupnpSearch()
   .then(searchResults => {
@@ -15,10 +15,12 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.rules.getRule(RULE_ID);
+    return api.rules.getRuleByName(RULE_NAME);
   })
-  .then(rule => {
-    // Print the details for the Rule
-    console.log(rule.toStringDetailed());
+  .then(rules => {
+    // Print the details for the Rules found
+    rules.forEach(rule => {
+      console.log(rule.toStringDetailed());
+    });
   })
 ;

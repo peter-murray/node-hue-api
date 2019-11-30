@@ -5,10 +5,7 @@ const v3 = require('../../../index').v3;
 // const v3 = require('node-hue-api').v3;
 
 // Replace this with your username for accessing the bridge
-const USERNAME = require('../../../test/support/testValues').username
-  // The name of the light we wish to retrieve by name
-  , LIGHT_ID = 1
-;
+const USERNAME = require('../../../test/support/testValues').username;
 
 v3.discovery.nupnpSearch()
   .then(searchResults => {
@@ -16,10 +13,10 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.lights.getLightById(LIGHT_ID);
+    return api.capabilities.getAll();
   })
-  .then(light => {
-    // Display the details of the light
-    console.log(light.toStringDetailed());
+  .then(capabilities => {
+    // Display the Capabilities Object Details
+    console.log(capabilities.toStringDetailed());
   })
 ;

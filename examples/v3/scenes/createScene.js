@@ -36,7 +36,7 @@ v3.discovery.nupnpSearch()
         console.log(`Created LightScene\n${scene.toStringDetailed()}`);
 
         // Now remove the scene we just created
-        return api.scenes.deleteScene(scene.id);
+        return api.scenes.deleteScene(scene);
       });
   })
   .catch(err => {

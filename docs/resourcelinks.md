@@ -9,7 +9,8 @@ See [`ResourceLink`s](./resourceLink.md) for more details on the `ResourceLink` 
 
 
 * [getAll()](#getall)
-* [get(id)](#get)
+* [getResourceLink(id)](#getresourcelink)
+* [getResourceLinkByName(name)](#getresourcelinkbyname)
 * [createResourceLink()](#createresourcelink)
 * [updateResouceLink()](#updateresourcelink)
 * [deleteResourceLink()](#deleteresourcelink)
@@ -34,14 +35,35 @@ A complete code sample for this function is available [here](../examples/v3/reso
 
 
 
-## get()
-The `get(id)` function allows a specific `ResourceLink` to be retrieved from the Hue Bridge.
+## getResourceLink()
+The `getResourceLink(id)` function allows a specific `ResourceLink` to be retrieved from the Hue Bridge.
 
 * `id`: The `String` id of the `ResourceLink` to retrieve.
 
 
 ```js
-api.resourceLinks.get(62738)
+api.resourceLinks.getResourceLink(62738)
+  .then(resourceLink => {
+    console.log(resourceLink.toStringDetailed());
+  })
+;
+```
+
+This function call will resolve to a `ResourceLink` object for the specified `id`.
+
+If the `ResourceLink` cannot be found an `ApiError` will be returned with a `getHueErrorType()` value of `3`.
+
+A complete code sample for this function is available [here](../examples/v3/resourceLinks/getResourceLink.js).
+
+
+## getResourceLinkByName()
+The `getResourceLinkByName(name)` function will retrieve all `ResourceLink` instances that match the provided name from the Hue Bridge.
+
+* `name`: The `String` name of the `ResourceLink` to retrieve.
+
+
+```js
+api.resourceLinks.getResourceLink(62738)
   .then(resourceLink => {
     console.log(resourceLink.toStringDetailed());
   })

@@ -4,14 +4,15 @@ The sensors API allows you to interact with the sensors features of the Hue Brid
 
 * [Sensor Objects](#sensors)
 * [getAll()](#getall)
-* [get(id)](#get)
+* [getSensor(id)](#getsensor)
 * [searchForNew()](#searchfornew)
 * [getNew()](#getnew)
-* [updateName()](#updatesensorname)
-* [createSensor()](#createsensor)
-* [deleteSensor()](#deletesensor)
-* [updateSensorConfig()](#updatesensorconfig)
-* [updateSensorState()](#updatesensorstate)
+* [renameSensor(sensor)](#renamesensor)
+* [updateName()](#updatename)
+* [createSensor(sensor)](#createsensor)
+* [deleteSensor(id)](#deletesensor)
+* [updateSensorConfig(sensor)](#updatesensorconfig)
+* [updateSensorState(sensor)](#updatesensorstate)
 
 
 ## Sensors
@@ -41,12 +42,12 @@ A complete code sample for getting all sensors is available [here](../examples/v
 
 
 
-## get()
-The `get(id)` function will obtain the sensor identified by the specified `id` value.
+## getSensor()
+The `getSensor(id)` function will obtain the sensor identified by the specified `id` value.
 
 ```js
 // Get the daylight sensor for the bridge, at id 1
-api.sensors.get(1)
+api.sensors.getSensor(1)
   .then(sensor => {
     console.log(sensor.toStringDetailed());
   })
@@ -99,17 +100,18 @@ The return `Object` has the following properties:
 A complete code sample is available [here](../examples/v3/sensors/getNewSensors.js).
 
 
-
-## updateName()
-The `updateName(id, name)` function will allow you to rename an existing Sensor in the Hue Bridge.
+## renameSensor()
+The `renameSensor(sensor)` function will allow you to rename an existing Sensor in the Hue Bridge.
 
 The parameters are:
 
-* `id`: The id of the sensor that you want to rename
-* `name`: The new name for the sensor identified by the `id` value.
+* `sensor`: The updated `Sensor` object with the changed name.
 
 ```js
-api.sensors.updateName(sensorId, newName)
+// The sensor would have been previously obtained from the bridge.
+sensor.name = 'Updated Sensor Name';
+
+api.sensors.renameSensor(sensor)
   .then(result => {
     console.log(`Updated Sensor Name? ${result}`)
   });
@@ -117,8 +119,12 @@ api.sensors.updateName(sensorId, newName)
 
 The result from the function call will be a `Boolean` indicating the success status of the renaming action.
 
-A complete code sample is available [here](../examples/v3/sensors/updateSensorName.js).
+A complete code sample is available [here](../examples/v3/sensors/renameSensor.js).
 
+
+## updateName()
+The `updateName(id, name)` function will allow you to rename an existing Sensor in the Hue Bridge.
+This has been deprecated, use [`reanmeSesnor(sensor)`](#renamesensor) instead.
 
 
 ## createSensor()

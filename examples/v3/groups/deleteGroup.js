@@ -14,6 +14,17 @@ v3.discovery.nupnpSearch()
   })
   .then(api => {
 
+    //TODO remove
+    // return api.groups.getByName('Custom group for $lights')
+    //   .then(groups => {
+    //     const promises = [];
+    //
+    //     groups.forEach(group => {
+    //       promises.push(api.groups.deleteGroup(group.id));
+    //     });
+    //     return  Promise.all(promises);
+    //   })
+
     // Create a new group that we can then delete
     return api.groups.createZone('Testing Group Deletion')
       .then(group => {

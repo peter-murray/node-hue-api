@@ -16,17 +16,19 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    const newGroup = model.createLightGroup();
-    // The name of the new group to create
-    newGroup.name = 'My New Group';
-    // The array of light ids that will be in the group
-    newGroup.lights = [2];
+    const entertainment = model.createEntertainment();
+    // The name of the new zone we are creating
+    entertainment.name =  'Testing Entertainment Creation';
+    // The array of light ids that will be in the entertainment group, not all lights can be added, they have to support streaming
+    entertainment.lights = [44, 43];
+    // The class for the entertainment group, this has to be selected from the valid values, consult the documentation for details
+    entertainment.class = 'TV';
 
-    return api.groups.createGroup(newGroup)
+    return api.groups.createGroup(entertainment)
       .then(group => {
         console.log(group.toStringDetailed());
 
-        // Delete the new Group
+        // Delete the new Entertainment Group
         return api.groups.deleteGroup(group);
       });
   })

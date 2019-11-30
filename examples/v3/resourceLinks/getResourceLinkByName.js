@@ -7,8 +7,11 @@ const v3 = require('../../../index').v3;
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
 
-// Set this to the desired name of the scenes to get
-const SCENE_NAME = 'Concentrate';
+// Replace this with your desired name for the ResourceLinks you want to retrieve
+const RESOURCE_LINK_NAME = 'Meditation lights';
+
+//
+// This code will obtain the specified ResourceLink identified by the RESOURCE_LINK_NAME above and display it on the console
 
 v3.discovery.nupnpSearch()
   .then(searchResults => {
@@ -16,13 +19,11 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.scenes.getSceneByName(SCENE_NAME);
+    return api.resourceLinks.getResourceLinkByName(RESOURCE_LINK_NAME);
   })
-  .then(scenes => {
-    // Do something useful with the Scenes
-    console.log(`Matched ${scenes.length} scenes with name '${SCENE_NAME}'`);
-    scenes.forEach(scene => {
-      console.log(scene.toStringDetailed());
+  .then(resourceLinks => {
+    resourceLinks.forEach(resourceLink => {
+      console.log(`${resourceLink.toStringDetailed()}`);
     });
   })
   .catch(err => {

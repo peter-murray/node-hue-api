@@ -2,16 +2,24 @@
 
 The `lights` API provides a means of interacting with the lights in Hue Bridge.
 
+* [Light Object](#light-object)
 * [getAll()](#getAll)
-* [getLightById(id)](#getlightbyid)
+* [getLight()](#getlight)
+* [getLightById(id)](#getlightbyid): Deprecated
 * [getLightByName(name)](#getlightbyname)
 * [searchForNew()](#searchfornew)
 * [getNew()](#getnew)
 * [getLightAttributesAndState(id)](#getlightattributesandstate)
 * [getLightState(id)](#getlightstate)
 * [setLightState(id, state)](#setlightstate)
-* [rename(id, name)](#rename)
+* [renameLight(light)](#renamelight)
 * [deleteLight(id)](#deletelight)
+
+
+## Light Object
+Any function calls that will return an instance of a Light, will return a [`Light`](./light.md) instance. 
+The `Light` object provides useful getters and setters for interacting with the Light. Consult the [documentation](./light.md)
+for specifics.
 
 
 
@@ -32,20 +40,26 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 
 
 
-## getLightById()
-The `getLightById(id)` function allows you to retrieve a specific light by it's ID value.
+## getLight()
+The `getLight(id)` function allows you to retrieve a specific light.
+
+* `id`: The `id` number or a `Light` instance to retrieve from the bridge.
 
 ```js
-api.lights.getLightById(id)
+api.lights.getLight(id)
   .then(light => {
     // Display the details of the light
     console.log(light.toStringDetailed());
   });
 ```
 
-This function call will resolve to a single `Light` instance.
+This function call will return a Promise that will resolve to a single `Light` instance.
 
-A complete code sample for this function is available [here](../examples/v3/lights/getLightById.js).
+A complete code sample for this function is available [here](../examples/v3/lights/getLight.js).
+
+
+## getLightById()
+This API `getLightById(id)` has bee deprecated, use [`getLight(id)`](#getlight) instead.
 
 
 
@@ -62,7 +76,7 @@ api.lights.getLightByName(name)
 
 This function call will resolve to a single `Light` instance.
 
-A complete code sample for this function is available [here](../examples/v3/lights/getLightById.js).
+A complete code sample for this function is available [here](../examples/v3/lights/getLight.js).
 
 
 
@@ -271,12 +285,12 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 
 
 
-## rename()
+## renameLight()
 
-The `rename(id, name)` function allows you to rename the light identified by the `id` to the specified `name` value.
+The `renameLight(id, name)` function allows you to rename the light identified by the `id` to the specified `name` value.
 
 ```js
-api.lights.rename(id, 'my_new_name')
+api.lights.renameLight(id, 'my_new_name')
   .then(result => {
       console.log(`Successfully reanmed light? ${result}`);
   });

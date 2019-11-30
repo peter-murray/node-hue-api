@@ -7,7 +7,7 @@ const v3 = require('../../../index').v3;
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
 
-// Set this to the id of the scene
+// Set this to the id of the scene to retrieve
 const SCENE_ID = 'GfOL56sqKPGmPer';
 
 v3.discovery.nupnpSearch()
@@ -16,7 +16,7 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.scenes.get(SCENE_ID);
+    return api.scenes.getScene(SCENE_ID);
   })
   .then(scene => {
     // Do something useful with the Scene
