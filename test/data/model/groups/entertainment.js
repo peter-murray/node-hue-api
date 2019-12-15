@@ -1,0 +1,32 @@
+module.exports = {
+  id: 1,
+  name: 'Lounge Entertainment',
+  lights: ['18', '37', '38', '17'],
+  sensors: [],
+  type: 'Entertainment',
+  state: {all_on: true, any_on: true},
+  recycle: false,
+  class: 'TV',
+  stream:
+    {proxymode: 'manual', proxynode: '/lights/22', active: false},
+  locations:
+    {
+      '17': [-0.65, -0.84, 0],
+      '18': [0.69, -0.85, 0],
+      '37': [-0.51, 0.85, 0],
+      '38': [0.44, 0.84, 0]
+    },
+  action:
+    {
+      on: true,
+      bri: 102,
+      hue: 2595,
+      sat: 127,
+      effect: 'none',
+      xy: [0.5095, 0.3624],
+      ct: 459,
+      alert: 'select',
+      colormode: 'hs'
+    },
+  node_hue_api: {type: 'entertainment', version: 1}
+};

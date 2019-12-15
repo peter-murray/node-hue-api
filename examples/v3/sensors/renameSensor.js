@@ -25,12 +25,12 @@ v3.discovery.nupnpSearch()
         // Update the name of the sensor
         sensor.name = 'Updated Name Value';
 
-        return api.sensors.rename(sensor)
+        return api.sensors.renameSensor(sensor)
           .then(result => {
             console.log(`\nUpdated sensor name? ${result}\n`);
 
             // Obtain the updated sensor from the bridge
-            return api.sensors.get(sensor);
+            return api.sensors.getSensor(sensor);
           })
           .then(sensor => {
             // Display the updated sensor (should be just the name that has changed)

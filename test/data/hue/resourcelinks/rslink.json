@@ -1,0 +1,12 @@
+{
+  "name": "HueLabs 2.0",
+  "description": "All installed formulas",
+  "type": "Link",
+  "classid": 1,
+  "owner": "985692e7-xxxx-xxxx-xxxx-30d75c0ab864",
+  "recycle": false,
+  "links": [
+    "/resourcelinks/48840",
+    "/resourcelinks/62738"
+  ]
+}

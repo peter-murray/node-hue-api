@@ -1,0 +1,29 @@
+{
+  "name": "Savana Sunset",
+  "type": "GroupScene",
+  "group": "9",
+  "lights": [
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "21",
+    "37",
+    "38",
+    "41",
+    "44",
+    "45",
+    "46"
+  ],
+  "owner": "53587a59-92a7-xxxx-xxxx-ab777830b474",
+  "recycle": false,
+  "locked": false,
+  "appdata": {
+    "version": 1,
+    "data": "YP0PB_r09_d99"
+  },
+  "picture": "",
+  "lastupdated": "2019-12-11T21:31:52",
+  "version": 2
+}
