@@ -103,6 +103,10 @@
 - ResourceLinks API:
     * New  API interacting with `ResourceLinks` via, `api.resourceLinks`, see [documentation](./docs/resourcelinks.md) for more details.
 
+- Configuration API:
+    * `get()` has been deprecated, use `getConfiguration()` instead
+    * `update()` has bee depricated, use `updateConfiguration()` instead
+
 - All creation function calls to the bridge will now return the created model object. This change makes it consistent as 
     some calls would return the object, others would return the id but no other data.
     
