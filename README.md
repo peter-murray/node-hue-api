@@ -19,6 +19,7 @@ documented Hue API.
     - [Connections to the Bridge](#connections-to-the-bridge)
     - [Rate Limiting](#rate-limiting)
     - [Debug Bridge Communications](#debug-bridge-communications)
+    - [v2 Compatibility](#v2-api-compatibility)
     - [API Documentation](#api-documentation)
         - [Discovering Local Hue Bridges](docs/discovery.md)
         - [Remote API Support](docs/remoteApi.md)
@@ -164,6 +165,18 @@ MAC Address of the bridge, IP Address and username values._
 
 The above warning applies here with respect to schedule when **not** in debug mode, as the schedule endpoints will contain the
 username value (that can be used to authenticate against the bridge) in the payloads of the `command`.
+
+
+## v2 API Compatibility
+In the version 4.x releases of this library all backwards compatibility to the much older Q promise and callback
+functionality was removed (as was indicated in the 3.x documentation). 
+
+What was provided in the 3.x versions of this library to provide some backward comaptibility has now been moved into 
+another library [node-hue-api-v2-shim](https://github.com/peter-murray/node-hue-api-v2-shim).
+
+_The `node-hue-api-v2-shim` is only provided to allow you to continue to use the older v2 API functionality in code you 
+may have had previously written and there are downsides to using it. You are strongly encouraged to migrate to the v3 
+API provided in this library (which is where any new features and improvements will be made going forward)._
 
 
 ## API Documentation
