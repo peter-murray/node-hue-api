@@ -137,6 +137,12 @@
 
 - Adding more in-depth tests to further increase coverage around types and models, and adding more edge case API level tests
 
+## 3.4.3
+- Long term fix for supporting older bridge types and creating new users. Issue #147
+
+## 3.4.2
+- Temporary fix for older bridges that do not support the entertainment API. Issue #147
+
 ## 3.4.1
 - Fixing issue with the lookup for the Hue motion sensor, issue #146
 
