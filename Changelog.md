@@ -1,5 +1,142 @@
 # Change Log
 
+## 4.0.0
+- Deprecated v2 API and shim and modules removed from library
+
+- Introduced rate limiting in the Light and Group set States to be compliant with the Hue API documentation best practices.
+    This only has an impact on this library, so it may be possible if you are running other software on your network
+    accessing the Bridge, you will still able to overload it. 
+    * The whole API is currently limited to 12 requests per second by default (currently not configurable)
+    * `lights.setLightState()` is limited to 10 requests per second
+    * `groups.setState()` is limited to 1 request per second 
+
+- `v3.discovery.nupnp()` Now returns a different payload as it no longer accesses the XML Discovery endpoint to return 
+    the bridge data as this can become unreliable when the bridge is overloaded. See the [documentation](./docs/discovery.md#n-upnpsearch)
+    for specifics. 
+
+- `v3.api` removed the `create` function as it was deprecated, use `createRemote()` fro the remote API, `createLocal()` 
+    for the local API or `createInsecureLocal()` for non-hue bridges that do not support https connections
+    
+- `v3.Scene` has been removed, use the following functions to create a new Scene instance: 
+    * `v3.model.createLightScene()`
+    * `v3.model.createGroupScene()`
+    
+    This change has also allowed for the separation of the attributes and getter/setters locked down properly based on
+    the type of Scene, i.e. Cannot change the lights in a GroupScene (as they are controlled by the Group).
+    
+- `v3.sensors` has been removed, use `v3.model.createCLIPxxx()` functions instead
+
+- `v3.rules` has been moved into `v3.model`
+    * To create a `Rule` use `v3.model.createRule()`
+    * To create a `RuleCondition` use `v3.model.ruleConditions.[group|sensor]`
+    * To create a `RuleAction` use `v3.model.ruleActions.[light|group|sensor|scene]`
+    
+- `v3.model` added to support exposing the underlying model objects that represent bridge objects. This module will allow
+    you to create all of the necessary objects, e.g. `createGroupScene()`
+
+- Capabilities API:
+    * `capabilities.getAll()` now returns a [`Capabilities` object](./docs/capabilities.md#capabilities-object)
+    
+- Groups API:
+    * The following API functions will accept a Light Object as the `id` parameter as well as an integer value:
+        * `groups.get(id)`
+        * `groups.getGroup(id)`
+        * `deleteGroup(id)`
+        * `enableStreaming(id)`
+        * `disableStreaming(id)`
+    * `groups.createGroup(group)` introduced, it expects a pre-configured Group instance created using the model functions:
+        * `model.createLightGroup()`
+        * `model.createEntertainment()`
+        * `model.createRoom()`
+        * `model.createZone()`
+    * `groups.get(id)` has been deprecated, use `groups.getGroup(id)` instead.
+    * `groups.createGroup(name, lights)` has been deprecated, use `groups.createGroup(group)` instead.
+    * `groups.createRoom(name, lights, roomClass)` has been deprecated, use `groups.createGroup(group)` instead.
+    * `groups.createZone(name, lights, roomClass)` has been deprecated, use `groups.createGroup(group)` instead.
+    * `groups.updateAttributes(id, data)` has been deprecated, Use `groups.updateGroupAttributes(group)` instead.
+    
+- Lights API:
+    * `getLightById(id)` is deprecated use `getLight(id)` instead
+    * `rename(id, name)` is deprecated, use `renameLight(light)` instead
+    * The following API functions will accept a Light Object as the `id` parameter as well as an integer value:
+        * `getLight(id)`
+        * `getLightById(id)`
+        * `getLightAttributesAndState(id)`
+        * `getLightState(id)`
+        * `setLightState(id, state)`
+        * `deleteLight(id)`
+    
+- Scenes API:
+    * `getScene(id)` introduced, can take a scene id or `Scene` instance as the id value
+    * `get(id)` has been deprecated, use `getScene(id)` instead
+    * `getByName(name)` has been depricated use `getSceneByName(name)` instead
+    * `updateScene(scene)` introduced to replace `update(id, scene)` for updating Scenes
+    * `update(id, scene)` has been deprecated, will be removed in `5.x`, use `updateScene(scene)` instead
+    * `deleteScene(id)` can accept a scene id or a `Scene` object as the `id` parameter
+    * `activateScene(id)` can accept a scene id value or a `Scene` object
+    * `updateLightState(id, lightId, sceneLightState)` can take an id value or `Scene`/`Light` for the `id` and `lightId` values respectively
+
+- Sensors API:
+    * `get(id)` has been depreciated use `getSensor(id)` instead
+    * `getSensor(id)` will accept a `Sensor` Object as the `id` or  the integer `id` value as parameter.
+    * `updateName(id, name)` has been deprecated, will be removed in `5.x`, use `reanmeSensor(sensor)` instead
+    * `renameSensor(sensor)` has been added to allow updating of the name only for a sensor (makes API consistent with `lights` and `sensors`)
+    * `getSensorByName(name)` added to get sensors by `name`
+
+- Rules API:
+    * The following API functions will accept a Rule Object as the `id` parameter as well as an integer value:
+        * `get(id)`
+        * `deleteRule(id)`
+    * Added `getRuleByName(name)` function to get rules by `name`
+    * Rule Actions were common to the new `Schedules`, so have been moved from `v3.model.ruleActions` to `v3.model.actions`. 
+        Use of `v3.model.ruleActions` is considered deprecated. 
+        
+- Schedules API:
+    * The schedules API is finally properly implemented, along with all the various Hue Bridge TimePatterns
+        * `model.timePatterns` provides an interface with creating the various timePatterns, consult the [documentation](./docs/timePatterns.mc) for details
+       
+    * The previous `schedules.update(id, schedule)` function has been removed and replaced with `schedules.update(schedule)`. 
+        
+        _I am fairly sure that the previous version was most likely never used (base on the implmenetation as it would 
+        have likely errored). With this knowledge, it was not deprecated and just removed. If you are impacted by this change, please raise an Issue._ 
+
+- ResourceLinks API:
+    * New  API interacting with `ResourceLinks` via, `api.resourceLinks`, see [documentation](./docs/resourcelinks.md) for more details.
+
+- Configuration API:
+    * `get()` has been deprecated, use `getConfiguration()` instead
+    * `update()` has bee depricated, use `updateConfiguration()` instead
+
+- All creation function calls to the bridge will now return the created model object. This change makes it consistent as 
+    some calls would return the object, others would return the id but no other data.
+    
+    This changes return object from the promise on the following calls:
+    * `api.rules.createRule()`
+    * `api.scenes.createScene()`
+    * `api.sensors.createSensor()`
+
+- Type system from the `LightState` definitions is now used in all Bridge Object Models to define the attributes/properties 
+    obtained from the Bridge.
+    
+    This provides a consistent validation mechanism to all bridge related attributes data. As part of this being used in 
+    the models, some validation is performed at the time of setting a value instead of waiting on when sending it to the 
+    hue bridge (some things still have to wait be sent to the bridge) so the validation is closer to the point of call.
+
+- Added ability to serialize a model object into JSON and then restore it to a corresponding object from the JSON 
+    payload. This was requested to aid in server/client side code situations, as the creation of the model objects are 
+    not directly exposed in the library by design. Related to issue #132
+
+- Creating Sensors (CLIP variety) has changed as the classes for the sensor objects are no longer directly accessible. 
+    All `CLIPxxx` sensors need to be built from the `v3.model.createCLIP[xxx]Sensor()` function for the desired type, 
+    e.g. `v3.model.createCLIPGenericStatusSensor()` for a `CLIPGenericStatus` sensor. 
+    
+    The function call to instantiate the sensors also no longer take an object to set various attributes of the sensor,
+    you need to call the approriate setter on the class now to set the attribute, e.g. `sensor.manufacturername = 'node-hue-api-sensor';`
+    
+- TypeScript definitions added to the library
+
+- Adding more in-depth tests to further increase coverage around types and models, and adding more edge case API level tests
+
 ## 3.4.3
 - Long term fix for supporting older bridge types and creating new users. Issue #147
 

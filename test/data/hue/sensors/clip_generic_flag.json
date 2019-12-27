@@ -1,0 +1,17 @@
+{
+  "state": {
+    "flag": false,
+    "lastupdated": "2019-04-09T18:17:00"
+  },
+  "config": {
+    "on": true,
+    "reachable": true
+  },
+  "name": "Wake up",
+  "type": "CLIPGenericFlag",
+  "modelid": "WAKEUP",
+  "manufacturername": "jMJW9DmvM1a9m6L180eLKSyv9K4K1V3k",
+  "swversion": "A_1",
+  "uniqueid": "L_04_Knte0",
+  "recycle": false
+}

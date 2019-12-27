@@ -1,0 +1,16 @@
+{
+  "name": "Wake up",
+  "description": "L_04_y0GY0_start wake up",
+  "command": {
+    "address": "/api/xxxxxxxxxxxxxxxxxxxxxxxxxxx/sensors/12/state",
+    "body": {
+      "flag": true
+    },
+    "method": "PUT"
+  },
+  "localtime": "W124/T06:00:00",
+  "time": "W124/T06:00:00",
+  "created": "2018-03-08T22:07:37",
+  "status": "disabled",
+  "recycle": true
+}

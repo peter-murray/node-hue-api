@@ -1,0 +1,40 @@
+{
+  "state": {
+    "on": false,
+    "bri": 128,
+    "alert": "select",
+    "mode": "homeautomation",
+    "reachable": false
+  },
+  "swupdate": {
+    "state": "noupdates",
+    "lastinstall": "2018-12-13T20:43:23"
+  },
+  "type": "Dimmable light",
+  "name": "Hallway Bedroom",
+  "modelid": "LWB004",
+  "manufacturername": "Philips",
+  "productname": "Hue white lamp",
+  "capabilities": {
+    "certified": true,
+    "control": {
+      "mindimlevel": 2000,
+      "maxlumen": 750
+    },
+    "streaming": {
+      "renderer": false,
+      "proxy": false
+    }
+  },
+  "config": {
+    "archetype": "sultanbulb",
+    "function": "functional",
+    "direction": "omnidirectional",
+    "startup": {
+      "mode": "powerfail",
+      "configured": true
+    }
+  },
+  "uniqueid": "00:17:88:01:xx:xx:xx:xx-xx",
+  "swversion": "5.127.1.26420"
+}

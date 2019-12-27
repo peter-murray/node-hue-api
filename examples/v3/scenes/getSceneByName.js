@@ -16,7 +16,7 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.scenes.getByName(SCENE_NAME);
+    return api.scenes.getSceneByName(SCENE_NAME);
   })
   .then(scenes => {
     // Do something useful with the Scenes

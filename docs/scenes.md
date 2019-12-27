@@ -14,17 +14,17 @@ Bridge will be 102.
 
 
 * [getAll()](#getall)
-* [get(id)](#get)
-* [getByName(name)](#getbyname)
+* [getScene(id)](#getscene)
+* [getSceneByName(name)](#getscenebyname)
 * [createScene()](#createscene)
-* [update()](#update)
+* [updateScene()](#updatescene)
 * [updateLightState()](#updatelightstate)
-* [delete()](#delete)
+* [deleteScene()](#deletescene)
 * [activateScene](#activatescene)
 
 
 ## getAll()
-The `getAll()` function allows you to get all the lights that the Hue Bridge has registered with it.
+The `getAll()` function allows you to get all the scenes that the Hue Bridge has registered with it.
 
 ```js
 api.scenes.getAll()
@@ -40,21 +40,21 @@ A complete code sample for this function is available [here](../examples/v3/scen
 
 
 
-## get()
-The `get(id)` function allows a specific scene to be retrieved from the Hue Bridge.
+## getScene()
+The `getScene(id)` function allows a specific scene to be retrieved from the Hue Bridge.
 
-* `id`: The `String` id of the scene to retrieve.
+* `id`: The `String` id of the scene to retrieve or a previous `Scene` instance obtained from the bridge.
 
 
 ```js
-api.scenes.get('GfOL56sqKPGmPer')
+api.scenes.getScene('GfOL56sqKPGmPer')
   .then(scene => {
     console.log(scene.toStringDetailed());
   })
 ;
 ```
 
-This function call will resolve to a `Scene` object for the specifed scene `id`.
+This function call will resolve to a `Scene` object for the specified scene `id`.
 
 If the Scene cannot be found an `ApiError` will be returned with a `getHueErrorType()` value of `3`.
 
@@ -62,13 +62,13 @@ A complete code sample for this function is available [here](../examples/v3/scen
 
 
 
-## getByName()
-The `getByName(name)` function will find all the scenes that are stored in the bridge with the specified `name`.
+## getSceneByName()
+The `getSceneByName(name)` function will find all the scenes that are stored in the bridge with the specified `name`.
 
 * `name`: The `String` that represents the name of the `Scene`s that you wish to find.
 
 ```js
-api.scenes.getByName('Concentrate')
+api.scenes.getSceneByName('Concentrate')
   .then(results => {
     // Do something with the scenes we found
     results.forEach(scene => {
@@ -87,21 +87,21 @@ A complete code sample for this function is available [here](../examples/v3/scen
 ## createScene()
 The `createScene(scene)` function allows for the creation of new `Scene`s in the Hue Bridge.
 
-* `scene`: A `Scene` object that has been configured with the desired settings for rhe scene being created.
+* `scene`: A `Scene` object that has been configured with the desired settings for the scene being created.
 
 ```js
-const scene = new Scene();
+const scene = v3.model.createLightScene();
 scene.name = 'My Scene';
 scene.lights = [1, 2, 3];
 
 api.scenes.createScene(scene)
-  .then(result => {
-    console.log(`Successfully created scene with id: ${result.id}`);
+  .then(scene => {
+    console.log(`Successfully created scene\n${scene.toStringDetailed()}`);
   })
 ;
 ```
 
-The function will resolve with a `Object` with a value of `id` that is the newly created scene's id.
+The function will resolve with a corresponding `GroupScene` or `LightScene` object, depending upon what was passed in.
 
 _Note: Whilst the Hue API itself will allow a scene to be updated via creation call, this library will prevent such a 
 thing, by removing any `id` value from the `Scene` object to prevent overwriting an existing `Scene`.
@@ -110,17 +110,17 @@ A complete code sample for this function is available [here](../examples/v3/scen
 
 
 
-## update()
-The `update(id, scene)` function allows you to update an existing `Scene` in the Hue Bridge.
+## updateScene()
+The `update(scene)` function allows you to update an existing `Scene` in the Hue Bridge.
 
-* `id`: A `String` value of the id for the scene to update
-* `scene`: A `Scene` object that contains the relevant updated data to apply to the existing scene.
+* `scene`: The `Scene` object that contains the relevant updated data to apply to the existing scene.
 
 ```js
-const scene = new Scene();
+// The scene would have be retrieved from the bridge using some other call.
+const scene;
 scene.name = 'Updated scene name';
 
-api.scenes.update('GfOL56sqKPGmPer', scene)
+api.scenes.updateScene(scene)
   .then(updated => {
     console.log(`Updated scene properties: ${JSON.stringify(updated)}`);
   })
@@ -184,13 +184,13 @@ For example if you passed a `SceneLightState` that updated the `on` and `bri` at
 A complete code sample for this function is available [here](../examples/v3/scenes/updateSceneLightState.js).
 
 
-## delete()
-The `delete(id)` function will delete the specified scene identified by the `id` from the Hue Bridge.
+## deleteScene()
+The `deleteScene(id)` function will delete the specified scene identified by the `id` from the Hue Bridge.
 
-* `id`: The `id` of the scene to delete from the Hue Bridge.
+* `id`: The `id` of the Scene or a `Scene` instance to delete from the Hue Bridge.
 
 ```js
-api.scenes.delete('abc170f')
+api.scenes.deleteScene('abc170f')
   .then(result => {
     console.log(`Deleted scene? ${result}`);
   })

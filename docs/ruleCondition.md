@@ -22,13 +22,13 @@ fluent interface for building up the various `RuleCondition`s for `Rule`s.
 
 ## Condition Builders
 
-A `RuleCondition` can be built using the `v3.rules.conditions` Object, currently this allows for the creation of 
+A `RuleCondition` can be built using the `v3.model.ruleCconditions` Object, currently this allows for the creation of 
 conditions for `Sensors` and `Groups`.
 
 
 ## SensorCondition Builder
 
-A `SensorCondition` builder can be created using the `v3.rules.conditions.sensor(sensor)` function.
+A `SensorCondition` builder can be created using the `v3.model.ruleConditions.sensor(sensor)` function.
 
 * `sensor`: The `Sensor` obtained from bridge via the API that you wish to use in a condition.
 
@@ -37,7 +37,7 @@ instance of the one you desire).
 
 ```js
 const v3 = require('node-hue-api').v3
-  , conditions = v3.rules.conditions;
+  , conditions = v3.model.ruleConditions;
 
 const mySensor = await v3.sensors.get(sesnorId);
 const mySensorCondition = conditions.sensor(mySensor);
@@ -86,7 +86,7 @@ The following are code examples of setting up various SensorConditions.
 Create a `RuleCondition` that will trigger on a `flag` attribute change on a CLIPGenericFlag Sensor (i.e. trigger on every change): 
 ```js
 const v3 = require('node-hue-api').v3
-  , conditions = v3.rules.conditions
+  , conditions = v3.model.ruleConditions
 ;
 
 // Create a SensorCondition that will trigger on a flag attribute change for the CLIPGenericFlag Sensor:
@@ -97,7 +97,7 @@ const ruleCondition = sensorCondition.getRuleCondition();
 Create a RuleCondition that will trigger when the `flag` attribute changes to `true` for a CLIPGenericFlag Sensor:
 ```js
 const v3 = require('node-hue-api').v3
-  , conditions = v3.rules.conditions
+  , conditions = v3.model.ruleConditions
 ;
 
 // Create a SensorCondition that will trigger on the flag attribute being true CLIPGenericFlag Sensor:
@@ -108,7 +108,7 @@ const ruleCondition = sensorCondition.getRuleCondition();
 
 ## GroupCondition Builder
 
-A `GroupCondition` builder can be created using the `v3.rules.conditions.group(id)` function.
+A `GroupCondition` builder can be created using the `v3.model.ruleConditions.group(id)` function.
 
 * `id`: The id for the group (or the Group instance) that you wish to build the condition on
 
@@ -153,7 +153,7 @@ The following are code examples of setting up various GroupConditions.
 Create a `GroupCondition` that will trigger when any light is on in a group: 
 ```js
 const v3 = require('node-hue-api').v3
-  , conditions = v3.rules.conditions
+  , conditions = v3.model.ruleConditions
 ;
 
 // Create a SensorCondition that will trigger on a flag attribute change for the CLIPGenericFlag Sensor:

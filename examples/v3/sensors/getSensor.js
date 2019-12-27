@@ -14,7 +14,7 @@ v3.discovery.nupnpSearch()
   })
   .then(api => {
     // The Hue Daylight software sensor is identified as id 1
-    return api.sensors.get(1);
+    return api.sensors.getSensor(1);
   })
   .then(sensor => {
     // Display the details of the sensors we got back

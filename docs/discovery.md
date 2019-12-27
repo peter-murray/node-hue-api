@@ -38,33 +38,14 @@ The results will be an array of discovered bridges with the following structure:
 ```json
 [
   {
-    "name": "Philips hue (192.xxx.xxx.xxx)",
-    "manufacturer": "Royal Philips Electronics",
-    "ipaddress": "192.xxx.xxx.xxx",
-    "model": {
-      "number": "BSB002",
-      "description": "Philips hue Personal Wireless Lighting",
-      "name": "Philips hue bridge 2015",
-      "serial": "0017xxxxxxxx"
-    },
-    "version": {
-      "major": "1",
-      "minor": "0"
-    },
-    "icons": [
-      {
-        "mimetype": "image/png",
-        "height": "48",
-        "width": "48",
-        "depth": "24",
-        "url": "hue_logo_0.png"
-      }
-    ]
+      "name": "Philips hue",
+      "ipaddress": "192.xxx.xxx.xxx",
+      "modelid": "BSB002",
+      "swversion": "1935074050"
   }
 ]
 ```
 
-Note that the data returned can vary depending upon the version of the bridge software.
 
 
 ## UPnP Search

@@ -4,7 +4,7 @@ const v3 = require('../../../index').v3;
 // If using this code outside of this library the above should be replaced with
 // const v3 = require('node-hue-api').v3;
 
-const LightState = v3.lightStates.LightState
+const LightState = v3.lightStates.LightState;
 
 // Set this to your username for the bridge
 const USERNAME = require('../../../test/support/testValues').username;
@@ -29,24 +29,20 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    const rule = new v3.rules.Rule();
+    const rule = new v3.model.createRule();
     rule.name = 'node-hue-api test rule';
     rule.recycle = true;
 
     // All lights group has any light turn on
-    rule.addCondition(v3.rules.conditions.group(0).when().anyOn().equals(true));
+    rule.addCondition(v3.model.ruleConditions.group(0).when().anyOn().equals(true));
 
     // The light with id LIGHT_ID
-    rule.addAction(v3.rules.actions.light(LIGHT_ID).withState(new LightState().alertShort()));
+    rule.addAction(v3.model.ruleActions.light(LIGHT_ID).withState(new LightState().alertShort()));
 
     return api.rules.createRule(rule)
-      .then(result => {
-        console.log(`Created Rule ${result.id}`);
-        return api.rules.get(result.id);
-      })
       .then(rule => {
         // Display the details for the rule we created
-        console.log(rule.toStringDetailed());
+        console.log(`Created a Rule\n ${rule.toStringDetailed()}`);
 
         // Now remove it, disable this line if you want the rule to remain after running this code
         return api.rules.deleteRule(rule.id);

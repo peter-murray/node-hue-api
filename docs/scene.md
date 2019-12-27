@@ -5,84 +5,44 @@ The Hue Bridge can support two variations of a Scene, `LightScene`  and `GroupSc
 A Scene is represented as an `id` a `name` and a list of `Lights` stored inside the Hue Bridge. These are separate from
 what a scene is in the iOS and Android applications.
 
+* [Common Scene Properties](#common-scene-properties-and-functions)
 * [LightScene](#lightscene)
+    * [Creating a LightScene](#creating-a-lightscene)
+    * [Properties](#lightscene-properties)
+        * [lights](#lights)
+        * [lightstates](#lightstates)
 * [GroupScene](#groupscene)
-* [LightStateScene](#lightstatescene)
-
-* [Create a Scene](#creating-a-scene)
-* [Scene Properties](#scene-properties)
-
-
-## LightScene
-This is the `default` type of `Scene` in the Hue Bridge. It maintains a list of lights that the are associated with the 
-Scene, which can be updated.
+    * [Creating a GroupScene](#creating-a-groupscene)
+    * [Properties](#groupscene-properties)
+        * [group](#group-1)
+        * [lights](#lights-1)
+        * [lightstates](#lightstates-1)
 
 
-## GroupScene
-A `GroupScene` is a `Scene` with a `type` of `GroupScene`. These scenes are linked to an specified Group in the Hue Bridge.
-
-The associated lights for the `GroupScene` is controlled via the `Group`. When the `Group` becomes empty or is removed
-from the Bridge, the associated `GroupScene`s are also removed. 
-
-The lights for a GroupScene are not modifiable.
-
-
-## LightStateScene
-A `LightStateScene` is a Scene that explictly sets the light states for each of the lights that makes up the Scene.
-
-
-## Creating a Scene
-
-You can create a `Scene` by using the `new` operator.
-
-```js
-const Scene = require('node-hue-api').v3.Scene;
-const myScene = new Scene();
-```
-
-
-## Scene Properties
+## Common Scene Properties and Functions
 Depending upon the properties that you chose to set on the `Scene` the `type` attribute will be implicitly set for you 
 by the API. This `type` dictates what attributes are modifiable in the Hue Bridge.
 
-* [name](#name)
 * [id](#id)
-* [group](#group)
-* [lights](#lights)
-* [lightstates](#lightstates)
+* [name](#name)
 * [type](#type)
 * [owner](#owner)
 * [recycle](#recycle)
-* [lockec](#locked)
+* [locked](#locked)
 * [appdata](#appdata)
 * [picture](#picture)
 * [lastupdated](#lastupdated)
 * [version](#version)
-* [payload](#payload)
+* [toString()](#tostring)
+* [toStringDetailed()](#tostringdetailed)
 
-### name
-Get/Set a name for the Scene.
-* `get`
-* `set`
 
 ### id
 Get the `id` for the Scene.
 * `get`
 
-### group
-The group ID for the Scene if associated with a group. If you set this, the `type` will be set to `GroupScene` implicitly.
-* `get`
-* `set`
-
-### lights
-The associated light ids for the Scene. If this is a `GroupScene` these are popualte by the Hue Bridge and are read only.
-If you invoke `set` on this property then the `type` will be implicitly set to `LightScene`. 
-* `get`
-* `set`
-
-### lightstates
-Gets/Sets the desired LightState for the lights in the scene. This is primiarily used to provide some backwards 
-compatibility in the API with v2, not for normal user usage.
+### name
+Get/Set a name for the Scene.
 * `get`
 * `set`
 
@@ -126,7 +86,6 @@ For example we could store the `location` and `application_name` in the `appdata
   data: 'my-custom-app-data'
 }
 ```
- 
 
 ### picture
 Get/Set the picture data for the scene. The Hue Bridge does not support setting this via a PUT call which means it is 
@@ -142,10 +101,6 @@ Gets the last updated time for the Scene.
 Gets the version of the Scene
 * `get`
 
-### payload
-Obtains the JSON payload that can be used to create/update the Scene on the Hue Bridge. 
-* `get`
-
 
 ### toString()
 The `toString()` function will obtain a simple `String` representation of the Scene.
@@ -153,3 +108,69 @@ The `toString()` function will obtain a simple `String` representation of the Sc
 
 ### toStringDetailed()
 The `toStringDetailed()` function will obtain a more detailed representation of the Scene object.
+
+
+
+# LightScene
+This is the `default` type of `Scene` in the Hue Bridge. It maintains a list of lights that the are associated with the 
+Scene, which can be updated.
+
+## Creating a LightScene
+You can create a new LightScene object using the `v3.model.createLightScene()` function.
+
+
+## LightScene Properties
+The following are the LightScene specific properties above those already defined in the [Common Scene Properties and functions](#common-scene-properties-and-functions).
+
+### lights
+The associated light ids for the `LightScene`.
+ 
+* `get`: Obtains the Array of light ids
+* `set`: Set the Array of light ids associated with the LightScene
+
+### lightstates
+Gets/Sets the desired LightState for the lights in the scene. This is primarily used to provide some backwards 
+compatibility in the API with v2, not for normal user usage.
+* `get`
+* `set`
+
+_Note: lightStates are only present on scenes that have explicitly been retrieved from the Hue Bridge, that is, scenes
+that you have obtained from the `v3.api.scenes.get(id)` API call._
+
+
+
+
+# GroupScene
+A `GroupScene` is a `Scene` with a `type` of `GroupScene`. These scenes are linked to an specified Group in the Hue Bridge.
+
+The associated lights for the `GroupScene` is controlled via the `Group`. When the `Group` becomes empty or is removed
+from the Bridge, the associated `GroupScene`s are also removed. 
+
+The lights for a GroupScene are not modifiable as they belong to the `Group` object.
+
+
+## Creating a GroupScene
+You can create a new GroupScene object using the `v3.model.createGroupScene()` function.
+
+
+## GroupScene Properties
+The following are the LightScene specific properties above those already defined in the [Common Scene Properties and functions](#common-scene-properties-and-functions).
+
+### group
+The group ID for the GroupScene if associated with a group.
+* `get`
+* `set`
+
+### lights
+The associated light ids for the `GroupScene`. This is controlled via the membership of the lights in the `Group` that 
+the GroupScene is associated with.
+ 
+* `get`: Obtains the Array of light ids in the target Group
+
+### lightstates
+Gets the LightStates for the lights in the GroupScene. This is primarily used to provide some backwards 
+compatibility in the API with v2, not for normal user usage.
+* `get`
+
+_Note: lightStates are only present on scenes that have explicitly been retrieved from the Hue Bridge, that is, scenes
+that you have obtained from the `v3.api.scenes.get(id)` API call._

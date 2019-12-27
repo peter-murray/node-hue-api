@@ -1,6 +1,6 @@
 # Rules API
 
-The `rules` API provides a measn of interacting with Rules in the Hue Bridge.
+The `rules` API provides a manes of interacting with Rules in the Hue Bridge.
 
 Rules are complex event triggers that consist of a one or more conditions that must be satisfied, which when they are
 will trigger one or more actions for devices connected to the bridge.
@@ -15,7 +15,8 @@ The Rules API interacts with specific [`Rule`](./rule.md) objects from the Bridg
 
 
 * [getAll()](#getall)
-* [(get(id)](#get)
+* [getRule(id)](#getrule)
+* [getRuleByName(name)](#getrulebyname)
 * [createRule(rule)](#createrule)
 * [deleteRule(id)](#deleterule)
 * [updateRule(rule)](#updaterule)
@@ -39,14 +40,14 @@ This function call will resolve to an `Array` of `Rule` objects.
 A complete code sample for this function is available [here](../examples/v3/rules/getAllRules.js).
 
 
-## get()
-The `get(id)` function will obtain the specified Rule with the given `id`.
+## getRule()
+The `getRule(id)` function will obtain the specified Rule with the given `id`.
 
-* `id`: The id fo the rule to get from the Hue Bridge.
+* `id`: The id for the rule, or a `Rule` instance to get from the Hue Bridge.
 
 ```js
-api.rules.get(1)
-  .then(allRules => {
+api.rules.getRule(1)
+  .then(rule => {
     // Display the Rule
     console.log(rule.toStringDetailed());
   });
@@ -55,6 +56,26 @@ api.rules.get(1)
 This function will return a `Rule` object for the specified `id`.
 
 A complete code sample for this function is available [here](../examples/v3/rules/getRule.js).
+
+
+## getRuleByName()
+The `getRuleByName(name)` function will obtain all the `Rule`s from the bridge that have the specified `name`.
+
+* `name`: The name of the `Rule`s to get from the Hue Bridge.
+
+```js
+api.rules.getRuleByName('Opened door')
+  .then(allRules => {
+    // Display the Rules
+    allRules.forEach(rule => {
+      console.log(rule.toStringDetailed());
+    });
+  });
+```
+
+This function will return an `Array` of `Rule` objects for all of the `Rule`s that matched the specided `name`.
+
+A complete code sample for this function is available [here](../examples/v3/rules/getRuleByName.js).
 
 
 
@@ -67,22 +88,21 @@ The `createRule(rule)` function will create a new `Rule` in the Hue Bridge.
 // You need to have created the myRule instance using code before invoking this
 api.rules.createRule(myRule)
   .then(result => {
-    console.log(`Created Rule: ${result.id}`);
+    // Will get an instance of a Rule object 
+    console.log(`Created Rule: ${result.toStringDetailed()}`);
   })
   .catch(err => {
     console.error(`Rule was not valid: ${err.message}`);
   });
 ```
 
-The function will return an Object with an `id` property for the new Rule is the Rule was valid, otherwise will throw 
-an `ApiError`.
+The function will return the created `Rule` object, otherwise will throw an `ApiError`.
 
 _Note: It is not possible to completely validate all the possible combinations of attributes in a `Rule` as to whether or not 
 it is valid before trying to create it in the Hue Bridge.
 The library will perform a number of checks around eliminating common and obvious issues when building a `Rule`, but 
 the ultimate check is made by the bridge, but I have seen some very generic error messages in testing when there are 
 issues in the Rule definition._ 
-
 
 A complete code sample for this function is available [here](../examples/v3/rules/createRule.js).
 

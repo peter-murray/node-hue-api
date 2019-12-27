@@ -15,7 +15,7 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.rules.get(RULE_ID);
+    return api.rules.getRule(RULE_ID);
   })
   .then(rule => {
     // Print the details for the Rule

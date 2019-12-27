@@ -1,11 +1,11 @@
 'use strict';
 
 const v3 = require('../../../index').v3
-  , Scene = v3.Scene
+  , model = v3.model
 ;
 // If using this code outside of this library the above should be replaced with
 // const v3 = require('node-hue-api').v3
-//  , Scene = v3.Scene
+//  , model = v3.model
 // ;
 
 // Replace this with your username for accessing the bridge
@@ -18,12 +18,12 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    const scene = new Scene();
+    const scene = model.createLightScene();
     // Set the name for the Scene
     scene.name = 'my-cool-scene';
 
     // Set the target lights for the scene, effectively making this LightScene
-    scene.lights = [1, 2];
+    scene.lights = [2, 3];
 
     // Some custom application data for the scene (only relevant to our application)
     scene.appdata = {
@@ -31,10 +31,13 @@ v3.discovery.nupnpSearch()
       data: 'my-custom-data'
     };
 
-    return api.scenes.createScene(scene);
-  })
-  .then(scene => {
-    console.log(`Created LightScene with id: ${scene.id}`);
+    return api.scenes.createScene(scene)
+      .then(scene => {
+        console.log(`Created LightScene\n${scene.toStringDetailed()}`);
+
+        // Now remove the scene we just created
+        return api.scenes.deleteScene(scene);
+      });
   })
   .catch(err => {
     console.error(`Unexpected Error: ${err.message}`);
