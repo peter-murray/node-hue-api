@@ -1,5 +1,9 @@
 # Change Log
 
+## 4.0.1
+- fixes/improvements in TypeScript definitions
+- removal of an invalid character in source code of the remote API Issue #155
+
 ## 4.0.0
 - Deprecated v2 API and shim and modules removed from library
 
