@@ -13,3 +13,6 @@ scratch.js
 
 # TypeScript Definition Files
 *.d.ts
+
+# Distribution Files
+dist

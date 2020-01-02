@@ -15,6 +15,7 @@
     "test-model": "mocha --recursive \"lib/model/**/*.test.js\"",
     "test-api": "mocha --timeout 5000 --recursive \"lib/api/**/*.test.js\"",
     "test-types": "mocha --recursive \"lib/types/*.test.js\"",
+    "generate-webpack-files": "npx webpack --config webpack.model.config.js",
     "clean-ts-definitions": "npx rimraf **/*.d.ts",
     "generate-ts-definitions": "npm run clean-ts-definitions && npx typescript index.js --allowJs --declaration --emitDeclarationOnly",
     "prepublishOnly": "npm run generate-ts-definitions"
