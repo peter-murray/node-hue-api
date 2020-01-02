@@ -1,5 +1,8 @@
 # Change Log
 
+## next
+- Fixing TypeScript definition return types for Groups API, Issue #157
+
 ## 4.0.1
 - fixes/improvements in TypeScript definitions
 - removal of an invalid character in source code of the remote API Issue #155
