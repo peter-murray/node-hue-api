@@ -1,7 +1,8 @@
 # Change Log
 
-## next
+## 4.0.2
 - Fixing TypeScript definition return types for Groups API, Issue #157
+- Adding another Rule status `looperror` to Rule status options, Issue #158
 
 ## 4.0.1
 - fixes/improvements in TypeScript definitions
