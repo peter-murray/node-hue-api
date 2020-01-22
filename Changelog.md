@@ -1,5 +1,8 @@
 # Change Log
 
+#4.0.4
+- Fixing UPnP lookup results failures, Issue #162.
+
 # 4.0.3
 - TypeScript definition updates
 
