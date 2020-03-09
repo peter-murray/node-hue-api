@@ -33,7 +33,7 @@ async function getBridge() {
 getBridge();
 ```
 
-The results will be an array of discovered bridges with the following structure:
+The results will be an array of valid discovered bridges with the following structure:
 
 ```json
 [
@@ -46,6 +46,22 @@ The results will be an array of discovered bridges with the following structure:
 ]
 ```
 
+If a bridge is registered in the Hue portal and returned from the discovery endpoint that is queried but cannot be 
+connected to for any reason (i.e. it is offline), then the bridge data will be provided in an error object of the form:
+
+```json
+{
+  "error": {
+    "message": "An error message",
+    "description": "Failed to connect and load configuration from the bridge at ip address xxx.xxx.xxx.xxx",
+    "ipaddress": "xxx.xxx.xxx.xxx",
+    "id": "xxxxxxxxxxxxxxxx"
+  }
+}
+```
+ The `message` value will be that of the underlying error when attempting to resolve the bridge configuration. The `id` 
+ is the mac address reported from the discovery portal and the `ipaddress` is that of the recorded ip address from the 
+ discovery portal.
 
 
 ## UPnP Search

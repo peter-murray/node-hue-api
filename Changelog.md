@@ -1,5 +1,9 @@
 # Change Log
 
+#5.0.0-alpha.1
+- Providing a fix for the discovery portal (N-UPnP search) issues where a user has multiple bridges, where some of 
+them are invalid. This changes the return value for discovery requiring a major version bump. Issue #168.
+
 #4.0.5
 - Various TypeScript definition fixes including Issue #166.
 
