@@ -1,12 +1,15 @@
 # Change Log
 
-#4.0.5
+## 4.0.6
+- Fixes typo in bringe software update configuration choices, Issue #170.
+
+## 4.0.5
 - Various TypeScript definition fixes including Issue #166.
 
-#4.0.4
+## 4.0.4
 - Fixing UPnP lookup results failures, Issue #162.
 
-# 4.0.3
+## 4.0.3
 - TypeScript definition updates
 
 ## 4.0.2
