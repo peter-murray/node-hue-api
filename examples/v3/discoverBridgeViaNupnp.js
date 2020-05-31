@@ -7,10 +7,14 @@ const v3 = require('../../index').v3
 // It will not function across VLANs or different network ranges.
 
 async function getBridge() {
-  const results = await v3.discovery.nupnpSearch();
+  try {
+    const results = await v3.discovery.nupnpSearch();
 
-  // Results will be an array of bridges that were found
-  console.log(JSON.stringify(results, null, 2));
+    // Results will be an array of bridges that were found
+    console.log(JSON.stringify(results, null, 2));
+  } catch (err) {
+    console.log(`Failure with n-UPnP search: ${err.message}`)
+  }
 }
 
 getBridge();
