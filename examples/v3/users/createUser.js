@@ -12,7 +12,7 @@ const APPLICATION_NAME = 'node-hue-api'
 v3.discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
-    return v3.api.createLocal(host);
+    return v3.api.createLocal(host).connect();
   })
   .then(api => {
     return api.users.createUser(APPLICATION_NAME, DEVICE_NAME);
@@ -22,6 +22,7 @@ v3.discovery.nupnpSearch()
     console.log(JSON.stringify(createdUser, null, 2));
   })
   .catch(err => {
+    console.error(err);
     if (err.getHueErrorType() === 101) {
       console.error('You need to press the Link Button on the bridge first');
     } else {
