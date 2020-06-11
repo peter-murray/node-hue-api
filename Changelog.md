@@ -1,7 +1,10 @@
 # Change Log
 
+## 4.0.7
+- Fixes typo in bridge software update configuration choices, Issue #170.
+
 ## 4.0.6
-- Fixes typo in bringe software update configuration choices, Issue #170.
+- Same as 4.0.5 due to merge error on my part
 
 ## 4.0.5
 - Various TypeScript definition fixes including Issue #166.
