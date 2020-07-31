@@ -1,5 +1,8 @@
 # Change Log
 
+## 4.0.8
+- Fixes problems in TypeScript definitions for the model, Issue #181
+
 ## 4.0.7
 - Fixes typo in bridge software update configuration choices, Issue #170.
 
