@@ -23,4 +23,7 @@ v3.discovery.nupnpSearch()
       console.log(light.toStringDetailed());
     });
   })
+  .catch(err => {
+    console.error(err);
+  })
 ;

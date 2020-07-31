@@ -17,8 +17,9 @@
     "test-types": "mocha --recursive \"lib/types/*.test.js\"",
     "generate-webpack-files": "npx webpack --config webpack.model.config.js",
     "clean-ts-definitions": "npx rimraf **/*.d.ts",
-    "generate-ts-definitions": "npm run clean-ts-definitions && npx typescript index.js --allowJs --declaration --emitDeclarationOnly",
-    "prepublishOnly": "npm run generate-ts-definitions"
+    "generate-ts-definitions": "npm run clean-ts-definitions && npx typescript@3.8.3 index.js --allowJs --declaration --emitDeclarationOnly",
+    "prepublishOnly": "npm run generate-ts-definitions",
+    "eslint-sarif-report": "eslint lib/**/*.js -c .eslintrc.js -f @microsoft/eslint-formatter-sarif -o report.sarif"
   },
   "repository": {
     "type": "git",
@@ -28,14 +29,15 @@
     "url": "https://github.com/peter-murray/node-hue-api/issues"
   },
   "dependencies": {
-    "axios": "^0.19.0",
     "bottleneck": "^2.19.5",
-    "get-ssl-certificate": "^2.3.3"
+    "get-ssl-certificate": "^2.3.3",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
+    "mocha": "~8.0.1",
     "chai": "~4.2",
     "eslint": "^5.16.0",
-    "mocha": "~6.2.2"
+    "@microsoft/eslint-formatter-sarif": "^2.1.5"
   },
   "engines": {
     "node": ">= 10.0.0"
