@@ -16,8 +16,8 @@
     "test-api": "mocha --timeout 5000 --recursive \"lib/api/**/*.test.js\"",
     "test-types": "mocha --recursive \"lib/types/*.test.js\"",
     "generate-webpack-files": "npx webpack --config webpack.model.config.js",
-    "clean-ts-definitions": "npx rimraf **/*.d.ts",
-    "generate-ts-definitions": "npm run clean-ts-definitions && npx typescript index.js --allowJs --declaration --emitDeclarationOnly",
+    "clean-ts-definitions": "find . -type f -name '*.d.ts' -exec rm {} \\;",
+    "generate-ts-definitions": "npm run clean-ts-definitions && npx typescript@3.8.3 index.js --allowJs --strict --declaration --emitDeclarationOnly --listEmittedFiles",
     "prepublishOnly": "npm run generate-ts-definitions"
   },
   "repository": {
