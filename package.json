@@ -34,10 +34,9 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
-    "mocha": "~8.0.1",
     "chai": "~4.2",
     "eslint": "^5.16.0",
-    "@microsoft/eslint-formatter-sarif": "^2.1.5"
+    "mocha": "^8.1.1"
   },
   "engines": {
     "node": ">= 10.0.0"
