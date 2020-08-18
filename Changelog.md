@@ -1,16 +1,25 @@
 # Change Log
 
-#5.0.0-alpha.1
+## 5.0.0-alpha.1
 - Providing a fix for the discovery portal (N-UPnP search) issues where a user has multiple bridges, where some of 
 them are invalid. This changes the return value for discovery requiring a major version bump. Issue #168.
 
-#4.0.5
+## 4.0.8
+- Fixes problems in TypeScript definitions for the model, Issue #181
+
+## 4.0.7
+- Fixes typo in bridge software update configuration choices, Issue #170.
+
+## 4.0.6
+- Same as 4.0.5 due to merge error on my part
+
+## 4.0.5
 - Various TypeScript definition fixes including Issue #166.
 
-#4.0.4
+## 4.0.4
 - Fixing UPnP lookup results failures, Issue #162.
 
-# 4.0.3
+## 4.0.3
 - TypeScript definition updates
 
 ## 4.0.2
