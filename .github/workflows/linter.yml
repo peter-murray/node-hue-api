@@ -1,0 +1,19 @@
+name: Lint Codebase
+
+on:
+  push:
+  
+jobs:
+  lint:
+    name: Lint Codebase
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+        
+      - name: Lint
+        uses: github/super-linter@v2.0.0
+        env:
+          VALIDATE_ALL_CODEBASE: true
+      

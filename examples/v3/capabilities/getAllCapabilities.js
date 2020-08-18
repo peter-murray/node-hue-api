@@ -1,16 +1,16 @@
 'use strict';
 
-const v3 = require('../../../index').v3;
+const hueApi = require('../../../index');
 // If using this code outside of this library the above should be replaced with
-// const v3 = require('node-hue-api').v3;
+// const hueApi = require('node-hue-api');
 
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
 
-v3.discovery.nupnpSearch()
+hueApi.discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
-    return v3.api.createLocal(host).connect(USERNAME);
+    return hueApi.v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
     return api.capabilities.getAll();
