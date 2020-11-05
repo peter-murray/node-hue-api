@@ -14,7 +14,7 @@
   "scripts": {
     "test": "mocha --timeout 5000 --recursive \"lib/api/**/*.test.js\"",
     "clean-ts-definitions": "find . -type f -name '*.d.ts' -exec rm {} \\;",
-    "generate-ts-definitions": "npm run clean-ts-definitions && npx typescript@3.8.3 index.js --allowJs --strict --declaration --emitDeclarationOnly --listEmittedFiles",
+    "generate-ts-definitions": "npx typescript@3.8.3 index.js --allowJs --strict --declaration --emitDeclarationOnly --listEmittedFiles",
     "prepublishOnly": "npm run generate-ts-definitions"
   },
   "repository": {
