@@ -69,7 +69,7 @@ $ npm install node-hue-api
 
 Node.js using yarn:
 ```
-$ yarn install node-hue-api
+$ yarn add node-hue-api
 ```
 
 ## v3 API
@@ -268,7 +268,7 @@ async function discoverAndCreateUser() {
     const authenticatedApi = await hueApi.createLocal(ipAddress).connect(createdUser.username);
 
     // Do something with the authenticated user/api
-    const bridgeConfig = await authenticatedApi.configuration.get();
+    const bridgeConfig = await authenticatedApi.configuration.getConfiguration();
     console.log(`Connected to Hue Bridge: ${bridgeConfig.name} :: ${bridgeConfig.ipaddress}`);
 
   } catch(err) {

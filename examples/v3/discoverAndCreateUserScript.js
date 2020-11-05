@@ -1,7 +1,8 @@
 const v3 = require('../../index').v3
+  , discovery = require('../../index').discovery
   // If using this code outside of the examples directory, you will want to use the line below and remove the
   // const v3 = require('node-hue-api').v3
-  , discovery = v3.discovery
+  // const discovery = require('node-hue-api').discovery
   , hueApi = v3.api
 ;
 

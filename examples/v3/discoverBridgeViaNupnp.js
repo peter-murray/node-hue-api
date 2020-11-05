@@ -1,8 +1,8 @@
 'use strict';
 
-const v3 = require('../../index').v3
+const discovery = require('../../index').discovery
 // If using this code outside of the examples directory, you will want to use the line below and remove the
-// const v3 = require('node-hue-api').v3
+// const discovery = require('node-hue-api').discovery
 ;
 
 // For this to work properly you need to be connected to the same network that the Hue Bridge is running on.
@@ -10,7 +10,7 @@ const v3 = require('../../index').v3
 
 async function getBridge() {
   try {
-    const results = await v3.discovery.nupnpSearch();
+    const results = await discovery.nupnpSearch();
 
     // Results will be an array of bridges that were found
     console.log(JSON.stringify(results, null, 2));
