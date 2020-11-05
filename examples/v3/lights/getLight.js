@@ -16,7 +16,7 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.lights.get(LIGHT_ID);
+    return api.lights.getLight(LIGHT_ID);
   })
   .then(light => {
     // Display the details of the light

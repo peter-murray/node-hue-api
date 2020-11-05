@@ -22,9 +22,13 @@ v3.discovery.nupnpSearch()
     return api.resourceLinks.getResourceLinkByName(RESOURCE_LINK_NAME);
   })
   .then(resourceLinks => {
-    resourceLinks.forEach(resourceLink => {
-      console.log(`${resourceLink.toStringDetailed()}`);
-    });
+    if (resourceLinks && resourceLinks.length > 0) {
+      resourceLinks.forEach(resourceLink => {
+        console.log(`${resourceLink.toStringDetailed()}`);
+      });
+    } else {
+      console.log(`No resource links found with name '${RESOURCE_LINK_NAME}'`);
+    }
   })
   .catch(err => {
     console.error(`Unexpected Error: ${err.message}`);

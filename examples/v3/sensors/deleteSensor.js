@@ -16,7 +16,10 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.sensors.getSensor(SENSOR_ID_TO_DELETE);
+    return api.sensors.getSensor(SENSOR_ID_TO_DELETE)
+      .then(sensor => {
+        return api.sensors.deleteSensor(sensor);
+      });
   })
   .then(result => {
     console.log(`Sensor was successfully deleted? ${result}`);

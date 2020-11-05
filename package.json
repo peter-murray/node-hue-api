@@ -12,10 +12,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test-model": "mocha --recursive \"lib/model/**/*.test.js\"",
-    "test-api": "mocha --timeout 5000 --recursive \"lib/api/**/*.test.js\"",
-    "test-types": "mocha --recursive \"lib/types/*.test.js\"",
-    "generate-webpack-files": "npx webpack --config webpack.model.config.js",
+    "test": "mocha --timeout 5000 --recursive \"lib/api/**/*.test.js\"",
     "clean-ts-definitions": "find . -type f -name '*.d.ts' -exec rm {} \\;",
     "generate-ts-definitions": "npm run clean-ts-definitions && npx typescript@3.8.3 index.js --allowJs --strict --declaration --emitDeclarationOnly --listEmittedFiles",
     "prepublishOnly": "npm run generate-ts-definitions"
@@ -28,14 +25,15 @@
     "url": "https://github.com/peter-murray/node-hue-api/issues"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "@peter-murray/hue-bridge-model": "0.0.4",
+    "axios": "^0.19.2",
     "bottleneck": "^2.19.5",
     "get-ssl-certificate": "^2.3.3"
   },
   "devDependencies": {
     "chai": "~4.2",
     "eslint": "^5.16.0",
-    "mocha": "~6.2.2"
+    "mocha": "^6.2.3"
   },
   "engines": {
     "node": ">= 10.0.0"

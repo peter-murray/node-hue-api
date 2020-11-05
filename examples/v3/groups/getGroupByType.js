@@ -24,8 +24,8 @@ v3.discovery.nupnpSearch()
 
     // Get and display Luminaires
     promises.push(
-      api.groups.getLuminaires()
-        .then(displayGroups('LightGroups'))
+      api.groups.getLuminaries()
+        .then(displayGroups('Luminaries'))
     );
 
     // Get and display LightSources

@@ -12,6 +12,8 @@ module.exports = {
   clientkey: getTestDataValue('clientkey'),
 
   testLightId: getTestDataValue('lightid'),
+
+  streamingLightId: getTestDataValue('lightid'),
 };
 
 
@@ -21,9 +23,11 @@ function loadData() {
   let testDataFile;
   if (platform === 'win32') {
     testDataFile = path.join(process.env.LOCALAPPDATA, '.node-hue-api');
+  } else if (platform === 'darwin') {
+    testDataFile = path.join(process.env.HOME, '.node-hue-api');
   }
 
-  //TODO add support for MacOS
+  //TODO add support for Linux
 
   let data = null;
   if (fs.existsSync(testDataFile)) {

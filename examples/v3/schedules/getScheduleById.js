@@ -16,7 +16,7 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.schedules.get(SCHEDULE_ID);
+    return api.schedules.getSchedule(SCHEDULE_ID);
   })
   .then(schedule => {
     // Display the details of the schedules we got back

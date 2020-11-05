@@ -19,8 +19,13 @@ v3.discovery.nupnpSearch()
   })
   .then(rules => {
     // Print the details for the Rules found
-    rules.forEach(rule => {
-      console.log(rule.toStringDetailed());
-    });
+
+    if (rules && rules.length > 0) {
+      rules.forEach(rule => {
+        console.log(rule.toStringDetailed());
+      });
+    } else {
+      console.log(`Failed to find any rules for name '${RULE_NAME}'.`);
+    }
   })
 ;

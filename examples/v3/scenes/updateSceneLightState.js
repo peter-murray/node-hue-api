@@ -1,13 +1,13 @@
 'use strict';
 
 const v3 = require('../../../index').v3
-  , Scene = v3.Scene
-  , SceneLightState = v3.lightStates.SceneLightState
+  , model = v3.model
+  , SceneLightState = model.lightStates.SceneLightState
 ;
 // If using this code outside of this library the above should be replaced with
 // const v3 = require('node-hue-api').v3
-//  , Scene = v3.Scene
-//  , SceneLightState = v3.lightstates.SceneLightState
+//  , model = v3.model
+//  , SceneLightState = model.lightStates.SceneLightState
 // ;
 
 // Replace this with your username for accessing the bridge
@@ -34,8 +34,8 @@ v3.discovery.nupnpSearch()
 
 
 function createSceneThenUpdateLightState(api) {
-  const scene = new Scene();
-  scene.name = 'node-hut-api-test-scene';
+  const scene = model.createLightScene();
+  scene.name = 'node-hue-api-test-scene';
   scene.lights = [1];
   // Allow the Bridge to delete this scene
   scene.recycle = true;
@@ -51,7 +51,7 @@ function createSceneThenUpdateLightState(api) {
       ;
 
       // Craft the parameters of the desired light state for the scene
-      lightState.on().brightness(100).saturation(100);
+      lightState.on().brightness(100);
 
       // Now update the light state for one of the lights in the scene
       return api.scenes.updateLightState(sceneId, lightId, lightState);

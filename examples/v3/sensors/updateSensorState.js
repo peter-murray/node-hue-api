@@ -4,8 +4,6 @@ const v3 = require('../../../index').v3;
 // If using this code outside of this library the above should be replaced with
 // const v3 = require('node-hue-api').v3;
 
-const CLIPOpenCloseSensor = v3.sensors.clip.OpenClose;
-
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
 
@@ -23,15 +21,12 @@ v3.discovery.nupnpSearch()
   })
   .then(api => {
     // Build a new sensor object to save to the bridge
-    const myOpenCloseSensor = new CLIPOpenCloseSensor({
-      modelid: 'node-hue-api software sensor',
-      swversion: '1.0',
-      uniqueid: '00:00:00:01',
-      manufacturername: 'node-hue-api',
-    });
-    // Set a name
+    const myOpenCloseSensor = v3.model.createCLIPOpenCloseSensor();
+    myOpenCloseSensor.modelid = 'node-hue-api software sensor';
+    myOpenCloseSensor.swversion = '1.0';
+    myOpenCloseSensor.uniqueid = '00:00:00:01';
+    myOpenCloseSensor.manufacturername = 'node-hue-api';
     myOpenCloseSensor.name = 'Test Open/Close Sensor';
-    // Set an initial open state of false
     myOpenCloseSensor.open = false;
 
     let sensorId = null;
@@ -43,7 +38,7 @@ v3.discovery.nupnpSearch()
         sensorId = result.id;
 
         // Get the new sensor from the bridge
-        return api.sensors.get(sensorId);
+        return api.sensors.getSensor(sensorId);
       })
       .then(sensor => {
         console.log(sensor.toStringDetailed());
@@ -60,7 +55,7 @@ v3.discovery.nupnpSearch()
         console.log(`Updated the Sensor, ${sensorId}, state values updated: ${JSON.stringify(result)}`);
 
         // Get the updated sensor object from the Bridge again, it should have a lastupdated attribute for the change now
-        return api.sensors.get(sensorId);
+        return api.sensors.getSensor(sensorId);
       })
       .then(sensor => {
         // Display the sensor details again after the state change

@@ -13,7 +13,7 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.configuration.get();
+    return api.configuration.getConfiguration();
   })
   .then(config => {
     // Display the configuration for the Bridge

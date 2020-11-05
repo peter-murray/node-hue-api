@@ -7,7 +7,7 @@ const v3 = require('../../../index').v3;
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username
   // The name of the light we wish to retrieve by name
-  , LIGHT_NAME = 'Office Desk Right'
+  , LIGHT_NAME = 'Bench corner'
 ;
 
 v3.discovery.nupnpSearch()
@@ -19,7 +19,11 @@ v3.discovery.nupnpSearch()
     return api.lights.getLightByName(LIGHT_NAME);
   })
   .then(light => {
-    // Display the details of the light
-    console.log(light.toStringDetailed());
+    if (light) {
+      // Display the details of the light
+      console.log(light.toStringDetailed());
+    } else {
+      console.log(`Failed to find a light with name '${LIGHT_NAME}'`);
+    }
   })
 ;

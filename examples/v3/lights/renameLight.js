@@ -16,10 +16,18 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.lights.rename(LIGHT_ID, 'my_new_name');
-  })
-  .then(result => {
-    // Display the state of the light
-    console.log(`Successfully reanmed light? ${result}`);
+    return api.lights.getLight(LIGHT_ID)
+      .then(light => {
+        if (light) {
+          light.name = 'my new neme';
+          return api.lights.renameLight(light);
+        } else {
+          throw new Error(`Failed to get light with id '${LIGHT_ID}`)
+        }
+      })
+      .then(result => {
+        // Display the state of the light
+        console.log(`Successfully renamed light? ${result}`);
+      })
   })
 ;

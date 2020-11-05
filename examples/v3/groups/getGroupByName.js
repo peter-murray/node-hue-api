@@ -16,12 +16,16 @@ v3.discovery.nupnpSearch()
     return v3.api.createLocal(host).connect(USERNAME);
   })
   .then(api => {
-    return api.groups.getByName(GROUP_NAME);
+    return api.groups.getGroupByName(GROUP_NAME);
   })
   .then(matchedGroups => {
-    // Iterate over the light objects showing details
-    matchedGroups.forEach(group => {
-      console.log(group.toStringDetailed());
-    });
+    if (matchedGroups && matchedGroups.length > 0) {
+      // Iterate over the light objects showing details
+      matchedGroups.forEach(group => {
+        console.log(group.toStringDetailed());
+      });
+    } else {
+     console.log(`No groups found with names that match: '${GROUP_NAME}'`);
+    }
   })
 ;

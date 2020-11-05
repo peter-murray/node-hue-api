@@ -15,10 +15,10 @@ v3.discovery.nupnpSearch()
   .then(api => {
     // The JSON payload of the configuration value(s) to update
     const valuesToUpdate = {
-      'proxyport': 8080
+      'touchlink': true
     };
 
-    return api.configuration.update(valuesToUpdate);
+    return api.configuration.updateConfiguration(valuesToUpdate);
   })
   .then(result => {
     // Display the configuration for the Bridge

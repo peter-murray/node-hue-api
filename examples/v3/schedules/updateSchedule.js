@@ -47,7 +47,7 @@ v3.discovery.nupnpSearch()
             console.log(JSON.stringify(updatedAttributes, null, 2));
 
             // Get the details of the updated schedule
-            return api.schedules.get(created);
+            return api.schedules.getSchedule(created);
           });
       })
       .then(updatedSchedule => {

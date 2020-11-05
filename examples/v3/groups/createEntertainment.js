@@ -20,7 +20,7 @@ v3.discovery.nupnpSearch()
     // The name of the new zone we are creating
     entertainment.name =  'Testing Entertainment Creation';
     // The array of light ids that will be in the entertainment group, not all lights can be added, they have to support streaming
-    entertainment.lights = [44, 43];
+    entertainment.lights = [13, 14];
     // The class for the entertainment group, this has to be selected from the valid values, consult the documentation for details
     entertainment.class = 'TV';
 

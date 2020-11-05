@@ -37,7 +37,7 @@ v3.discovery.nupnpSearch()
     rule.addCondition(v3.model.ruleConditions.group(0).when().anyOn().equals(true));
 
     // The light with id LIGHT_ID
-    rule.addAction(v3.model.ruleActions.light(LIGHT_ID).withState(new LightState().alertShort()));
+    rule.addAction(v3.model.actions.light(LIGHT_ID).withState(new LightState().alertShort()));
 
     return api.rules.createRule(rule)
       .then(rule => {
