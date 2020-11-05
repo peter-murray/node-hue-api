@@ -7,10 +7,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      max-parallel: 4
+      max-parallel: 12
       matrix:
-        os: [ubuntu-18.04, macos-latest, windows-latest]
-        node-version: [10.x, 12.x]
+        os: [ubuntu-20.04, macos-latest, windows-latest]
+        node-version: [10, 12, 14, 15]
 
     steps:
     - uses: actions/checkout@v1
@@ -23,7 +23,4 @@ jobs:
     - name: npm test
       run: |
         npm ci
-        npm run test-types --if-present
-        npm run test-model --if-present
-      env:
-        CI: true
+        npm run generate-ts-definitions
