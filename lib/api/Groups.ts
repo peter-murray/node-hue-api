@@ -1,4 +1,4 @@
-import Bottleneck = require('bottleneck');
+import Bottleneck from "bottleneck";
 import { model } from '@peter-murray/hue-bridge-model';
 import { ApiDefinition } from './http/ApiDefinition';
 import { groupsApi } from './http/endpoints/groups';
