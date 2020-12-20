@@ -1,6 +1,6 @@
 'use strict';
 
-const v3 = require('../../../index').v3
+const v3 = require('../../../lib').v3
   , model = v3.model
   , SceneLightState = model.lightStates.SceneLightState
 ;

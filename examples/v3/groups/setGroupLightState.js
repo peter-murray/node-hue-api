@@ -1,6 +1,6 @@
 'use strict';
 
-const v3 = require('../../../index').v3
+const v3 = require('../../../lib').v3
   , GroupLightState = v3.lightStates.GroupLightState
 ;
 // If using this code outside of this library the above should be replaced with

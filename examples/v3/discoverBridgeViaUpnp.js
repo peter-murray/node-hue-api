@@ -1,6 +1,6 @@
 'use strict';
 
-const discovery = require('../../index').discovery
+const discovery = require('../../lib').discovery
 ;
 
 async function getBridge() {

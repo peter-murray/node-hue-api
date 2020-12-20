@@ -1,21 +1,20 @@
 {
   "name": "node-hue-api",
   "description": "Philips Hue API Library for Node.js",
-  "version": "4.0.9",
-  "author": "Peter Murray <peter.murray@osirisoft.com>",
+  "version": "5.0.0-beta.1",
+  "author": "Peter Murray",
   "contributors": [
     {
       "name": "Peter Murray",
       "email": "681306+peter-murray@users.noreply.github.com"
     }
   ],
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
   "scripts": {
-    "test": "mocha --timeout 5000 --recursive \"lib/api/**/*.test.js\"",
-    "clean-ts-definitions": "find . -type f -name '*.d.ts' -exec rm {} \\;",
-    "generate-ts-definitions": "npx typescript@3.8.3 index.js --allowJs --strict --declaration --emitDeclarationOnly --listEmittedFiles",
-    "prepublishOnly": "npm run generate-ts-definitions"
+    "test": "mocha --recursive -r ts-node/register \"lib/**/*.test.ts\" \"lib/**/*.test.js\"",
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -25,15 +24,19 @@
     "url": "https://github.com/peter-murray/node-hue-api/issues"
   },
   "dependencies": {
-    "@peter-murray/hue-bridge-model": "^1.0.0",
+    "@peter-murray/hue-bridge-model": "^1.0.1",
     "bottleneck": "^2.19.5",
-    "get-ssl-certificate": "^2.3.3",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^14.14.14",
+    "@types/node-fetch": "^2.5.7",
     "chai": "~4.2",
-    "eslint": "^5.16.0",
-    "mocha": "^8.1.1"
+    "mocha": "^8.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
   },
   "engines": {
     "node": ">= 10.0.0"

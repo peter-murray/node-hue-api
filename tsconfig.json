@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist/cjs",
+    "strict": false,
+    "esModuleInterop": true,
+    "allowJs": true
+  },
+  "exclude": [
+    "test",
+    "examples",
+    "**/*.test.ts",
+    "**/*.test.js",
+    "dist",
+    "node_modules"
+  ],
+  "include": [
+    "lib/**/*.ts"
+  ]
+}

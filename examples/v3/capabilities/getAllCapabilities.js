@@ -1,6 +1,6 @@
 'use strict';
 
-const hueApi = require('../../../index');
+const hueApi = require('../../../lib');
 // If using this code outside of this library the above should be replaced with
 // const hueApi = require('node-hue-api');
 
