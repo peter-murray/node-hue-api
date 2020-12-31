@@ -64,7 +64,7 @@ time of writing.*
 
 
 ## connectWithCode
-The `connectWithCode(code, useername, timeout, deviceType, remoteBirdgeId)` function will perform the second step in the 
+The `connectWithCode(code, username, timeout, deviceType, remoteBridgeId)` function will perform the second step in the 
 OAuth authentication process following a user granting your application access to their Hue Bridge.  
 
 * `code`: The `authentication` code that you get from the Callback URL for your `Hue Remote Api Application`.
@@ -121,7 +121,7 @@ there is also a time limit on the refresh token.
 const v3 = require('node-hue-api').v3;
 
 const remoteBootstrap = v3.api.createRemote(clientId, clientSecret);
-remoteBootstrap.connectWithCode(code)
+remoteBootstrap.connectWithTokens(code)
   .then(api => {
     // Do something with the api like getting lights etc... 
   })
