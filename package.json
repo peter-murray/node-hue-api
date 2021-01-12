@@ -1,7 +1,7 @@
 {
   "name": "node-hue-api",
   "description": "Philips Hue API Library for Node.js",
-  "version": "4.0.9",
+  "version": "4.0.10",
   "author": "Peter Murray <peter.murray@osirisoft.com>",
   "contributors": [
     {
