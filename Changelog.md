@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.10
+- Fixes reported vulnerabilities in axios and other dev based dependencies, Issue #188.
+
+## 4.0.9
+- Missing support for Geofence sensor Issue #182.
+
 ## 4.0.8
 - Fixes problems in TypeScript definitions for the model, Issue #181
 
