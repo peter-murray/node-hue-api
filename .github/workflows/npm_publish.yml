@@ -1,0 +1,68 @@
+name: Node.js Publish
+
+on:
+  create:
+    tags:
+      - v*
+
+env:
+  node_version: 12
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node_version }}
+
+      - run: npm ci
+      - run: npm test
+
+
+  publish-npm:
+    name: Publish npm
+    needs: build
+
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node_version }}
+          registry-url: https://registry.npmjs.org/
+
+      - run: npm ci
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
+
+
+  publish-gpr:
+    name: Publish GitHub Package Registry
+    needs: build
+
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node_version }}
+          registry-url: https://npm.pkg.github.com/peter-murray
+
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
