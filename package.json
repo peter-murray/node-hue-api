@@ -2,7 +2,7 @@
   "name": "node-hue-api",
   "description": "Philips Hue API Library for Node.js",
   "version": "5.0.0-beta.1",
-  "author": "Peter Murray",
+  "author": "Peter Murray ",
   "contributors": [
     {
       "name": "Peter Murray",
@@ -12,6 +12,10 @@
   "main": "dist/cjs/index.js",
   "types": "dist/esm/index.d.ts",
   "module": "dist/esm/index.js",
+  "exports": {
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js"
+  },
   "scripts": {
     "test": "mocha --recursive -r ts-node/register \\\"src/**/*.test.ts\\\" \\\"src/**/*.test.js\\\"",
     "build": "tsc -p tsconfig.json && tsc -p tsconfig_esm.json",
@@ -25,14 +29,14 @@
     "url": "https://github.com/peter-murray/node-hue-api/issues"
   },
   "dependencies": {
-    "@peter-murray/hue-bridge-model": "^2.0.0",
+    "@peter-murray/hue-bridge-model": "^2.0.1",
     "bottleneck": "^2.19.5",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.1",
-    "@types/node": "^14.14.30",
+    "@types/node": "^14.14.31",
     "@types/node-fetch": "^2.5.8",
     "chai": "~4.2",
     "mocha": "^8.3.0",

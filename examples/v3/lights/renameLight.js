@@ -12,6 +12,7 @@ const v3 = hueApi.v3
 const USERNAME = require('../../../test/support/testValues').username
   // The name of the light we wish to retrieve by name
   , LIGHT_ID = 1
+  , LIGHT_NAME = 'Bath Head'
 ;
 
 discovery.nupnpSearch()
@@ -23,7 +24,7 @@ discovery.nupnpSearch()
     return api.lights.getLight(LIGHT_ID)
       .then(light => {
         if (light) {
-          light.name = 'my new neme';
+          light.name = LIGHT_NAME;
           return api.lights.renameLight(light);
         } else {
           throw new Error(`Failed to get light with id '${LIGHT_ID}`)
