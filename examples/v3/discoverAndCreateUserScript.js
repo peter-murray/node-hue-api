@@ -1,5 +1,5 @@
-const v3 = require('../../lib').v3
-  , discovery = require('../../lib').discovery
+const v3 = require('../../dist/cjs').v3
+  , discovery = require('../../dist/cjs').discovery
   // If using this code outside of the examples directory, you will want to use the line below and remove the
   // const v3 = require('node-hue-api').v3
   // const discovery = require('node-hue-api').discovery

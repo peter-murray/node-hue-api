@@ -12,7 +12,6 @@ module.exports = {
   clientkey: getTestDataValue('clientkey'),
 
   testLightId: getTestDataValue('lightid'),
-
   streamingLightId: getTestDataValue('lightid'),
 };
 

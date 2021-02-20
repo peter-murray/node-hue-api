@@ -1,18 +1,20 @@
 'use strict';
 
-const v3 = require('../../../lib').v3
-;
+const hueApi = require('../../../dist/cjs');
 // If using this code outside of this library the above should be replaced with
-// const v3 = require('node-hue-api').v3
-// ;
+// const hueApi = require('node-hue-api');
+
+const v3 = hueApi.v3
+  , discovery = hueApi.discovery
+;
 
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
 
 // Set this to an existing scene id
-const SCENE_ID = 'BW0qV8ys7otEdex';
+const SCENE_ID = 'yNNiOoRP51G8js5';
 
-v3.discovery.nupnpSearch()
+discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
     return v3.api.createLocal(host).connect(USERNAME);
@@ -25,7 +27,7 @@ v3.discovery.nupnpSearch()
         // Update the name
         scene.name = 'my-cool-scene';
         // Set update the target lights for an existing LightScene
-        scene.lights = [2, 3];
+        scene.lights = [1, 2];
         return api.scenes.updateScene(scene);
       })
   })
@@ -33,7 +35,7 @@ v3.discovery.nupnpSearch()
     console.log(`Updated Scene Attributes? ${JSON.stringify(result)}`);
   })
   .catch(err => {
-    if (err.getHueErrorType() === 3) {
+    if (err.getHueErrorType && err.getHueErrorType() === 3) {
       console.error(`Failed to resolve an existing scene with id:${SCENE_ID}`);
     } else {
       console.error(`Unexpected Error: ${err.message}`);

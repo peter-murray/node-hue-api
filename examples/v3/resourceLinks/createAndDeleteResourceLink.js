@@ -1,8 +1,12 @@
 'use strict';
 
-const v3 = require('../../../lib').v3;
+const hueApi = require('../../../dist/cjs');
 // If using this code outside of this library the above should be replaced with
-// const v3 = require('node-hue-api').v3;
+// const hueApi = require('node-hue-api');
+
+const v3 = hueApi.v3
+  , discovery = hueApi.discovery
+;
 
 const model = v3.model;
 
@@ -12,7 +16,7 @@ const USERNAME = require('../../../test/support/testValues').username;
 //
 // This code will create a new ResourceLink on the bridge associated with the group 0 (all lights group)
 
-v3.discovery.nupnpSearch()
+discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
     return v3.api.createLocal(host).connect(USERNAME);

@@ -1,10 +1,13 @@
 'use strict';
 
-const v3 = require('../../../lib').v3;
+const hueApi = require('../../../dist/cjs');
 // If using this code outside of this library the above should be replaced with
-// const v3 = require('node-hue-api').v3;
+// const hueApi = require('node-hue-api');
 
-const model = v3.model;
+const v3 = hueApi.v3
+  , discovery = hueApi.discovery
+  , model = v3.model
+;
 
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
@@ -13,7 +16,7 @@ const USERNAME = require('../../../test/support/testValues').username;
 // This code will create a CLIP Sensor and then remove it so as to not pollute the Hur Bridge with useless sensors.
 //
 
-v3.discovery.nupnpSearch()
+discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
     return v3.api.createLocal(host).connect(USERNAME);

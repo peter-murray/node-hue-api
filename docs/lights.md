@@ -58,25 +58,21 @@ This function call will return a Promise that will resolve to a single `Light` i
 A complete code sample for this function is available [here](../examples/v3/lights/getLight.js).
 
 
-## getLightById()
-This API `getLightById(id)` has bee deprecated, use [`getLight(id)`](#getlight) instead.
-
-
-
 ## getLightByName()
-The `getLightByName(name)` function allows you to retrieve a specific light by it's associated name value.
+The `getLightByName(name)` function allows you to retrieve a specific light by its associated name value. It is possible
+to have multiple lights with the same names, so this will return an array of lights that match the specified name.
 
 ```js
 api.lights.getLightByName(name)
-  .then(light => {
-    // Display the details of the light
-    console.log(light.toStringDetailed());
+  .then(lights => {
+    // Display the details of the first light match
+    console.log(light[0].toStringDetailed());
   });
 ```
 
-This function call will resolve to a single `Light` instance.
+This function call will resolve to an array of `Light` instances.
 
-A complete code sample for this function is available [here](../examples/v3/lights/getLight.js).
+A complete code sample for this function is available [here](../examples/v3/lights/getLightByName.js).
 
 
 

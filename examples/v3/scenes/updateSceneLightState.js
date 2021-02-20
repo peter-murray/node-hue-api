@@ -1,14 +1,13 @@
 'use strict';
 
-const v3 = require('../../../lib').v3
-  , model = v3.model
-  , SceneLightState = model.lightStates.SceneLightState
-;
+const hueApi = require('../../../dist/cjs');
 // If using this code outside of this library the above should be replaced with
-// const v3 = require('node-hue-api').v3
-//  , model = v3.model
-//  , SceneLightState = model.lightStates.SceneLightState
-// ;
+// const hueApi = require('node-hue-api');
+
+const v3 = hueApi.v3
+  , discovery = hueApi.discovery
+  , SceneLightState = v3.lightStates.SceneLightState
+;
 
 // Replace this with your username for accessing the bridge
 const USERNAME = require('../../../test/support/testValues').username;
@@ -16,7 +15,7 @@ const USERNAME = require('../../../test/support/testValues').username;
 // This example will getOperator a new scene and then update the LightState for one of the lights.
 // You may need to remove this scene later depending on whether or not you wish to have it remain.
 
-v3.discovery.nupnpSearch()
+discovery.nupnpSearch()
   .then(searchResults => {
     const host = searchResults[0].ipaddress;
     return v3.api.createLocal(host).connect(USERNAME);
@@ -34,7 +33,7 @@ v3.discovery.nupnpSearch()
 
 
 function createSceneThenUpdateLightState(api) {
-  const scene = model.createLightScene();
+  const scene = v3.model.createLightScene();
   scene.name = 'node-hue-api-test-scene';
   scene.lights = [1];
   // Allow the Bridge to delete this scene

@@ -1,6 +1,8 @@
 'use strict';
 
-const discovery = require('../../lib').discovery
+const discovery = require('../../dist/cjs').discovery
+// If using this code outside of the examples directory, you will want to use the line below and remove the
+// const discovery = require('node-hue-api').discovery
 ;
 
 async function getBridge() {

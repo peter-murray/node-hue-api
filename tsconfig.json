@@ -4,9 +4,9 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "./dist/cjs",
-    "strict": false,
+    "strict": true,
     "esModuleInterop": true,
-    "allowJs": true
+//    "allowJs": true
   },
   "exclude": [
     "test",
@@ -17,6 +17,6 @@
     "node_modules"
   ],
   "include": [
-    "lib/**/*.ts"
+    "src/**/*.ts"
   ]
 }

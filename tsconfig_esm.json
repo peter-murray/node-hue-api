@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "es6",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "outDir": "./dist/esm"
+  }
+}
