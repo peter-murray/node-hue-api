@@ -4,12 +4,12 @@ A `Group` is a representation of a grouping construct in the Hue Bridge, of whic
 including serrving different purposes:
 
 * [`LightGroup`](#lightgroup): The default type of Group which collects lights and sensors
-* [`Luminaire`](#luminaire): A special type of group representing a Luminaire, the bridge will create these for these devices if you have any 
+* [`Luminaire`](#luminaire): A special type of group representing a Luminaire, the bridge will create these for these devices if you have any
 * [`Room`](#room): A Room that collects a number of lights and sensors togehter (a light and sensor can only belong to a single `Room`)
 * [`Entertainment`](#entertainment): A new special type of Group used for an Entertainment area for streaming (syncing light changes
     to a visualization via a seperate streaming API). Not all lights can be added to an Entertainment Group.
 * [`Zone`](#zone): A group that allows you to define a Zone that might be within a room, or extend across a number of rooms.
-    This allows you to work around the `Room` limitations of lights and sensors only being able to belong to on Room. 
+    This allows you to work around the `Room` limitations of lights and sensors only being able to belong to on Room.
 
 You cannot create these Object directly, but can either retrieve them from the Hue Bridge via the [Groups API](./groups.md)
 or create a new instance of them using the `v3.model` functions:
@@ -77,7 +77,7 @@ The type can be one of the following values:
 * `Lighsource`: Multisource Luminaire group
 * `LightGroup`: A group of lights that can be controlled together
     * A light group is deleted by the bridge if you remove all the lights from it
-* `Room` 
+* `Room`
 * `Entertainment`
 * `Zone`
 
@@ -91,17 +91,17 @@ The Light state of one of the lamps in the group.
 ## recycle
 A flag indicating if the bridge can automatically remove the group.
 
-* `get` 
+* `get`
 
 
 ## sensors
-An `Array` of sensor `id`s that are associated with the group, which cna be empty. 
+An `Array` of sensor `id`s that are associated with the group, which cna be empty.
 
 * `get`
 
 
 ## state
-A state representation of the group. Which can contain details like `all_on` or `any_on` which indicate if all or any of 
+A state representation of the group. Which can contain details like `all_on` or `any_on` which indicate if all or any of
 the light members are currently on.
 
 `get`
@@ -111,7 +111,7 @@ the light members are currently on.
 The `toString()` function will obtain a simple `String` representation of the Scene.
 
 
-###toStringDetailed()
+### toStringDetailed()
 The `toStringDetailed()` function will obtain a more detailed representation of the Scene object.
 
 
@@ -128,7 +128,7 @@ A group of lights that are physically located in the same place in a house. Thes
 * A light is only allowed in a single room
 * A room is not automatically deleted when all the lights are removed
 
-The `Room` Group has all the properties and functions as defined in the [common group properties](#common-group-properties-and-functions) 
+The `Room` Group has all the properties and functions as defined in the [common group properties](#common-group-properties-and-functions)
 as well as the following:
 
 ## class
@@ -140,13 +140,13 @@ The `class` represents the `Zone` category as a `String`.
 The values that can be set for this on a `Room` are:
 
 -------------- | -------------- | ----------
-`Living room`  | `Kitchen`      | `Dining`   
-`Bedroom`      | `Kids bedroom` | `Bathroom` 
-`Nursery`      | `Recreation`   | `Office`   
-`Gym`          | `Hallway`      | `Toilet`   
-`Front door`   | `Garage`       | `Terrace`  
-`Garden`       | `Driveway`     | `Carport`  
-`Other`        |                |           
+`Living room`  | `Kitchen`      | `Dining`
+`Bedroom`      | `Kids bedroom` | `Bathroom`
+`Nursery`      | `Recreation`   | `Office`
+`Gym`          | `Hallway`      | `Toilet`
+`Front door`   | `Garage`       | `Terrace`
+`Garden`       | `Driveway`     | `Carport`
+`Other`        |                |
 
 Since version 1.30 of the Hue Bridge API the following values can also be used:
 
@@ -166,7 +166,7 @@ A group of lights that can be controlled together.
 * A zone can be empty and contain no lights
 * A light is allowed to be in multiple zones (as opposed to only being able to belong to a single room)
 
-The `Zone` Group has all the properties and functions as defined in the [common group properties](#common-group-properties-and-functions) 
+The `Zone` Group has all the properties and functions as defined in the [common group properties](#common-group-properties-and-functions)
 as well as the following:
 
 ## class
@@ -178,13 +178,13 @@ The `class` represents the `Zone` category as a `String`.
 The values that can be set for this on a `Room` are:
 
 -------------- | -------------- | ----------
-`Living room`  | `Kitchen`      | `Dining`   
-`Bedroom`      | `Kids bedroom` | `Bathroom` 
-`Nursery`      | `Recreation`   | `Office`   
-`Gym`          | `Hallway`      | `Toilet`   
-`Front door`   | `Garage`       | `Terrace`  
-`Garden`       | `Driveway`     | `Carport`  
-`Other`        |                |           
+`Living room`  | `Kitchen`      | `Dining`
+`Bedroom`      | `Kids bedroom` | `Bathroom`
+`Nursery`      | `Recreation`   | `Office`
+`Gym`          | `Hallway`      | `Toilet`
+`Front door`   | `Garage`       | `Terrace`
+`Garden`       | `Driveway`     | `Carport`
+`Other`        |                |
 
 Since version 1.30 of the Hue Bridge API the following values can also be used:
 
@@ -202,7 +202,7 @@ Since version 1.30 of the Hue Bridge API the following values can also be used:
 ## Entertainment
 Represents an entertainment set up, which is a group of lights used to define targets for streaming along with defining position of the lights.
 
-The Entertainment Group has all the properties and functions as defined in the [common group properties](#common-group-properties-and-functions) 
+The Entertainment Group has all the properties and functions as defined in the [common group properties](#common-group-properties-and-functions)
 as well as the following:
 
 * [class](#class)
