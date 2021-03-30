@@ -95,7 +95,7 @@ A flag indicating if the bridge can automatically remove the group.
 
 
 ## sensors
-An `Array` of sensor `id`s that are associated with the group, which cna be empty.
+An `Array` of sensor `id`s that are associated with the group, which can be empty.
 
 * `get`
 
@@ -238,4 +238,3 @@ The stream object consists of the following keys and values:
 * `proxynode`: A string which is an address string to a light in the bridge, e.g. `/lights/22`
 * `active`: A Boolean indicating whether or not the Entertainment is currently streaming
 * `owner`: If the Entertainment is currently streaming, this is the user id of the owner of the stream.
-
