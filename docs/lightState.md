@@ -24,7 +24,7 @@ To create any one of the variations of `LightState`s you can import them using:
 const LightState = require('node-hue-api').v3.lightStates.LightState;
 
 // LightState for interacting with Scene Lights
-const SceneLightState = require('node-hue-api').v3.lightStates.GroupLightState;
+const SceneLightState = require('node-hue-api').v3.lightStates.SceneLightState;
 
 // LightState for interacting with Group Lights
 const GroupLightState = require('node-hue-api').v3.lightStates.GroupLightState;
