@@ -9,7 +9,7 @@ including serrving different purposes:
 * [`Entertainment`](#entertainment): A new special type of Group used for an Entertainment area for streaming (syncing light changes
     to a visualization via a seperate streaming API). Not all lights can be added to an Entertainment Group.
 * [`Zone`](#zone): A group that allows you to define a Zone that might be within a room, or extend across a number of rooms.
-    This allows you to work around the `Room` limitations of lights and sensors only being able to belong to on Room.
+    This allows you to work around the `Room` limitations of lights and sensors only being able to belong to one Room.
 
 You cannot create these Object directly, but can either retrieve them from the Hue Bridge via the [Groups API](./groups.md)
 or create a new instance of them using the `v3.model` functions:
