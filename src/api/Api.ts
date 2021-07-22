@@ -198,4 +198,4 @@ export class Api {
   _getRemote(): RemoteApi {
     return this._config.remote;
   }
-};
+}

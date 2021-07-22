@@ -187,9 +187,6 @@ export class RemoteApi {
         params: {
           grant_type: 'refresh_token'
         },
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded',
-        },
         validateStatus: (status: number) => {
           return status === 401;
         }
