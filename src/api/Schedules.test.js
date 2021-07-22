@@ -318,10 +318,13 @@ describe('Hue API #schedule', () => {
     let schedule;
 
     beforeEach(async () => {
+      // We need to ensure we are a time in the future
+      const triggerTime = Date.now() + (1000 * 60) + (1000 * 60 * 60);
+
       const createSchedule = new Schedule();
       createSchedule.name = 'Test Schedule For Deletes';
       createSchedule.description = 'A node-hue-api test schedule that can be removed';
-      createSchedule.localtime = new timePatterns.AbsoluteTime(new Date(Date.now() + (1000 * 60 * 60)));
+      createSchedule.localtime = new timePatterns.AbsoluteTime(new Date(triggerTime));
       createSchedule.recycle = true;
       createSchedule.command = model.actions.light(0).withState({on: false});
 
