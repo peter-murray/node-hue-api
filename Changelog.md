@@ -1,6 +1,9 @@
 # Change Log
 
-#5.0.0-alpha.1
+## 5.0.0-beta.3
+- Fixes #201 a content type header being added twice for refreshing of tokens
+
+## 5.0.0-alpha.1
 - Providing a fix for the discovery portal (N-UPnP search) issues where a user has multiple bridges, where some of 
 them are invalid. This changes the return value for discovery requiring a major version bump. Issue #168.
 
