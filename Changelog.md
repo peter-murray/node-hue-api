@@ -1,5 +1,8 @@
 # Change Log
 
+## 5.0.0-beta.4
+- More fixes associated with OAuth2 remote endpoint changes fixing new error from #201
+
 ## 5.0.0-beta.3
 - Fixes #201 a content type header being added twice for refreshing of tokens
 
