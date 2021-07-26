@@ -1,4 +1,4 @@
-import { OAuthTokens, Token, Tokens } from './http/OAuthTokens';
+import { Token, Tokens } from './http/OAuthTokens';
 import { Api } from './Api';
 import { ApiError } from '../ApiError';
 

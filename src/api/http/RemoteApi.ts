@@ -131,7 +131,7 @@ export class RemoteApi {
         responseType: 'json',
       }
       , requestConfig = {
-        url: '/oauth2/token',
+        url: '/v2/oauth2/token',
         method: 'POST',
         params: {
           code: code,
@@ -169,7 +169,7 @@ export class RemoteApi {
    * remote connection.
    *
    * @param refreshToken The refresh token to exchange for new tokens.
-   * @returns The new refreshed tokens.
+   * @returns Promise<Tokens> The new refreshed tokens.
    */
   refreshTokens(refreshToken: string): Promise<Tokens> {
     const self = this
@@ -181,11 +181,11 @@ export class RemoteApi {
         responseType: 'json',
       }
       , requestConfig: RequestConfig = {
-        url: '/oauth2/refresh',
+        url: '/v2/oauth2/token',
         method: 'POST',
-        data: `refresh_token=${refreshToken}`,
         params: {
-          grant_type: 'refresh_token'
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken
         },
         validateStatus: (status: number) => {
           return status === 401;
@@ -197,8 +197,8 @@ export class RemoteApi {
     const http = httpClient.create(config);
 
     return http.request(requestConfig)
-      .catch(err => {
-        return self._respondWithDigest(http, err, requestConfig);
+      .then(res => {
+        return self._respondWithDigest(http, res, requestConfig);
       })
       .then(res => {
         if (res.status === 200) {
@@ -275,8 +275,7 @@ export class RemoteApi {
     }
 
     const wwwAuthenticate = getAuthenticationDetailsFromHeader(res.headers)
-      ,
-      digestHeader = this.getAuthorizationHeaderDigest(wwwAuthenticate.realm, wwwAuthenticate.nonce, requestConfig.method, requestConfig.url)
+      , digestHeader = this.getAuthorizationHeaderDigest(wwwAuthenticate.realm, wwwAuthenticate.nonce, requestConfig.method, requestConfig.url)
     ;
 
     requestConfig.headers = {

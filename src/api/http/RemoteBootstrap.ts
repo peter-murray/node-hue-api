@@ -36,7 +36,7 @@ export class RemoteBootstrap {
     // if (! appId) {
     //   throw new ApiError('An Application ID (appId parameter) must be provided that matches the AppId for the remote application you registered with the Hue Portal');
     // }
-    return `${this.remoteApi.baseUrl}/oauth2/auth?clientid=${this.clientId}&state=${state}&deviceid=${deviceId}&appid=${appId}&response_type=code`;
+    return `${this.remoteApi.baseUrl}/v2/oauth2/authorize?clientid=${this.clientId}&state=${state}&deviceid=${deviceId}&appid=${appId}&response_type=code`;
   }
 
   /**
@@ -117,7 +117,7 @@ export class RemoteBootstrap {
     ;
     return Promise.resolve(api);
   }
-};
+}
 
 
 function getTimeout(timeout: number | undefined) {
