@@ -4,6 +4,7 @@ import { Transport } from './http/Transport';
 
 export type ConfigParameters = {
   baseUrl: string,
+  bridgeName: string,
   username?: string,
   clientId?: string,
   clientSecret?: string,
@@ -25,7 +26,6 @@ export class HueApiConfig {
     this._config = config;
     this._remoteApi = remoteApi;
     this._transport = transport;
-
     this._isRemote = !!config.remote && remoteApi != undefined;
   }
 
@@ -88,6 +88,14 @@ export class HueApiConfig {
    */
   get baseUrl(): string {
     return this._config.baseUrl;
+  }
+
+  /**
+   * Gets the name of the hue bridge.
+   * @returns string The name for the bridge.
+   */
+  get bridgeName(): string {
+    return this._config.bridgeName;
   }
 
   /**

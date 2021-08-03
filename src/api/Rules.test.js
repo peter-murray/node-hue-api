@@ -12,13 +12,15 @@ const expect = require('chai').expect
   , testValues = require('../../test/support/testValues.js')
 ;
 
-describe('Hue API #rules', () => {
+describe('Hue API #rules', function() {
 
   let hue
     , testSensor
     , targetLight
     , targetGroup
   ;
+
+  this.timeout(10000);
 
   before(() => {
     return discovery.nupnpSearch()

@@ -216,7 +216,7 @@ describe('Hue API #schedule', () => {
       const createSchedule = new Schedule();
       createSchedule.name = 'Test Schedule For Updates';
       createSchedule.description = 'A node-hue-api test schedule that can be removed';
-      createSchedule.localtime = new timePatterns.AbsoluteTime(new Date(Date.now() + (1000 * 60 * 60)));
+      createSchedule.localtime = new timePatterns.AbsoluteTime(new Date(Date.now() + (1000 * 60 * 60) + (1000 * 60)));
       createSchedule.recycle = true;
       createSchedule.command = model.actions.light(0).withState({on: true});
 

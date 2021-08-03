@@ -6,6 +6,7 @@ const expect = require('chai').expect
   , model = require('@peter-murray/hue-bridge-model').model
   , Light = model.Light
   , LightState = model.lightStates.LightState
+  , RateLimitConfig = require('./HueApiRateLimits').HueApiRateLimits
   , testValues = require('../../test/support/testValues.js')
 ;
 
@@ -103,6 +104,48 @@ describe('Hue API #lights', function () {
     });
   });
 
+
+  describe('rate limiting', function () {
+
+    this.timeout(20000);
+
+    async function multipleRequests(hueApi, count) {
+      const promises = [];
+
+      const start = Date.now();
+
+      for (let i = 0; i < 10; i++) {
+        promises.push(hueApi.lights.setLightState(EXTENDED_COLOR_LIGHT_ID, {bri:100 + i}));
+      }
+      await Promise.all(promises);
+      const stop = Date.now();
+
+      return stop - start;
+    }
+
+    before(async () => {
+      await hue.lights.setLightState(EXTENDED_COLOR_LIGHT_ID, {on: true});
+    });
+
+    after(async () => {
+      await hue.lights.setLightState(EXTENDED_COLOR_LIGHT_ID, {on: false});
+    });
+
+    it('should allow for a custom rate limit', async () => {
+      const rateLimits = new RateLimitConfig({light: {maxConcurrent:1, minTime:100}});
+
+      const searchResults = await discovery.nupnpSearch();
+      const localApi = v3.api.createLocal(searchResults[0].ipaddress, undefined, rateLimits);
+      const fastHue = await localApi.connect(testValues.username);
+
+      const requestCount = 5;
+      const normalHueSpeed = await multipleRequests(hue, requestCount);
+      const fastHueSpeed = await multipleRequests(fastHue, requestCount);
+
+      // The faster limits should confirm that the faster api is in fact that (this is an arbitary amount)...
+      expect(fastHueSpeed).to.be.lessThan(normalHueSpeed - 1000);
+    });
+  });
 
   describe('#getLightAttributesAndState()', () => {
 

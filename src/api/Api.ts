@@ -15,6 +15,7 @@ import { Sensors } from './Sensors';
 import { Users } from './Users';
 
 import { model } from '@peter-murray/hue-bridge-model';
+import { HueApiRateLimits } from './HueApiRateLimits';
 type Light = model.Light
 
 type ApiImplementationMap = {
@@ -35,6 +36,8 @@ export class Api {
 
   private readonly _config: HueApiConfig;
 
+  readonly rateLimitConfig: HueApiRateLimits;
+
   private _api: ApiImplementationMap;
 
   private _syncPromise?: Promise<any>;
@@ -43,8 +46,9 @@ export class Api {
 
   private _state?: Cache = undefined;
 
-  constructor(config: ConfigParameters, transport: Transport, remote?: RemoteApi) {
+  constructor(config: ConfigParameters, transport: Transport, rateLimits: HueApiRateLimits, remote?: RemoteApi) {
     this._config = new HueApiConfig(config, transport, remote);
+    this.rateLimitConfig = rateLimits;
 
     this._api = {
       capabilities: new Capabilities(this),
@@ -185,6 +189,10 @@ export class Api {
       .then(() => {
         return this._state?.getLight(id);
       });
+  }
+
+  get name(): string {
+    return this._config.bridgeName;
   }
 
   _getConfig(): HueApiConfig {

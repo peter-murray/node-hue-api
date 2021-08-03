@@ -1,13 +1,14 @@
 import * as https from 'https';
-import * as url from 'url';
 
 import {Api} from '../Api';
 
 import * as httpClient from './HttpClientFetch';
 import { ApiError } from '../../ApiError';
 import { Transport } from './Transport';
+import { HueApiRateLimits } from '../HueApiRateLimits';
 
 import { getSSLCertificate, SSLCertificate } from './sslCertificate';
+import { ConfigParameters, HueApiConfig } from '../HueApiConfig';
 
 const DEBUG: boolean = /node-hue-api/.test(process.env.NODE_DEBUG || '');
 
@@ -17,9 +18,11 @@ const INITIAL_HTTPS_AGENT = new https.Agent({
 
 export class LocalBootstrap {
 
-  private _baseUrl: string;
+  readonly baseUrl: URL;
 
-  private _hostname: string;
+  readonly hostname: string;
+
+  readonly rateLimits: HueApiRateLimits;
 
   /**
    * Create a Local Network Bootstrap for connecting to the Hue Bridge. The connection is ALWAYS over TLS/HTTPS.
@@ -27,23 +30,10 @@ export class LocalBootstrap {
    * @param {String} hostname The hostname or ip address of the hue bridge on the local network.
    * @param {number=} port The port number for the connections, defaults to 443 and should not need to be specified in the majority of use cases.
    */
-  constructor(hostname: string, port?: number) {
-    this._baseUrl = url.format({protocol: 'https', hostname: hostname, port: port || 443});
-    this._hostname = hostname;
-  }
-
-  /**
-   * Gets the Base URL for the local connection to the bridge.
-   */
-  get baseUrl(): string {
-    return this._baseUrl;
-  }
-
-  /**
-   * Gets the hostname being used to connect to the hue bridge (ip address or fully qualified domain name).
-   */
-  get hostname(): string {
-    return this._hostname;
+  constructor(hostname: string, rateLimits: HueApiRateLimits, port?: number) {
+    this.baseUrl = new URL(`https://${hostname}:${port || 443}`);
+    this.hostname = hostname;
+    this.rateLimits = rateLimits;
   }
 
   /**
@@ -60,12 +50,12 @@ export class LocalBootstrap {
   connect(username?: string, clientkey?: string, timeout?: number): Promise<Api> {
     const self = this
       , hostname: string = self.hostname
-      , baseUrl: string = self.baseUrl
+      , baseUrl: string = self.baseUrl.href
     ;
 
     return httpClient.request({
         method: 'GET',
-        url: `${baseUrl}/api/config`,
+        url: `${baseUrl}api/config`,
         json: true,
         httpsAgent: INITIAL_HTTPS_AGENT
       }).then(res => {
@@ -104,21 +94,22 @@ export class LocalBootstrap {
             throw new ApiError(error);
           })
           .then(agent => {
-            const apiBaseUrl = `${baseUrl}/api`
-              , transport = new Transport(httpClient.create({baseURL: apiBaseUrl, httpsAgent: agent}), username)
-              , config = {
+            const apiBaseUrl = `${baseUrl}api`
+              , transport = new Transport(httpClient.create({baseURL: apiBaseUrl, httpsAgent: agent}), this.rateLimits.transportRateLimit, username)
+              , config: ConfigParameters = {
                 remote: false,
                 baseUrl: apiBaseUrl,
-                clientkey: clientkey,
+                bridgeName: this.hostname,
+                clientKey: clientkey,
                 username: username,
               }
             ;
 
-            return new Api(config, transport);
+            return new Api(config, transport, this.rateLimits);
           });
       });
   }
-};
+}
 
 function getTimeout(timeout?: number): number {
   return timeout || 20000;

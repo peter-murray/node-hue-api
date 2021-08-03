@@ -1,4 +1,3 @@
-import Bottleneck from 'bottleneck';
 import { model } from '@peter-murray/hue-bridge-model';
 import { ApiDefinition } from './http/ApiDefinition';
 import { ApiError } from '../ApiError';
@@ -7,6 +6,7 @@ import { lightsApi } from './http/endpoints/lights';
 import { LightIdPlaceholder } from './placeholders/LightIdPlaceholder';
 import { KeyValueType } from '../commonTypes';
 import { Api } from './Api';
+import { HueRateLimiter } from './HueRateLimiter';
 
 const LIGHT_ID_PARSER = new LightIdPlaceholder();
 
@@ -17,13 +17,11 @@ type LightsType = model.Light | model.Luminaire | model.Lightsource;
 
 export class Lights extends ApiDefinition {
 
-  private _lightStateLimiter: Bottleneck;
+  private _lightStateLimiter: HueRateLimiter;
 
   constructor(hueApi: Api) {
     super(hueApi);
-
-    // As per Bridge documentation guidance, limit the number of calls to the light state changes to 10 per second max
-    this._lightStateLimiter = new Bottleneck({maxConcurrent: 1, minTime: 60});
+    this._lightStateLimiter = new HueRateLimiter(hueApi.name, 'lights', hueApi.rateLimitConfig.lightRateLimit);
   }
 
   getAll(): Promise<LightsType[]> {

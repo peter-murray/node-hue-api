@@ -2,6 +2,8 @@ import { create } from './HttpClientFetch';
 import { RemoteApi } from './RemoteApi';
 import { Api } from '../Api';
 import { Transport } from './Transport';
+import { HueApiRateLimits } from '../HueApiRateLimits';
+import { ConfigParameters } from '../HueApiConfig';
 
 export class RemoteBootstrap {
 
@@ -11,10 +13,13 @@ export class RemoteBootstrap {
 
   private remoteApi: RemoteApi;
 
-  constructor(clientId: string, clientSecret: string) {
+  private readonly rateLimits: HueApiRateLimits
+
+  constructor(clientId: string, clientSecret: string, rateLimits: HueApiRateLimits) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.remoteApi = new RemoteApi(clientId, clientSecret);
+    this.rateLimits = rateLimits;
   }
 
   /**
@@ -36,7 +41,7 @@ export class RemoteBootstrap {
     // if (! appId) {
     //   throw new ApiError('An Application ID (appId parameter) must be provided that matches the AppId for the remote application you registered with the Hue Portal');
     // }
-    return `${this.remoteApi.baseUrl}/v2/oauth2/authorize?clientid=${this.clientId}&state=${state}&deviceid=${deviceId}&appid=${appId}&response_type=code`;
+    return `${this.remoteApi.baseUrl}/v2/oauth2/authorize?client_id=${this.clientId}&state=${state}&deviceid=${deviceId}&appid=${appId}&response_type=code`;
   }
 
   /**
@@ -96,11 +101,12 @@ export class RemoteBootstrap {
   private _getRemoteApi(username: string, timeout?: number) {
     const self = this
       , baseUrl = `${self.remoteApi.baseUrl}/bridge`
-      , config = {
+      , config: ConfigParameters = {
         remote: true,
         clientId: this.clientId,
         clientSecret: this.clientSecret,
         baseUrl: baseUrl,
+        bridgeName: `remote:${this.remoteApi.clientId}`,
         username: username,
       }
     ;
@@ -112,8 +118,8 @@ export class RemoteBootstrap {
         },
         timeout: getTimeout(timeout)
       }
-      , transport = new Transport(create(clientConfig), username)
-      , api = new Api(config, transport, self.remoteApi)
+      , transport = new Transport(create(clientConfig), this.rateLimits.transportRateLimit, username)
+      , api = new Api(config, transport, this.rateLimits, self.remoteApi)
     ;
     return Promise.resolve(api);
   }

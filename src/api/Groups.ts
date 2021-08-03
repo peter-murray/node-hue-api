@@ -1,8 +1,8 @@
-import Bottleneck from "bottleneck";
 import { model } from '@peter-murray/hue-bridge-model';
 import { ApiDefinition } from './http/ApiDefinition';
 import { groupsApi } from './http/endpoints/groups';
 import { Api } from './Api';
+import { HueRateLimiter } from './HueRateLimiter';
 
 type GroupState = model.GroupState
 
@@ -25,13 +25,11 @@ type AnyGroup =
 
 export class Groups extends ApiDefinition {
 
-  private _groupStateLimiter: Bottleneck;
+  private _groupStateLimiter: HueRateLimiter;
 
   constructor(hueApi: Api) {
     super(hueApi);
-
-    // Set up a limiter on the group state changes from the library to once per second as per guidance documentation
-    this._groupStateLimiter = new Bottleneck({maxConcurrent: 1, minTime: 1000});
+    this._groupStateLimiter = new HueRateLimiter(hueApi.name, 'groups', hueApi.rateLimitConfig.groupRateLimit);
   }
 
   getAll(): Promise<AnyGroup[]> {

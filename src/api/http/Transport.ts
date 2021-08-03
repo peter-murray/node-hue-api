@@ -1,15 +1,10 @@
-import Bottleneck from 'bottleneck';
 import { ApiError } from '../../ApiError';
 import { parseErrors } from '../../util';
 import { ApiEndpoint } from './endpoints/ApiEndpoint';
 import { HueError } from '../../HueError';
 import { FetchResult, HttpClientFetch } from './HttpClientFetch';
-
-// The limiter configuration if nothing is specified
-const DEFAULT_LIMITER_CONFIG = {
-  maxConcurrent: 4,
-  minTime: 50,
-};
+import { RateLimit } from '../HueApiRateLimits';
+import { HueRateLimiter } from '../HueRateLimiter';
 
 export class Transport {
 
@@ -17,20 +12,15 @@ export class Transport {
 
   private _client: HttpClientFetch;
 
-  private _limiter: Bottleneck;
+  private readonly _limiter: HueRateLimiter;
 
-  constructor(client: HttpClientFetch, username?: string, queueConfig?: object) {
+  constructor(client: HttpClientFetch, rateLimiterConfig: RateLimit, username?: string) {
     this._username = username;
     this._client = client;
-    this._limiter = new Bottleneck(queueConfig || DEFAULT_LIMITER_CONFIG);
-    // this.configureLimiter(queueConfig || DEFAULT_LIMITER_CONFIG);
+    this._limiter = new HueRateLimiter('', 'transport', rateLimiterConfig);
   }
 
-  // configureLimiter(config: any) {
-  //   this._limiter = new Bottleneck(config);
-  // }
-
-  get limiter(): Bottleneck {
+  get limiter(): HueRateLimiter {
     return this._limiter;
   }
 

@@ -1,23 +1,29 @@
-import * as url from 'url';
 import { Transport } from './Transport';
 import { Api } from '../Api';
 import { request, create } from './HttpClientFetch';
+import { HueApiRateLimits } from '../HueApiRateLimits';
+import { ConfigParameters } from '../HueApiConfig';
 
 const SUPPRESS_WARNING = process.env.NODE_HUE_API_USE_INSECURE_CONNECTION != null;
 
 export class LocalInsecureBootstrap {
 
-  readonly baseUrl: string;
+  readonly baseUrl: URL;
 
   readonly hostname: string;
 
-  constructor(hostname: string, port?: number) {
-    this.baseUrl = url.format({protocol: 'http', hostname: hostname, port: port || 80});
+  readonly rateLimits: HueApiRateLimits;
+
+  constructor(hostname: string, rateLimits: HueApiRateLimits, port?: number) {
+    this.baseUrl = new URL(`http://${hostname}:${port || 80}`);
     this.hostname = hostname;
+    this.rateLimits = rateLimits;
   }
 
   connect(username: string, clientkey?: string) {
-    const baseUrl = this.baseUrl;
+    const baseUrl = this.baseUrl
+      , rateLimits = this.rateLimits
+    ;
 
     if (!SUPPRESS_WARNING) {
       console.log('WARNING: You are using this library in an insecure way!\n'
@@ -26,19 +32,20 @@ export class LocalInsecureBootstrap {
       );
     }
 
-    return request({method: 'GET', url: `${baseUrl}/api/config`})
+    return request({method: 'GET', url: `${baseUrl.href}api/config`})
       .then(() => {
-        const apiBaseUrl = `${baseUrl}/api`
-          , transport = new Transport(create({baseURL: apiBaseUrl}), username)
-          , config = {
+        const apiBaseUrl = `${baseUrl.href}api`
+          , transport = new Transport(create({baseURL: apiBaseUrl}), rateLimits.transportRateLimit, username)
+          , config: ConfigParameters = {
             remote: false,
             baseUrl: apiBaseUrl,
-            clientkey: clientkey,
+            bridgeName: this.hostname,
+            clientKey: clientkey,
             username: username,
           }
         ;
 
-        return new Api(config, transport);
+        return new Api(config, transport, rateLimits);
       });
   }
 }

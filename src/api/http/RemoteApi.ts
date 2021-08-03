@@ -15,7 +15,7 @@ export class RemoteApi {
   private _config: {
     clientId: string,
     clientSecret: string,
-    baseUrl: string,
+    baseUrl: URL,
   };
 
   private _tokens: OAuthTokens;
@@ -24,7 +24,7 @@ export class RemoteApi {
     this._config = {
       clientId: clientId,
       clientSecret: clientSecret,
-      baseUrl: 'https://api.meethue.com'
+      baseUrl: new URL('https://api.meethue.com'),
     };
 
     this._tokens = new OAuthTokens();
@@ -39,7 +39,7 @@ export class RemoteApi {
   }
 
   get baseUrl(): string {
-    return this._config.baseUrl;
+    return this._config.baseUrl.href;
   }
 
   get accessToken(): string | undefined {
@@ -264,8 +264,6 @@ export class RemoteApi {
     });
   }
 
-
-  //TODO deal with err object
   private _respondWithDigest(http: HttpClientFetch, res: FetchResult, requestConfig: RequestConfig) {
     // We need this information to build the digest Authorization header and get the nonce that we can use for the
     // request that will be properly validated and issue us the authorization tokens.
@@ -287,8 +285,8 @@ export class RemoteApi {
   }
 
   private _processTokens(start: number, data: TokenResponse): Tokens {
-    this.setAccessToken(data.access_token, start + (data.access_token_expires_in * 1000));
-    this.setRefreshToken(data.refresh_token, start + (data.refresh_token_expires_in * 1000));
+    this.setAccessToken(data.access_token, start + (data.expires_in * 1000));
+    this.setRefreshToken(data.refresh_token, start + (data.expires_in * 1000));
 
     // We have just set the tokens
     return {
@@ -302,9 +300,9 @@ export class RemoteApi {
 
 type TokenResponse = {
   access_token: string,
-  access_token_expires_in: number,
+  expires_in: number,
   refresh_token: string,
-  refresh_token_expires_in: number,
+  token_type: string,
 }
 
 //TODO define the type of the response in the error header
