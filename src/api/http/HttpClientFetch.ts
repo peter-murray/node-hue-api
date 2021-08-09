@@ -1,6 +1,6 @@
 import fetch, { Response } from 'node-fetch';
 
-const {URLSearchParams} = require('url');
+import {URLSearchParams} from 'url';
 import { Agent as HttpsAgent } from 'https';
 import { Agent as HttpAgent } from 'http';
 import HttpError from './HttpError';
