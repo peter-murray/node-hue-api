@@ -16,3 +16,5 @@ scratch.js
 
 # Distribution Files
 dist
+!dist/cjs/package.json
+!dist/esm/package.json
