@@ -20,4 +20,4 @@ export function nupnp(): Promise<DiscoveryBridgeDefinition[]> {
         throw new ApiError(`Status code unexpected when using N-UPnP endpoint: ${response.status}`);
       }
     });
-};
+}

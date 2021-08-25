@@ -4,6 +4,10 @@ import { Agent } from 'https';
 export function getDiscoveryMeetHueHttpsAgent(): Agent {
   const discoveryAgent = new Agent();
 
+  if (!discoveryAgent.options) {
+    discoveryAgent.options = {};
+  }
+
   discoveryAgent.options.ca = '-----BEGIN CERTIFICATE-----\n' +
     'MIIGLTCCBRWgAwIBAgIQDRFjcdUbFwTU3xg1Bre3yzANBgkqhkiG9w0BAQsFADBN\n' +
     'MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMScwJQYDVQQDEx5E\n' +
@@ -93,4 +97,4 @@ export function getDiscoveryMeetHueHttpsAgent(): Agent {
     '-----END CERTIFICATE-----\n';
 
   return discoveryAgent;
-};
+}
