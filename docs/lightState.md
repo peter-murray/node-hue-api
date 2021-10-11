@@ -341,7 +341,7 @@ The `white(temp, bri)` function will set the state to white, using the provided 
 * `temp` is the `ct` value also known as the Mired color temperature and can be set to a value between `153` and `500` 
     (corresponding to 6500K and 2000K respectively). This is the same as [ct()](#ct)
 * `bri` is the brightness expressed as a percentage from `0` to `100`. Note, `0%` does not mean off in this case, it will correspond to 
-    the lowest bri value for the light. This is the same as [breightness()](#brightness)
+    the lowest bri value for the light. This is the same as [brightness()](#brightness)
 
 
 ### hsb()
@@ -350,7 +350,7 @@ The `hsb(hue, saturation, brightness)` function will set an `hsb` value on the l
 * `hue`: is the hue value expressed as a degree value between `0` and `360`.
 * `saturation`: is the saturation expressed as a percentage from `0` to `100`. This is the same as [saturation()](#saturation)
 * `brightness` is the brightness expressed as a percentage from `0` to `100`. Note, `0%` does not mean off in this case, it will correspond to 
-    the lowest bri value for the light. This is the same as [breightness()](#brightness)
+    the lowest bri value for the light. This is the same as [brightness()](#brightness)
 
 
 ### hsl()
