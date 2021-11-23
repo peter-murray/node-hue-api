@@ -106,7 +106,7 @@ As of version 4.0+ of the library there are Rate limiters being used in three pl
 These defaults are not currently configurable, but have been implemented to conform to the best practices defined in the 
 Hue API documentation. If you are facing issues with this, then raise a support ticket via an Issue.
 
-_Note: these do NOT (and cannot) take into account all access to the Hue Bridge, so if you have other softare that also 
+_Note: these do NOT (and cannot) take into account all access to the Hue Bridge, so if you have other software that also 
 accesses the bridge, it is still possible to overload it with requests._
 
 
@@ -127,7 +127,7 @@ Bridge Certificate:
   valid to:      Jan  1 00:00:00 2038 GMT
   serial number: xxxxxxx
 
-Performing validation of bridgeId "xxx" against certifcate subject "xxx"; matched? true
+Performing validation of bridgeId "xxx" against certificate subject "xxx"; matched? true
 URL Placeholders:
   username: { type:string, optional:false, defaultValue:null }
 Headers: {"Accept":"application/json"}
@@ -160,7 +160,7 @@ Headers: {"Accept":"application/json","Content-Type":"application/json"}
 }
 ```
 
-_Note: You should be careful as to who can gain access to this output as it will contain sensative data including the 
+_Note: You should be careful as to who can gain access to this output as it will contain sensitive data including the 
 MAC Address of the bridge, IP Address and username values._
 
 The above warning applies here with respect to schedule when **not** in debug mode, as the schedule endpoints will contain the
@@ -171,7 +171,7 @@ username value (that can be used to authenticate against the bridge) in the payl
 In the version 4.x releases of this library all backwards compatibility to the much older Q promise and callback
 functionality was removed (as was indicated in the 3.x documentation). 
 
-What was provided in the 3.x versions of this library to provide some backward comaptibility has now been moved into 
+What was provided in the 3.x versions of this library to provide some backward compatibility has now been moved into 
 another library [node-hue-api-v2-shim](https://github.com/peter-murray/node-hue-api-v2-shim).
 
 _The `node-hue-api-v2-shim` is only provided to allow you to continue to use the older v2 API functionality in code you 
@@ -211,7 +211,7 @@ API provided in this library (which is where any new features and improvements w
 The v3 APIs are documented using example code and links to more complex/complete examples for each API calls, consult 
 the documentation links [above](#v3-api).
 
-Alternatively take a look at the [examples directory](examples/v3) in this repository for complete self contained 
+Alternatively take a look at the [examples directory](examples/v3) in this repository for complete self-contained 
 runnable example code.
 
 ---
