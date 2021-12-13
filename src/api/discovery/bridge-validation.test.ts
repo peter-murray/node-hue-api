@@ -103,7 +103,7 @@ describe('bridge-validation', () => {
       try {
         await bridgeValidation.getBridgeConfig({internalipaddress: ipAddress}, timeout);
         expect.fail('Should have failed');
-      } catch (err) {
+      } catch (err: any) {
         expect(err.message).to.contain('network timeout');
       }
     });
@@ -135,7 +135,7 @@ describe('bridge-validation', () => {
       try {
         await bridgeValidation.getBridgeDescription({internalipaddress: ipAddress}, timeout);
         expect.fail('Should have failed');
-      } catch (err) {
+      } catch (err: any) {
         expect(err.message).to.contain('network timeout');
       }
     });

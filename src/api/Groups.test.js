@@ -440,7 +440,8 @@ describe('Hue API #groups', function () {
       });
 
       it('should update the name and lights', async () => {
-        const newLights = [4, 5]
+        // TODO hardcoded flaky test when hue config changes
+        const newLights = [4, 6]
           , newName = `renamed-${Date.now()}`
           ;
         group.name = newName;

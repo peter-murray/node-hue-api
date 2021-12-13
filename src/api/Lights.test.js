@@ -78,7 +78,8 @@ describe('Hue API #lights', function () {
   describe('#getLightByName()', () => {
 
     it('should get light with a valid name', async () => {
-      const name = 'Office Desk Left'
+      // TODO hardcoded flaky test when hue config changes
+      const name = 'Monitor Left'
         , result = await hue.lights.getLightByName(name)
       ;
 

@@ -143,12 +143,14 @@ describe('Hue API #users', () => {
 
 
       it('should get a list of user accounts for appName, deviceName', async () => {
-        const appName = 'node-hue-api'
-          , deviceName = 'example-code' //TODO hardcoded value, pull this out into test data
+        //TODO hardcoded value, pull this out into test data
+        const appName = 'Hue 3'
+          , deviceName = 'iPhone'
           , users = await authenticatedHue.users.getUserByName(appName, deviceName)
         ;
 
         expect(users).to.be.instanceof(Array);
+        expect(users).to.have.length.greaterThan(0);
 
         expect(users[0]).to.have.property('name').to.equal(`${appName}#${deviceName}`);
         expect(users[0]).to.have.property('username');
