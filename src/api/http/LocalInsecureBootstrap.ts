@@ -3,6 +3,7 @@ import { Api } from '../Api';
 import { request, create } from './HttpClientFetch';
 import { HueApiRateLimits } from '../HueApiRateLimits';
 import { ConfigParameters } from '../HueApiConfig';
+import { getHttpUrl } from './urlUtil';
 
 const SUPPRESS_WARNING = process.env.NODE_HUE_API_USE_INSECURE_CONNECTION != null;
 
@@ -15,7 +16,7 @@ export class LocalInsecureBootstrap {
   readonly rateLimits: HueApiRateLimits;
 
   constructor(hostname: string, rateLimits: HueApiRateLimits, port?: number) {
-    this.baseUrl = new URL(`http://${hostname}:${port || 80}`);
+    this.baseUrl = getHttpUrl(hostname, port || 80);
     this.hostname = hostname;
     this.rateLimits = rateLimits;
   }

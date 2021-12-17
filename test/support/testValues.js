@@ -24,9 +24,9 @@ function loadData() {
     testDataFile = path.join(process.env.LOCALAPPDATA, '.node-hue-api');
   } else if (platform === 'darwin') {
     testDataFile = path.join(process.env.HOME, '.node-hue-api');
+  } else if (platform === 'linux') {
+    testDataFile = path.join(process.env.HOME, '.node-hue-api');
   }
-
-  //TODO add support for Linux
 
   let data = null;
   if (fs.existsSync(testDataFile)) {

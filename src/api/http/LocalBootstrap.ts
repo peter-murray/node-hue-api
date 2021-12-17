@@ -8,7 +8,8 @@ import { Transport } from './Transport';
 import { HueApiRateLimits } from '../HueApiRateLimits';
 
 import { getSSLCertificate, SSLCertificate } from './sslCertificate';
-import { ConfigParameters, HueApiConfig } from '../HueApiConfig';
+import { ConfigParameters } from '../HueApiConfig';
+import { cleanHostname, getHttpsUrl } from './urlUtil';
 
 const DEBUG: boolean = /node-hue-api/.test(process.env.NODE_DEBUG || '');
 
@@ -31,8 +32,8 @@ export class LocalBootstrap {
    * @param {number=} port The port number for the connections, defaults to 443 and should not need to be specified in the majority of use cases.
    */
   constructor(hostname: string, rateLimits: HueApiRateLimits, port?: number) {
-    this.baseUrl = new URL(`https://${hostname}:${port || 443}`);
-    this.hostname = hostname;
+    this.baseUrl = getHttpsUrl(hostname, port || 443);
+    this.hostname = cleanHostname(hostname);
     this.rateLimits = rateLimits;
   }
 
