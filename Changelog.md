@@ -1,5 +1,8 @@
 # Change Log
 
+## 5.0.0-beta.10
+- Fixes #208 issues with discovery.meethue.com CA cert chain changes
+
 ## 5.0.0-beta.4
 - More fixes associated with OAuth2 remote endpoint changes fixing new error from #201
 
