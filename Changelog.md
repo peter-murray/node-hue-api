@@ -1,5 +1,8 @@
 # Change Log
 
+## 4.0.11
+- Fixes change in the discovery.meethue.com CA certificate chain, Issue #208.
+
 ## 4.0.10
 - Fixes reported vulnerabilities in axios and other dev based dependencies, Issue #188.
 
