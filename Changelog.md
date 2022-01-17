@@ -1,5 +1,8 @@
 # Change Log
 
+## 5.0.0-beta.11
+- Fixing swapped default rate limits for groups and lights as reported in #196
+
 ## 5.0.0-beta.10
 - Fixes #208 issues with discovery.meethue.com CA cert chain changes
 
