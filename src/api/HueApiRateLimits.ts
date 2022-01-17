@@ -41,8 +41,8 @@ export class HueApiRateLimits {
     } else {
       this._rateLimits = {
         transport: DEFAULT_RATE_LIMITS,
-        group: DEFAULT_LIGHT_RATE_LIMITS,
-        light: DEFAULT_GROUP_RATE_LIMITS,
+        group: DEFAULT_GROUP_RATE_LIMITS,
+        light: DEFAULT_LIGHT_RATE_LIMITS,
       }
     }
   }
