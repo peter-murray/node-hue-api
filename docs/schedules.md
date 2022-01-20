@@ -103,7 +103,7 @@ api.schedules.createSchedule(schedule)
 
 The function will return a Promise that will resolve with a corresponding `Schedule` with a populated `id` attribute.
 
-A complete code sample for this function is available [here](../examples/v3/schedule/createSchedule.js).
+A complete code sample for this function is available [here](../examples/v3/schedules/createSchedule.js).
 
 
 
@@ -145,7 +145,7 @@ indicating if the value was modified.
 }
 ```
 
-A complete code sample for this function is available [here](../examples/v3/schedule/updateSchedule.js).
+A complete code sample for this function is available [here](../examples/v3/schedules/updateSchedule.js).
 
 
 
