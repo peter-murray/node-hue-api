@@ -133,7 +133,7 @@ describe('Hue API #lights', function () {
     });
 
     it('should allow for a custom rate limit', async () => {
-      const rateLimits = new RateLimitConfig({light: {maxConcurrent:1, minTime:100}});
+      const rateLimits = new RateLimitConfig({light: {maxConcurrent:1, minTime:30}});
 
       const searchResults = await discovery.nupnpSearch();
       const localApi = v3.api.createLocal(searchResults[0].ipaddress, undefined, rateLimits);
@@ -144,7 +144,7 @@ describe('Hue API #lights', function () {
       const fastHueSpeed = await multipleRequests(fastHue, requestCount);
 
       // The faster limits should confirm that the faster api is in fact that (this is an arbitary amount)...
-      expect(fastHueSpeed).to.be.lessThan(normalHueSpeed - 1000);
+      expect(fastHueSpeed).to.be.lessThan(normalHueSpeed - 100);
     });
   });
 
