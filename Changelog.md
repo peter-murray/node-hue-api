@@ -1,5 +1,8 @@
 # Change Log
 
+## 5.0.0-beta.13
+- Fixing problem with timeouts not being applied from the agent #212
+
 ## 5.0.0-beta.11
 - Fixing swapped default rate limits for groups and lights as reported in #196
 
