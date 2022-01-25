@@ -4,6 +4,7 @@ import {URLSearchParams} from 'url';
 import { Agent as HttpsAgent } from 'https';
 import { Agent as HttpAgent } from 'http';
 import HttpError from './HttpError';
+import { time } from '@peter-murray/hue-bridge-model';
 
 export type HTTPHeaders = {
   [key: string]: string
@@ -14,6 +15,7 @@ type HttpClientFetchConfig = {
   baseURL?: string,
   httpAgent?: HttpAgent,
   httpsAgent?: HttpsAgent,
+  timeout?: number,
 }
 
 type AgentConfig = {
@@ -69,6 +71,13 @@ export class HttpClientFetch {
     return !!this.baseURL;
   }
 
+  getTimeout(timeout: number | undefined): number {
+    if (timeout !== undefined) {
+      return timeout;
+    }
+    return this._config?.timeout || 0;
+  }
+
   refreshAuthorizationHeader(token: string) {
     if (!this._config.headers) {
       this._config.headers = {};
@@ -111,9 +120,13 @@ export class HttpClientFetch {
       , config: FetchRequestConfig = {
         method: req.method,
         headers: headers,
-        timeout: req.timeout || 0,
+        timeout: this.getTimeout(req.timeout),
       }
     ;
+
+    // We are setting the timeout on the HTTP(s) agent, but node-fetch does not appear to be respecting this setting
+    // from the agent, so taking to explicitly extracting the timeout from the agent and setting it on the API call
+    // if a timeout is not specified as part of the request.
 
     if (isJson) {
       headers['Content-Type'] = 'application/json';

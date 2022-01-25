@@ -21,7 +21,7 @@ export class LocalInsecureBootstrap {
     this.rateLimits = rateLimits;
   }
 
-  connect(username: string, clientkey?: string) {
+  connect(username: string, clientkey?: string, timeout?: number) {
     const baseUrl = this.baseUrl
       , rateLimits = this.rateLimits
     ;
@@ -36,17 +36,24 @@ export class LocalInsecureBootstrap {
     return request({method: 'GET', url: `${baseUrl.href}api/config`})
       .then(() => {
         const apiBaseUrl = `${baseUrl.href}api`
-          , transport = new Transport(create({baseURL: apiBaseUrl}), rateLimits.transportRateLimit, username)
+          , fetchConfig = {
+              baseURL: apiBaseUrl,
+              timeout: getTimeout(timeout)
+            }
+          , transport = new Transport(create(fetchConfig), rateLimits.transportRateLimit, username)
           , config: ConfigParameters = {
-            remote: false,
-            baseUrl: apiBaseUrl,
-            bridgeName: this.hostname,
-            clientKey: clientkey,
-            username: username,
-          }
+              remote: false,
+              baseUrl: apiBaseUrl,
+              bridgeName: this.hostname,
+              clientKey: clientkey,
+              username: username,
+            }
         ;
 
         return new Api(config, transport, rateLimits);
       });
   }
+}
+function getTimeout(timeout?: number): number {
+  return timeout || 20000;
 }

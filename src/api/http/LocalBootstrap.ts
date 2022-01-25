@@ -10,6 +10,7 @@ import { HueApiRateLimits } from '../HueApiRateLimits';
 import { getSSLCertificate, SSLCertificate } from './sslCertificate';
 import { ConfigParameters } from '../HueApiConfig';
 import { cleanHostname, getHttpsUrl } from './urlUtil';
+import { time } from '@peter-murray/hue-bridge-model';
 
 const DEBUG: boolean = /node-hue-api/.test(process.env.NODE_DEBUG || '');
 
@@ -58,7 +59,8 @@ export class LocalBootstrap {
         method: 'GET',
         url: `${baseUrl}api/config`,
         json: true,
-        httpsAgent: INITIAL_HTTPS_AGENT
+        httpsAgent: INITIAL_HTTPS_AGENT,
+        timeout: getTimeout(timeout),
       }).then(res => {
         const bridgeId = res.data.bridgeid.toLowerCase();
 
@@ -84,7 +86,7 @@ export class LocalBootstrap {
                 keepAlive: true,
                 keepAliveMsecs: 10000,
                 maxSockets: 50,
-                timeout: getTimeout(timeout),
+                // timeout: getTimeout(timeout), //node-fetch appears to ignore this
                 rejectUnauthorized: false,
                 // ca: cert.pemEncoded //TODO there are still issues here, as the certificate being self signed is failing somewhere deeper in TLS code
               });
@@ -96,14 +98,19 @@ export class LocalBootstrap {
           })
           .then(agent => {
             const apiBaseUrl = `${baseUrl}api`
-              , transport = new Transport(httpClient.create({baseURL: apiBaseUrl, httpsAgent: agent}), this.rateLimits.transportRateLimit, username)
+              , fetchConfig = {
+                  baseURL: apiBaseUrl,
+                  httpsAgent: agent,
+                  timeout: getTimeout(timeout)
+                }
+              , transport = new Transport(httpClient.create(fetchConfig), this.rateLimits.transportRateLimit, username)
               , config: ConfigParameters = {
-                remote: false,
-                baseUrl: apiBaseUrl,
-                bridgeName: this.hostname,
-                clientKey: clientkey,
-                username: username,
-              }
+                  remote: false,
+                  baseUrl: apiBaseUrl,
+                  bridgeName: this.hostname,
+                  clientKey: clientkey,
+                  username: username,
+                }
             ;
 
             return new Api(config, transport, this.rateLimits);
