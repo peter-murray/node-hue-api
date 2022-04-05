@@ -23,7 +23,7 @@ const REMOTE_ACCESS_CREDENTIALS = {
   }
 }
 
-const remoteBootstrap = v3.api.createRemote(REMOTE_ACCESS_CREDENTIALS.clientId, REMOTE_ACCESS_CREDENTIALS.clientId);
+const remoteBootstrap = v3.api.createRemote(REMOTE_ACCESS_CREDENTIALS.clientId, REMOTE_ACCESS_CREDENTIALS.clientSecret);
 
 remoteBootstrap.connectWithTokens(
     REMOTE_ACCESS_CREDENTIALS.tokens.access.value,
