@@ -4,7 +4,9 @@ import { BridgeConfigData } from './discoveryTypes';
 
 describe('discovery', () => {
 
-  describe('#nupnpSearch()', () => {
+  describe('#nupnpSearch()', function () {
+
+    this.timeout(10000);
 
     it('should discover a bridge', async () => {
       const results = await discovery.nupnpSearch();
@@ -21,13 +23,12 @@ describe('discovery', () => {
     });
   });
 
-
-  describe('#upnpSearch()', function ()  {
+  describe('#mdnsSearch()', function () {
 
     this.timeout(10000);
 
     it('should discover a bridge', async () => {
-      const results = await discovery.upnpSearch(3000);
+      const results = await discovery.mdnsSearch();
 
       expect(results).to.be.instanceOf(Array);
       expect(results).to.have.length.greaterThan(0);
@@ -41,7 +42,6 @@ describe('discovery', () => {
       expect(results[0].model).to.have.property('serial');
     });
   });
-
 
   describe('#description()', function ()  {
 

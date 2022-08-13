@@ -57,21 +57,13 @@ export function getBridgeDescription(bridge: DiscoveryBridgeDefinition, timeout?
   const ipAddress = bridge.internalipaddress;
 
   return request({
-    method: 'GET',
-    url: `http://${ipAddress}/description.xml`,
-    timeout: timeout || DATA_TIMEOUT,
-    headers: {
-      accept: 'text/xml'
-    }
-  })
-  // return axios.request({
-  //     method: 'GET',
-  //     url: `http://${ipAddress}/description.xml`,
-  //     timeout: timeout | DATA_TIMEOUT,
-  //     headers: {
-  //       accept: 'text/xml'
-  //     }
-  //   })
+      method: 'GET',
+      url: `http://${ipAddress}/description.xml`,
+      timeout: timeout || DATA_TIMEOUT,
+      headers: {
+        accept: 'text/xml'
+      }
+    })
     .catch(err => {
       throw new ApiError(`Failed to resolve the XML Description for the bridge at ${ipAddress}; ${err.message}`);
     })

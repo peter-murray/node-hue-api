@@ -1,14 +1,19 @@
 import * as bridgeValidator from './bridge-validation';
 import { nupnp } from './nupnp';
-import { SSDPSearch } from './UPnP';
+import { mDNSSearch } from './mDNS';
 import {
   BridgeConfigError, BridgeDiscoveryResponse, DiscoveryBridgeDefinition, DiscoveryBridgeDescription
 } from './discoveryTypes';
 
 
-export function upnpSearch(timeout?: number): Promise<DiscoveryBridgeDescription[]> {
-  const upnp = new SSDPSearch();
-  return upnp.search(timeout).then(loadDescriptions);
+export function mdnsSearch(timeout?: number): Promise<DiscoveryBridgeDescription[]> {
+  const mDNSearch = new mDNSSearch();
+
+  return mDNSearch.search(timeout)
+    .then((data) => {
+      mDNSearch.finished();
+      return loadDescriptions(data);
+    });
 }
 
 export function nupnpSearch(): Promise<BridgeDiscoveryResponse[]> {

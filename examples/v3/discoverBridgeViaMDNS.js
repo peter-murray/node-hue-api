@@ -6,7 +6,7 @@ const discovery = require('../../dist/cjs').discovery
 ;
 
 async function getBridge() {
-  const results = await discovery.upnpSearch();
+  const results = await discovery.mdnsSearch();
 
   // Results will be an array of bridges that were found
   console.log(JSON.stringify(results, null, 2));

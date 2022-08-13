@@ -2,19 +2,21 @@ import { model } from '@peter-murray/hue-bridge-model';
 import { v3Model } from './v3Model';
 import { deprecatedFunction } from './util';
 import * as api from './api';
-import { description, nupnpSearch, upnpSearch } from './api/discovery';
+import { description, nupnpSearch, mdnsSearch } from './api/discovery';
+
 
 // Definition of the v3 API for node-hue-api
 const v3 = {
   api: api,
 
   discovery: {
+    // Have overridden this with mDNS searching as UPnP is no more and was removed from the bridge
     upnpSearch: (timeout: number) => {
       deprecatedFunction(
         '6.x',
         `require('node-hue-api').v3.discovery.upnpSearch()`,
-        `Use require('node-hue-api').discovery.upnpSearch()`);
-      return upnpSearch(timeout);
+        `Use require('node-hue-api').discovery.mdnsSearch()`);
+      return mdnsSearch(timeout);
     },
 
     nupnpSearch: () => {
