@@ -29,7 +29,7 @@
     "url": "https://github.com/peter-murray/node-hue-api/issues"
   },
   "dependencies": {
-    "@peter-murray/hue-bridge-model": "^2.0.1",
+    "@peter-murray/hue-bridge-model": "^2.1.0",
     "bonjour": "^3.5.0",
     "bottleneck": "^2.19.5",
     "node-fetch": "^2.6.1"
