@@ -1,5 +1,8 @@
 # Change Log
 
+## 5.0.0-beta.15
+- Adding support for Hue Tap Dial switches #226
+
 ## 5.0.0-beta.13
 - Fixing problem with timeouts not being applied from the agent #212
 
