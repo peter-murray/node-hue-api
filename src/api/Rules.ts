@@ -1,8 +1,8 @@
-import { ApiDefinition } from './http/ApiDefinition';
-import { rulesApi } from './http/endpoints/rules';
+import { ApiDefinition } from './http/ApiDefinition.js';
+import { rulesApi } from './http/endpoints/rules.js';
 import { model } from '@peter-murray/hue-bridge-model';
-import { KeyValueType } from '../commonTypes';
-import { Api } from './Api';
+import { KeyValueType } from '../commonTypes.js';
+import { Api } from './Api.js';
 
 type Rule = model.Rule;
 type RuleId = number | Rule;

@@ -1,12 +1,12 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { ApiDefinition } from './http/ApiDefinition';
-import { ApiError } from '../ApiError';
-import { lightsApi } from './http/endpoints/lights';
+import { ApiDefinition } from './http/ApiDefinition.js';
+import { ApiError } from '../ApiError.js';
+import { lightsApi } from './http/endpoints/lights.js';
 
-import { LightIdPlaceholder } from './placeholders/LightIdPlaceholder';
-import { KeyValueType } from '../commonTypes';
-import { Api } from './Api';
-import { HueRateLimiter } from './HueRateLimiter';
+import { LightIdPlaceholder } from './placeholders/LightIdPlaceholder.js';
+import { KeyValueType } from '../commonTypes.js';
+import { Api } from './Api.js';
+import { HueRateLimiter } from './HueRateLimiter.js';
 
 const LIGHT_ID_PARSER = new LightIdPlaceholder();
 
@@ -87,7 +87,7 @@ export class Lights extends ApiDefinition {
     const lightId: number = getLightId(id);
 
     return this.hueApi.getLightDefinition(lightId)
-      .then(device => {
+      .then((device: any) => {
         if (!device) {
           throw new ApiError(`Light with id:${lightId} was not found on this bridge`);
         }

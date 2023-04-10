@@ -1,10 +1,10 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint';
-import { GroupIdPlaceholder } from '../../placeholders/GroupIdPlaceholder';
-import { ApiError } from '../../../ApiError';
+import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint.js';
+import { GroupIdPlaceholder } from '../../placeholders/GroupIdPlaceholder.js';
+import { ApiError } from '../../../ApiError.js';
 
-import { parseErrors, wasSuccessful } from '../../../util';
-import { KeyValueType } from '../../../commonTypes';
+import { parseErrors, wasSuccessful } from '../../../util.js';
+import { KeyValueType } from '../../../commonTypes.js';
 
 const GroupState = model.GroupState
   , instanceChecks = model.instanceChecks

@@ -1,7 +1,7 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { configurationApi } from './http/endpoints/configuration';
-import { ApiDefinition } from './http/ApiDefinition';
-import { Api } from './Api';
+import { configurationApi } from './http/endpoints/configuration.js';
+import { ApiDefinition } from './http/ApiDefinition.js';
+import { Api } from './Api.js';
 
 export class Configuration extends ApiDefinition {
 

@@ -1,6 +1,6 @@
-import { ApiDefinition } from './http/ApiDefinition';
-import { capabilitiesApi } from './http/endpoints/capabilities';
-import { Api } from './Api';
+import { ApiDefinition } from './http/ApiDefinition.js';
+import { capabilitiesApi } from './http/endpoints/capabilities.js';
+import { Api } from './Api.js';
 
 export class Capabilities extends ApiDefinition {
 

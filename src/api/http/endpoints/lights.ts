@@ -1,10 +1,10 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { LightIdPlaceholder } from '../../placeholders/LightIdPlaceholder';
-import { ApiEndpoint } from './ApiEndpoint';
-import { rgbToXY } from '../../../rgb';
-import { ApiError } from '../../../ApiError';
-import { parseErrors, wasSuccessful } from '../../../util';
-import { KeyValueType } from '../../../commonTypes';
+import { LightIdPlaceholder } from '../../placeholders/LightIdPlaceholder.js';
+import { ApiEndpoint } from './ApiEndpoint.js';
+import { rgbToXY } from '../../../rgb.js';
+import { ApiError } from '../../../ApiError.js';
+import { parseErrors, wasSuccessful } from '../../../util.js';
+import { KeyValueType } from '../../../commonTypes.js';
 
 const LIGHT_ID_PLACEHOLDER = new LightIdPlaceholder();
 

@@ -1,8 +1,8 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { v3Model } from './v3Model';
-import { deprecatedFunction } from './util';
-import * as api from './api';
-import { description, nupnpSearch, mdnsSearch } from './api/discovery';
+import { v3Model } from './v3Model.js';
+import { deprecatedFunction } from './util.js';
+import * as api from './api/index.js';
+import { description, nupnpSearch, mdnsSearch } from './api/discovery/index.js';
 
 
 // Definition of the v3 API for node-hue-api

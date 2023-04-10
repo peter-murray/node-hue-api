@@ -1,10 +1,10 @@
-import { ApiError } from '../../ApiError';
-import { parseErrors } from '../../util';
-import { ApiEndpoint } from './endpoints/ApiEndpoint';
-import { HueError } from '../../HueError';
-import { FetchResult, HttpClientFetch } from './HttpClientFetch';
-import { RateLimit } from '../HueApiRateLimits';
-import { HueRateLimiter } from '../HueRateLimiter';
+import { ApiError } from '../../ApiError.js';
+import { parseErrors } from '../../util.js';
+import { ApiEndpoint } from './endpoints/ApiEndpoint.js';
+import { HueError } from '../../HueError.js';
+import { FetchResult, HttpClientFetch } from './HttpClientFetch.js';
+import { RateLimit } from '../HueApiRateLimits.js';
+import { HueRateLimiter } from '../HueRateLimiter.js';
 
 export class Transport {
 

@@ -1,6 +1,6 @@
-import { HueError } from './HueError';
-import { KeyValueType } from './commonTypes';
-import { ApiError } from './ApiError';
+import { HueError } from './HueError.js';
+import { KeyValueType } from './commonTypes.js';
+import { ApiError } from './ApiError.js';
 
 const suppressDeprecationWarnings = process.env.NODE_HUE_API_SUPPRESS_DEPRICATION_WARNINGS || false;
 

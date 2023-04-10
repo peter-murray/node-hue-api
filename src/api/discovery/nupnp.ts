@@ -1,7 +1,7 @@
-import {request} from '../http/HttpClientFetch';
-import { DiscoveryBridgeDefinition } from './discoveryTypes';
-import { getDiscoveryMeetHueHttpsAgent } from './ca-chain';
-import { ApiError } from '../../ApiError';
+import {request} from '../http/HttpClientFetch.js';
+import { DiscoveryBridgeDefinition } from './discoveryTypes.js';
+import { getDiscoveryMeetHueHttpsAgent } from './ca-chain.js';
+import { ApiError } from '../../ApiError.js';
 
 export function nupnp(): Promise<DiscoveryBridgeDefinition[]> {
   return request({

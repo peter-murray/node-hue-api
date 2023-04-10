@@ -1,12 +1,12 @@
-import {request} from '../http/HttpClientFetch';
+import {request} from '../http/HttpClientFetch.js';
 import {
   DiscoveryBridgeDefinition,
   DiscoveryBridgeDescription,
   DiscoveryBridgeModel,
   DiscoveryBridgeIcon,
   SpecVersion, BridgeConfigData
-} from './discoveryTypes';
-import { ApiError } from '../../ApiError';
+} from './discoveryTypes.js';
+import { ApiError } from '../../ApiError.js';
 
 const FRIENDLY_NAME = /<friendlyName>(.*)<\/friendlyName/sm
   , MODEL_NAME = /<modelName>(.*)<\/modelName/sm

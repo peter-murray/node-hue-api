@@ -1,8 +1,8 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { ApiDefinition } from './http/ApiDefinition';
-import { groupsApi } from './http/endpoints/groups';
-import { Api } from './Api';
-import { HueRateLimiter } from './HueRateLimiter';
+import { ApiDefinition } from './http/ApiDefinition.js';
+import { groupsApi } from './http/endpoints/groups.js';
+import { Api } from './Api.js';
+import { HueRateLimiter } from './HueRateLimiter.js';
 
 type GroupState = model.GroupState
 

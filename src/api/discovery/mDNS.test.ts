@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { mDNSSearch } from './mDNS';
+import { mDNSSearch } from './mDNS.js';
 
 describe('mDNS', function () {
 

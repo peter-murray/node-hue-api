@@ -1,6 +1,6 @@
 import { types } from '@peter-murray/hue-bridge-model';
-import { ApiError } from '../../ApiError';
-import { KeyValueType } from '../../commonTypes';
+import { ApiError } from '../../ApiError.js';
+import { KeyValueType } from '../../commonTypes.js';
 
 type Type = types.BaseType<any>;
 

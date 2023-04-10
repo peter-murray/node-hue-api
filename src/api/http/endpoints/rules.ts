@@ -1,9 +1,9 @@
 import {model} from '@peter-murray/hue-bridge-model';
-import { RuleIdPlaceholder } from '../../placeholders/RuleIdPlaceholder';
-import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint';
-import { extractUpdatedAttributes, parseErrors, wasSuccessful } from '../../../util';
-import { ApiError } from '../../../ApiError';
-import { KeyValueType } from '../../../commonTypes';
+import { RuleIdPlaceholder } from '../../placeholders/RuleIdPlaceholder.js';
+import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint.js';
+import { extractUpdatedAttributes, parseErrors, wasSuccessful } from '../../../util.js';
+import { ApiError } from '../../../ApiError.js';
+import { KeyValueType } from '../../../commonTypes.js';
 
 const instanceChecks = model.instanceChecks
 

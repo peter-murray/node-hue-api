@@ -1,10 +1,9 @@
 import {expect} from 'chai';
 
-import * as bridgeValidation from './bridge-validation';
-import { mDNSSearch } from "./mDNS";
+import * as bridgeValidation from './bridge-validation.js';
+import { mDNSSearch } from "./mDNS.js";
 
 describe('bridge-validation', () => {
-
 
   describe('#parseXmlDescription()', () => {
 

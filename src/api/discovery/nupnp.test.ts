@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import { nupnp } from './nupnp';
+import { nupnp } from './nupnp.js';
 
 describe('N-UPnP', () => {
 

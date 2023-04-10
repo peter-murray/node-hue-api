@@ -1,10 +1,10 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { extractUpdatedAttributes, parseErrors, wasSuccessful } from '../../../util';
-import { SceneIdPlaceholder } from '../../placeholders/SceneIdPlaceholder';
-import { LightIdPlaceholder } from '../../placeholders/LightIdPlaceholder';
-import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint';
-import { ApiError } from '../../../ApiError';
-import { KeyValueType } from '../../../commonTypes';
+import { extractUpdatedAttributes, parseErrors, wasSuccessful } from '../../../util.js';
+import { SceneIdPlaceholder } from '../../placeholders/SceneIdPlaceholder.js';
+import { LightIdPlaceholder } from '../../placeholders/LightIdPlaceholder.js';
+import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint.js';
+import { ApiError } from '../../../ApiError.js';
+import { KeyValueType } from '../../../commonTypes.js';
 
 const SCENE_ID_PLACEHOLDER = new SceneIdPlaceholder();
 

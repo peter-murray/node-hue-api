@@ -1,6 +1,6 @@
 import Bottleneck from 'bottleneck';
-import { RateLimit } from './HueApiRateLimits';
-import { HueApiRateLimitLogger } from './HueApiRateLimitLogger';
+import { RateLimit } from './HueApiRateLimits.js';
+import { HueApiRateLimitLogger } from './HueApiRateLimitLogger.js';
 
 export class HueRateLimiter {
 

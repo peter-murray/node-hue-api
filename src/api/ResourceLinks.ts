@@ -1,7 +1,7 @@
-import { ApiDefinition } from './http/ApiDefinition';
-import { resourceLinksApi } from './http/endpoints/resourceLinks';
+import { ApiDefinition } from './http/ApiDefinition.js';
+import { resourceLinksApi } from './http/endpoints/resourceLinks.js';
 import { model } from '@peter-murray/hue-bridge-model';
-import { Api } from './Api';
+import { Api } from './Api.js';
 
 type ResourceLinkId = string | model.ResourceLink
 type LooseObject = { [key: string]: any };

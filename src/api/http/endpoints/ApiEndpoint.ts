@@ -1,6 +1,6 @@
-import { HTTPHeaders, RequestConfig } from '../HttpClientFetch';
-import { Placeholder } from '../../placeholders/Placeholder';
-import { UsernamePlaceholder } from '../../placeholders/UsernamePlaceholder';
+import { HTTPHeaders, RequestConfig } from '../HttpClientFetch.js';
+import { Placeholder } from '../../placeholders/Placeholder.js';
+import { UsernamePlaceholder } from '../../placeholders/UsernamePlaceholder.js';
 
 const DEBUG: boolean = /node-hue-api/.test(process.env['NODE_DEBUG'] || '');
 

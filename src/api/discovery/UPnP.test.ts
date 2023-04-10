@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { SSDPSearch } from './UPnP';
+import { SSDPSearch } from './UPnP.js';
 
 describe('UPnP', function () {
 

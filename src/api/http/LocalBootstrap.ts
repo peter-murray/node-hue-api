@@ -1,15 +1,15 @@
 import * as https from 'https';
 
-import {Api} from '../Api';
+import {Api} from '../Api.js';
 
-import * as httpClient from './HttpClientFetch';
-import { ApiError } from '../../ApiError';
-import { Transport } from './Transport';
-import { HueApiRateLimits } from '../HueApiRateLimits';
+import * as httpClient from './HttpClientFetch.js';
+import { ApiError } from '../../ApiError.js';
+import { Transport } from './Transport.js';
+import { HueApiRateLimits } from '../HueApiRateLimits.js';
 
-import { getSSLCertificate, SSLCertificate } from './sslCertificate';
-import { ConfigParameters } from '../HueApiConfig';
-import { cleanHostname, getHttpsUrl } from './urlUtil';
+import { getSSLCertificate, SSLCertificate } from './sslCertificate.js';
+import { ConfigParameters } from '../HueApiConfig.js';
+import { cleanHostname, getHttpsUrl } from './urlUtil.js';
 import { time } from '@peter-murray/hue-bridge-model';
 
 const DEBUG: boolean = /node-hue-api/.test(process.env.NODE_DEBUG || '');

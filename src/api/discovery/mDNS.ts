@@ -1,5 +1,5 @@
-import { DiscoveryBridgeDefinition } from './discoveryTypes';
-const mDnsSd = require('node-dns-sd');
+import { DiscoveryBridgeDefinition } from './discoveryTypes.js';
+import * as mDnsSd from 'node-dns-sd';
 
 export class mDNSSearch {
 
@@ -7,11 +7,11 @@ export class mDNSSearch {
   }
 
   search(timeout?: number, returnOnFirstFound = false): Promise<DiscoveryBridgeDefinition[]> {
-    return mDnsSd.discover({
+    return mDnsSd.default.discover({
       name: '_hue._tcp.local',
       wait: timeout ? timeout/1000 : 3,
       quick: returnOnFirstFound
-    }).then((devices: any) => {
+    }).then((devices: any[] | undefined) => {
       let results: DiscoveryBridgeDefinition[] = [];
 
       if (devices && devices.length > 0) {

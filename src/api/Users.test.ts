@@ -1,11 +1,11 @@
 'use strict';
 
 import {expect } from 'chai';
-import {v3} from '../v3';
-import {discovery, ApiError} from '../index';
-import {UserRecord} from "./Users";
+import {v3} from '../v3.js';
+import {discovery, ApiError} from '../index.js';
+import {UserRecord} from "./Users.js";
 
-const testValues = require('../../test/support/testValues'); //TODO move these
+import * as testValues from '../../test/support/testValues.js'; //TODO move these
 
 describe('Hue API #users', () => {
 

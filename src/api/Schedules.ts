@@ -1,7 +1,7 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { ApiDefinition } from './http/ApiDefinition';
-import { schedulesApi } from './http/endpoints/schedules';
-import { Api } from './Api';
+import { ApiDefinition } from './http/ApiDefinition.js';
+import { schedulesApi } from './http/endpoints/schedules.js';
+import { Api } from './Api.js';
 
 type Schedule = model.Schedule
 type ScheduleId = number | string | Schedule

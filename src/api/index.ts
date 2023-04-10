@@ -1,7 +1,7 @@
-import { LocalBootstrap } from './http/LocalBootstrap';
-import { LocalInsecureBootstrap } from './http/LocalInsecureBootstrap';
-import { RemoteBootstrap } from './http/RemoteBootstrap';
-import { HueApiRateLimits } from './HueApiRateLimits';
+import { LocalBootstrap } from './http/LocalBootstrap.js';
+import { LocalInsecureBootstrap } from './http/LocalInsecureBootstrap.js';
+import { RemoteBootstrap } from './http/RemoteBootstrap.js';
+import { HueApiRateLimits } from './HueApiRateLimits.js';
 
 const DEFAULT_RATE_LIMIT_CONFIG = new HueApiRateLimits();
 

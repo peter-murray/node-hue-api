@@ -1,9 +1,9 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { SensorIdPlaceholder } from '../../placeholders/SensorIdPlaceholder';
-import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint';
-import { ApiError } from '../../../ApiError';
-import { KeyValueType } from '../../../commonTypes';
-import { extractUpdatedAttributes, parseErrors, wasSuccessful } from '../../../util';
+import { SensorIdPlaceholder } from '../../placeholders/SensorIdPlaceholder.js';
+import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint.js';
+import { ApiError } from '../../../ApiError.js';
+import { KeyValueType } from '../../../commonTypes.js';
+import { extractUpdatedAttributes, parseErrors, wasSuccessful } from '../../../util.js';
 
 
 const SENSOR_ID_PLACEHOLDER = new SensorIdPlaceholder();

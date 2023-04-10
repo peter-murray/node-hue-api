@@ -1,9 +1,9 @@
-import { Transport } from './Transport';
-import { Api } from '../Api';
-import { request, create } from './HttpClientFetch';
-import { HueApiRateLimits } from '../HueApiRateLimits';
-import { ConfigParameters } from '../HueApiConfig';
-import { getHttpUrl } from './urlUtil';
+import { Transport } from './Transport.js';
+import { Api } from '../Api.js';
+import { request, create } from './HttpClientFetch.js';
+import { HueApiRateLimits } from '../HueApiRateLimits.js';
+import { ConfigParameters } from '../HueApiConfig.js';
+import { getHttpUrl } from './urlUtil.js';
 
 const SUPPRESS_WARNING = process.env.NODE_HUE_API_USE_INSECURE_CONNECTION != null;
 

@@ -1,9 +1,9 @@
-import { ApiDefinition } from './http/ApiDefinition';
+import { ApiDefinition } from './http/ApiDefinition.js';
 import { model } from '@peter-murray/hue-bridge-model';
-import { KeyValueType } from '../commonTypes';
+import { KeyValueType } from '../commonTypes.js';
 
-import { SensorIdResult, sensorsApi } from './http/endpoints/sensors';
-import { Api } from './Api';
+import { SensorIdResult, sensorsApi } from './http/endpoints/sensors.js';
+import { Api } from './Api.js';
 
 type Sensor = model.Sensor
 type SensorId = string | Sensor

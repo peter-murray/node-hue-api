@@ -1,4 +1,4 @@
-import { ApiError } from './ApiError';
+import { ApiError } from './ApiError.js';
 
 export function rgbToXY (rgb: number[], colorGamut: Gamut) {
   if (!colorGamut) {

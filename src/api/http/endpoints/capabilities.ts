@@ -1,6 +1,6 @@
-import { ApiEndpoint } from './ApiEndpoint';
+import { ApiEndpoint } from './ApiEndpoint.js';
 import { model } from '@peter-murray/hue-bridge-model';
-import { KeyValueType } from '../../../commonTypes';
+import { KeyValueType } from '../../../commonTypes.js';
 
 function getAllCapabilities() {
   return new ApiEndpoint()

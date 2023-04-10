@@ -1,6 +1,6 @@
-import { Token, Tokens } from './http/OAuthTokens';
-import { Api } from './Api';
-import { ApiError } from '../ApiError';
+import { Token, Tokens } from './http/OAuthTokens.js';
+import { Api } from './Api.js';
+import { ApiError } from '../ApiError.js';
 
 type RemoteAccessCredentials = {
   clientId: string

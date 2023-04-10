@@ -1,9 +1,9 @@
-import { ApiDefinition } from './http/ApiDefinition';
-import { configurationApi, CreatedUser } from './http/endpoints/configuration';
+import { ApiDefinition } from './http/ApiDefinition.js';
+import { configurationApi, CreatedUser } from './http/endpoints/configuration.js';
 import { model } from '@peter-murray/hue-bridge-model';
-import { KeyValueType } from '../commonTypes';
-import { Cache } from './Cache';
-import { Api } from './Api';
+import { KeyValueType } from '../commonTypes.js';
+import { Cache } from './Cache.js';
+import { Api } from './Api.js';
 
 export type UserRecord = {
   username: string,

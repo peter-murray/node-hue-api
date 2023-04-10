@@ -1,6 +1,6 @@
-import { ApiError } from '../ApiError';
-import { RemoteApi } from './http/RemoteApi';
-import { Transport } from './http/Transport';
+import { ApiError } from '../ApiError.js';
+import { RemoteApi } from './http/RemoteApi.js';
+import { Transport } from './http/Transport.js';
 
 export type ConfigParameters = {
   baseUrl: string,

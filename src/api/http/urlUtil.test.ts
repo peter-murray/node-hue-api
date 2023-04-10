@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import { getHttpsUrl, isIpv6Host } from './urlUtil';
+import { getHttpsUrl, isIpv6Host } from './urlUtil.js';
 
 
 const IPV6_EXPANDED = '0000:0000:0000:0000:0000:ffff:c0a8:0a28'

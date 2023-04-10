@@ -1,10 +1,10 @@
-import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint';
-import { UsernamePlaceholder } from '../../placeholders/UsernamePlaceholder';
+import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint.js';
+import { UsernamePlaceholder } from '../../placeholders/UsernamePlaceholder.js';
 import { model } from '@peter-murray/hue-bridge-model';
-import { ApiError } from '../../../ApiError';
+import { ApiError } from '../../../ApiError.js';
 
-import { wasSuccessful } from '../../../util';
-import { KeyValueType } from '../../../commonTypes';
+import { wasSuccessful } from '../../../util.js';
+import { KeyValueType } from '../../../commonTypes.js';
 
 const instanceChecks = model.instanceChecks;
 

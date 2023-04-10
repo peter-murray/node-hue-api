@@ -1,5 +1,5 @@
 import { model } from '@peter-murray/hue-bridge-model';
-import { LightIdPlaceholder } from './placeholders/LightIdPlaceholder';
+import { LightIdPlaceholder } from './placeholders/LightIdPlaceholder.js';
 
 const LIGHT_ID_PLACEHOLDER = new LightIdPlaceholder();
 

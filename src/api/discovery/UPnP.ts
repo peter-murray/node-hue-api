@@ -1,6 +1,6 @@
 import * as dgram from 'dgram';
 import * as events from 'events';
-import { DiscoveryBridgeDefinition } from './discoveryTypes';
+import { DiscoveryBridgeDefinition } from './discoveryTypes.js';
 
 
 export class SSDPSearch {

@@ -1,4 +1,4 @@
-import { KeyValueType } from '../../commonTypes';
+import { KeyValueType } from '../../commonTypes.js';
 
 export type Token = {
   value: string,

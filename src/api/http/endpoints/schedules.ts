@@ -1,9 +1,9 @@
 import { model, time } from '@peter-murray/hue-bridge-model';
-import { extractUpdatedAttributes, parseErrors, wasSuccessful } from '../../../util';
-import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint';
-import { ScheduleIdPlaceholder } from '../../placeholders/ScheduleIdPlaceholder';
-import { ApiError } from '../../../ApiError';
-import { KeyValueType } from '../../../commonTypes';
+import { extractUpdatedAttributes, parseErrors, wasSuccessful } from '../../../util.js';
+import { ApiBodyPayload, ApiEndpoint } from './ApiEndpoint.js';
+import { ScheduleIdPlaceholder } from '../../placeholders/ScheduleIdPlaceholder.js';
+import { ApiError } from '../../../ApiError.js';
+import { KeyValueType } from '../../../commonTypes.js';
 
 const SCHEDULE_ID_PLACEHOLDER = new ScheduleIdPlaceholder();
 

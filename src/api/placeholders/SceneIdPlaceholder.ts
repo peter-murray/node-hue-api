@@ -1,4 +1,4 @@
-import { Placeholder } from './Placeholder';
+import { Placeholder } from './Placeholder.js';
 import { model, types } from '@peter-murray/hue-bridge-model';
 
 export class SceneIdPlaceholder extends Placeholder {

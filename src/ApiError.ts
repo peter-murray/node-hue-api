@@ -1,4 +1,4 @@
-import { HueError } from './HueError';
+import { HueError } from './HueError.js';
 
 export class ApiError extends Error {
 

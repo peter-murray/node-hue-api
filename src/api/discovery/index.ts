@@ -1,9 +1,9 @@
-import * as bridgeValidator from './bridge-validation';
-import { nupnp } from './nupnp';
-import { mDNSSearch } from './mDNS';
+import * as bridgeValidator from './bridge-validation.js';
+import { nupnp } from './nupnp.js';
+import { mDNSSearch } from './mDNS.js';
 import {
   BridgeConfigError, BridgeDiscoveryResponse, DiscoveryBridgeDefinition, DiscoveryBridgeDescription
-} from './discoveryTypes';
+} from './discoveryTypes.js';
 
 
 export function mdnsSearch(timeout?: number): Promise<DiscoveryBridgeDescription[]> {

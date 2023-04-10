@@ -1,6 +1,6 @@
-import { Api } from '../Api';
-import { Transport } from './Transport';
-import { ApiEndpoint } from './endpoints/ApiEndpoint';
+import { Api } from '../Api.js';
+import { Transport } from './Transport.js';
+import { ApiEndpoint } from './endpoints/ApiEndpoint.js';
 
 export class ApiDefinition {
 

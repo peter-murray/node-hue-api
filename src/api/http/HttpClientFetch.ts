@@ -3,7 +3,7 @@ import fetch, { Response } from 'node-fetch';
 import {URLSearchParams} from 'url';
 import { Agent as HttpsAgent } from 'https';
 import { Agent as HttpAgent } from 'http';
-import HttpError from './HttpError';
+import HttpError from './HttpError.js';
 
 export type HTTPHeaders = {
   [key: string]: string

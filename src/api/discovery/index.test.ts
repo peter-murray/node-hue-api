@@ -1,6 +1,6 @@
 import {expect} from 'chai'
-import * as discovery from './index';
-import { BridgeConfigData } from './discoveryTypes';
+import * as discovery from './index.js';
+import { BridgeConfigData } from './discoveryTypes.js';
 
 describe('discovery', () => {
 

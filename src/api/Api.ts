@@ -1,21 +1,21 @@
-import { Remote } from './Remote';
-import { Cache } from './Cache';
-import { ConfigParameters, HueApiConfig } from './HueApiConfig';
-import { RemoteApi } from './http/RemoteApi';
-import { Transport } from './http/Transport';
-import { Capabilities } from './Capabilities';
-import { Configuration } from './Configuration';
-import { Groups } from './Groups';
-import { Lights } from './Lights';
-import { ResourceLinks } from './ResourceLinks';
-import { Rules } from './Rules';
-import { Scenes } from './Scenes';
-import { Schedules } from './Schedules';
-import { Sensors } from './Sensors';
-import { Users } from './Users';
+import { Remote } from './Remote.js';
+import { Cache } from './Cache.js';
+import { ConfigParameters, HueApiConfig } from './HueApiConfig.js';
+import { RemoteApi } from './http/RemoteApi.js';
+import { Transport } from './http/Transport.js';
+import { Capabilities } from './Capabilities.js';
+import { Configuration } from './Configuration.js';
+import { Groups } from './Groups.js';
+import { Lights } from './Lights.js';
+import { ResourceLinks } from './ResourceLinks.js';
+import { Rules } from './Rules.js';
+import { Scenes } from './Scenes.js';
+import { Schedules } from './Schedules.js';
+import { Sensors } from './Sensors.js';
+import { Users } from './Users.js';
 
 import { model } from '@peter-murray/hue-bridge-model';
-import { HueApiRateLimits } from './HueApiRateLimits';
+import { HueApiRateLimits } from './HueApiRateLimits.js';
 type Light = model.Light
 
 type ApiImplementationMap = {

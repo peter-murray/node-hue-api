@@ -1,8 +1,8 @@
-import * as httpClient from './HttpClientFetch';
-import { ApiError } from '../../ApiError';
-import { FetchResult, HttpClientFetch, HTTPHeaders, RequestConfig } from './HttpClientFetch';
-import { OAuthTokens, Tokens } from './OAuthTokens';
-import { wasSuccessful } from '../../util';
+import * as httpClient from './HttpClientFetch.js';
+import { ApiError } from '../../ApiError.js';
+import { FetchResult, HttpClientFetch, HTTPHeaders, RequestConfig } from './HttpClientFetch.js';
+import { OAuthTokens, Tokens } from './OAuthTokens.js';
+import { wasSuccessful } from '../../util.js';
 
 import { createHash } from 'crypto';
 

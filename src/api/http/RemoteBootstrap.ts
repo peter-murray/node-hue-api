@@ -1,9 +1,9 @@
-import { create } from './HttpClientFetch';
-import { RemoteApi } from './RemoteApi';
-import { Api } from '../Api';
-import { Transport } from './Transport';
-import { HueApiRateLimits } from '../HueApiRateLimits';
-import { ConfigParameters } from '../HueApiConfig';
+import { create } from './HttpClientFetch.js';
+import { RemoteApi } from './RemoteApi.js';
+import { Api } from '../Api.js';
+import { Transport } from './Transport.js';
+import { HueApiRateLimits } from '../HueApiRateLimits.js';
+import { ConfigParameters } from '../HueApiConfig.js';
 
 export class RemoteBootstrap {
 

@@ -1,9 +1,9 @@
-import { ApiDefinition } from './http/ApiDefinition';
-import { scenesApi } from './http/endpoints/scenes';
-import { SceneIdPlaceholder } from './placeholders/SceneIdPlaceholder';
+import { ApiDefinition } from './http/ApiDefinition.js';
+import { scenesApi } from './http/endpoints/scenes.js';
+import { SceneIdPlaceholder } from './placeholders/SceneIdPlaceholder.js';
 import { model } from '@peter-murray/hue-bridge-model';
-import { KeyValueType } from '../commonTypes';
-import { Api } from './Api';
+import { KeyValueType } from '../commonTypes.js';
+import { Api } from './Api.js';
 
 type LightScene = model.LightScene
 type GroupScene = model.GroupScene
