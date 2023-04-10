@@ -1,25 +1,29 @@
 'use strict';
 
-const expect = require('chai').expect
-  , v3Api = require('../v3').v3.api
-  , discovery = require('../index').discovery
-  , ApiError = require('../index').ApiError
-  , testValues = require('../../test/support/testValues.js') //TODO move these
-;
+import {expect } from 'chai';
+import {v3} from '../v3';
+import {discovery, ApiError} from '../index';
+import {UserRecord} from "./Users";
+
+const testValues = require('../../test/support/testValues'); //TODO move these
 
 describe('Hue API #users', () => {
 
-  let unauthenticatedHue
-    , authenticatedHue
+  let unauthenticatedHue: any
+    , authenticatedHue: any
   ;
 
   before(async function () {
     this.timeout(5000);
 
-    const searchResults = await discovery.nupnpSearch();
+    const searchResults = await discovery.mdnsSearch();
     const ipAddress = searchResults[0].ipaddress;
-    unauthenticatedHue = await v3Api.createLocal(ipAddress).connect();
-    authenticatedHue = await v3Api.createLocal(ipAddress).connect(testValues.username);
+    expect(ipAddress).to.not.equal(undefined);
+
+    // @ts-ignore
+    unauthenticatedHue = await v3.api.createLocal(ipAddress).connect();
+    // @ts-ignore
+    authenticatedHue = await v3.api.createLocal(ipAddress).connect(testValues.username);
   });
 
 
@@ -41,7 +45,7 @@ describe('Hue API #users', () => {
         try {
           await unauthenticatedHue.users.createUser('node-hue-api', 'node-hue-api-tests');
           expect.fail('should not get here unless the link button was pressed');
-        } catch (err) {
+        } catch (err: any) {
           expect(err).to.be.instanceof(ApiError);
           expect(err.getHueErrorType()).to.equal(101);
         }
@@ -71,12 +75,12 @@ describe('Hue API #users', () => {
       // });
 
       it('should remove test accounts', async () => {
-        const users = await authenticatedHue.users.getUserByName('node-hue-api', 'node-hue-api-tests');
+        const users: UserRecord[] = await authenticatedHue.users.getUserByName('node-hue-api', 'node-hue-api-tests');
 
         expect(users).to.be.instanceof(Array);
         expect(users).to.have.length.greaterThan(0);
 
-        const promises = [];
+        const promises: Promise<any>[] = [];
         users.forEach(user => {
           promises.push(authenticatedHue.users.deleteUser(user.username));
         });

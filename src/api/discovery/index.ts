@@ -11,7 +11,6 @@ export function mdnsSearch(timeout?: number): Promise<DiscoveryBridgeDescription
 
   return mDNSearch.search(timeout)
     .then((data) => {
-      mDNSearch.finished();
       return loadDescriptions(data);
     });
 }

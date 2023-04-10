@@ -19,10 +19,10 @@ describe('Hue API #lights', function () {
   this.timeout(10000);
 
   before(async () => {
-    const searchResults = await discovery.nupnpSearch();
+    const searchResults = await discovery.mdnsSearch();
 
     if (!searchResults || searchResults.length === 0) {
-      throw new Error('Failed to find a bridge in nupnp search');
+      throw new Error('Failed to find a bridge in mDNS search');
     }
 
     const localApi = v3.api.createLocal(searchResults[0].ipaddress);

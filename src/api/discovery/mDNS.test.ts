@@ -11,15 +11,10 @@ describe('mDNS', function () {
     mdns = new mDNSSearch();
   });
 
-  afterEach(() => {
-    if (mdns) {
-      mdns.finished();
-    }
-  })
-
   it('should discover a bridge on the network', async () => {
     // const results = await mdns.search(15 * 1000);
-    const results = await mdns.search();
+    // const results = await mdns.search();
+    const results = await mdns.search(10000, true);
 
     expect(results).to.be.instanceOf(Array);
     expect(results).to.have.length.greaterThan(0);

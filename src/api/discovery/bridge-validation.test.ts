@@ -1,9 +1,7 @@
 import {expect} from 'chai';
 
-import * as bridgeValidation from './bridge-validation'
-
-const testValues = require('../../../test/support/testValues')
-
+import * as bridgeValidation from './bridge-validation';
+import { mDNSSearch } from "./mDNS";
 
 describe('bridge-validation', () => {
 
@@ -82,12 +80,17 @@ describe('bridge-validation', () => {
 
   describe('#getBridgeConfig()', () => {
 
-    it('should get config on a valid bridge', async () => {
-      const ipAddress = '192.168.10.40'; //TODO hard coded
-      const config = await bridgeValidation.getBridgeConfig({internalipaddress: ipAddress}, 5000);
+    it('should get config on a valid bridge', async function(){
+      this.timeout(10000);
 
-      expect(config).to.have.property('name').to.equal('Philips hue');
-      expect(config).to.have.property('ipaddress').to.equal(ipAddress);
+      const bridges = await new mDNSSearch().search();
+      expect(bridges).to.have.length.greaterThan(0);
+      const bridge = bridges[0];
+
+      const config = await bridgeValidation.getBridgeConfig(bridge, 5000);
+
+      expect(config).to.have.property('name');
+      expect(config).to.have.property('ipaddress').to.equal(bridge.internalipaddress);
       expect(config).to.have.property('modelid');
       expect(config).to.have.property('swversion');
     });
@@ -111,12 +114,17 @@ describe('bridge-validation', () => {
 
   describe('#getBridgeDescription()', () => {
 
-    it('should get config on a valid bridge', async () => {
-      const ipAddress = '192.168.10.40'; //TODO hard coded
-      const config = await bridgeValidation.getBridgeDescription({internalipaddress: ipAddress}, 5000);
+    it('should get config on a valid bridge', async function(){
+      this.timeout(10000);
+
+      const bridges = await new mDNSSearch().search();
+      expect(bridges).to.have.length.greaterThan(0);
+      const bridge = bridges[0];
+
+      const config = await bridgeValidation.getBridgeDescription(bridge, 5000);
 
       expect(config).to.have.property('name').to.include('Philips hue');
-      expect(config).to.have.property('ipaddress').to.equal(ipAddress);
+      expect(config).to.have.property('ipaddress').to.equal(bridge.internalipaddress);
 
       expect(config).to.have.property('model');
       expect(config.model).to.have.property('number').to.equal('BSB002');
