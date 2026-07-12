@@ -2,6 +2,10 @@
 
 [![npm](https://img.shields.io/npm/v/node-hue-api.svg)](http://npmjs.org/node-hue-api)
 
+> [!NOTE]
+> This repository is no longer being actively maintained. If you have an interest in taking over ownership and moving this repository forward with the necessary changes to support the new APIs and maintenance, please feel free to reach out so that i can pass this on.
+
+
 An API library for Node.js that interacts with the Philips Hue Bridge to control Lights, schedules, sensors and the 
 various other features of the Hue Bridge.
 
