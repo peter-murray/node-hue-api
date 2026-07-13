@@ -283,10 +283,10 @@ A complete code sample for this function is available [here](../examples/v3/ligh
 
 ## renameLight()
 
-The `renameLight(id, name)` function allows you to rename the light identified by the `id` to the specified `name` value.
+The `renameLight(light)` function allows you to rename the light identified by its object.
 
 ```js
-api.lights.renameLight(id, 'my_new_name')
+api.lights.renameLight(light)
   .then(result => {
       console.log(`Successfully reanmed light? ${result}`);
   });
