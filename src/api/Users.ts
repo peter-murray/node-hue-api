@@ -83,7 +83,13 @@ export class Users extends ApiDefinition {
         if (state) {
           oldBridge = state.modelid === 'BSB001';
         }
-
+        
+        if (appName.length > 20) {
+          throw new Error("appName is too long");
+        } else if (deviceName && deviceName.length > 19) {
+          throw new Error("deviceName is too long");
+        }
+        
         return this.execute(configurationApi.createUser, {
           appName: appName,
           deviceName: deviceName,
